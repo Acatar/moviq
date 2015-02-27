@@ -1,71 +1,7 @@
-/*
-// Variables and mixins
-*/
-@video-controls-width: 60%;
-@video-controls-min-width: 960px;
-@video-controls-max-width: 1024px;
+// out: moviq.css
 
-@progress-control-width: 260px;
-@progress-bar-width: 240px;
-
-@btn-size: 34px;
-@progress-size: 10px;
-@controls-left-size: 45px; //34px;
-@controls-right-size: 125px;
-
-@control-background: rgba(0, 0, 0, .8);
-@background-color: #0F212C;
-@progress-bar-color: #FD104A;
-@btn-hover-color: @progress-bar-color;
-@text-color: #fff;
-@font-size: 18px;
-@header-font-weight: 300;
-
-@fullscreen-zindex: 2147483647;
-
-.backface-visibility(@visibility) {
-    -webkit-backface-visibility: @visibility;
-       -moz-backface-visibility: @visibility;
-        -ms-backface-visibility: @visibility;
-         -o-backface-visibility: @visibility;
-            backface-visibility: @visibility;
-}
-
-.rgba(@r, @g, @b, @alpha) {
-    @colour: rgb(@r, @g, @b);
-    @alphaColour: hsla(hue(@colour), saturation(@colour), lightness(@colour), @alpha);
-    @alphaColour: rgba(@r, @g, @b, @alpha);
-    @ieAlphaColour: argb(@alphaColour);
-    
-    background-color: @colour; // Fallback for older browsers
-    // This will be ignored by browsers that don't support it.
-    background-color: @alphaColour;
-    
-    // OldIE hacks
-    .lt-ie9 & { //assumes you have conditional commented <html> tags
-        zoom: 1; // hasLayout
-        background-color: transparent;
-        -ms-filter:  "progid:DXImageTransform.Microsoft.gradient(startColorstr=@{ieAlphaColour}, endColorstr=@{ieAlphaColour})"; // IE 8+
-        filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=@{ieAlphaColour}, endColorstr=@{ieAlphaColour})"; // IE 6 & 7
-    }
-    
-}
-
-.box-shadow (@h-shadow, @v-shadow, @blur, @color) {
-	-webkit-box-shadow: @h-shadow @v-shadow @blur @color;
-	   -moz-box-shadow: @h-shadow @v-shadow @blur @color;
-	        box-shadow: @h-shadow @v-shadow @blur @color;
-}
-
-.border-radius (@radius: 2px) {
-	-webkit-border-radius: @radius;
-	   -moz-border-radius: @radius;
-	        border-radius: @radius;
-
-    -webkit-background-clip: padding-box;
-       -moz-background-clip: padding;
-	        background-clip: padding-box;
-}
+@import 'variables.less';
+@import 'mixins.less';
 
 /*
 // Video Player
