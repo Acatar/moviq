@@ -6,6 +6,7 @@
         VideoContainer,
         Buttons,
         buttons,
+        progress,
         Events,
         events,
         EventEmitter,
@@ -13,28 +14,58 @@
         sources,
         bindVideos,
         bindEvents,
-        defaultLocale;
+        defaultLocale,
+        html,
+        handles = {
+            header: '.moviq-header',
+            controls: {
+                control_container: '.moviq-controls',
+                play: '.moviq-btn-play',
+                mute: '.moviq-btn-mute',
+                fullscreen: '.moviq-btn-fullscreen',
+                cc: '.moviq-btn-cc',
+                speed: '.moviq-speed',
+                quality: '.moviq-quality',
+                progress: '.moviq-progress',
+                progress_bar: '.moviq-progress-bar',
+                progress_buffer: '.moviq-progress-buffer',
+                progress_time: '.moviq-progress-time',
+                progress_timeDisplay: '.moviq-progress-display',
+                progress_timePicker: '.moviq-progress-picker',
+                buttons_right: '.moviq-buttons-right',
+                controls_left: '.moviq-controls-left',
+                controls_right: '.moviq-controls-right',
+                getHandle: function (movi, buttonHandle) {
+                    return movi.container.$controls.find(buttonHandle);
+                },
+                getIconHandle: function (movi, buttonHandle) {
+                    return movi.container.$controls.find(buttonHandle + ' span');
+                }
+            }
+        };
     
     /*
     // The core moviq Video object - an entry point for the public API
     */
     Video = function ($videoContainer, eventEmitter, locale) {
-        var container = new VideoContainer($videoContainer),
+        var self = this,
             cc;
         
-        this.locale = locale || defaultLocale;
-        this.events = new Events(eventEmitter || moviqEventEmitter);
-        this.container = container;
-        this.buttons = new Buttons(this);
+        $videoContainer.append(html.controls);
         
-        if (container.manifest) {
-            this.container.sources = sources.getSourcesByManifest(this);
+        self.locale = locale || defaultLocale;
+        self.events = new Events(eventEmitter || moviqEventEmitter);
+        self.container = new VideoContainer($videoContainer);
+        self.buttons = new Buttons(self);
+        
+        if (self.container.manifest) {
+            self.container.sources = sources.getSourcesByManifest(self);
             
         } else {
-            this.container.sources = sources.getSources(this);
+            self.container.sources = sources.getSources(self);
         }
         
-        cc = this.container.html5Video.textTracks[0];
+        cc = self.container.html5Video.textTracks[0];
         
         if (cc) {
             cc.mode = 'hidden';
@@ -47,27 +78,32 @@
     // The DOM representations of the video
     */
     VideoContainer = function ($videoContainer) {
-        this.jqHandle = $videoContainer;
-        this.domHandle = this.jqHandle[0];
-        this.$video = this.jqHandle.children('video').first();
-        this.html5Video = this.$video[0];
-        this.controls = this.jqHandle.children('.moviq-controls').first();
-        this.manifest = this.html5Video.dataset.manifest;
-        this.sources = undefined;
+        var self = this;
+        
+        self.$handle = $videoContainer;
+        self.domHandle = self.$handle[0];
+        self.$video = self.$handle.children('video').first();
+        self.html5Video = self.$video[0];
+        self.$controls = self.$handle.children(handles.controls.control_container).first();
+        self.$header = self.$handle.children(handles.header).first();
+        self.manifest = self.html5Video.dataset.manifest;
+        self.sources = undefined;
     };
     
     /*
     // The button handlers for a given video
     */
     Buttons = function (movi) {
-        this.togglePlay = function () { return buttons.togglePlay(movi); };
-        this.toggleFullscreen = function () { return buttons.toggleFullscreen(movi); };
-        this.toggleCaptions = function () { return buttons.toggleCaptions(movi); };
-        this.toggleMute = function () { return buttons.toggleMute(movi); };
-        this.toggleQuality = function () { return buttons.toggleQuality(movi); };
-        this.toggleSpeed = function () { return buttons.toggleSpeed(movi); };
+        var self = this,
+            btns = buttons.init(movi, self),
+            prog = progress.init(movi);
         
-        buttons.bindEvents(movi, this);
+        self.togglePlay = function () { return btns.togglePlay(); };
+        self.toggleFullscreen = function () { return btns.toggleFullscreen(); };
+        self.toggleCaptions = function () { return btns.toggleCaptions(); };
+        self.toggleMute = function () { return btns.toggleMute(); };
+        self.toggleQuality = function () { return btns.toggleQuality(); };
+        self.toggleSpeed = function () { return btns.toggleSpeed(); };
     };
     
     /*
@@ -139,6 +175,9 @@
         
     };
     
+    /*
+    // All text defaults to english
+    */
     defaultLocale = (function () {
         return {
             errors: {
@@ -152,11 +191,70 @@
         };
     }());
     
+    html = (function () {
+        var controls;
+        
+        controls =
+              '<div class="moviq-controls">'
+            + '<div class="moviq-controls-enclosure">'
+            + '<div class="moviq-controls-left">'
+            + '    <button class="moviq-btn moviq-btn-play" title="Play/Pause video">'
+            + '        <span class="fa fa-play"></span>'
+            + '    </button>'
+            + '</div>'
+            + '<div class="moviq-progress">'
+            + '    <span class="moviq-progress-display"></span>'
+            + '    <span class="moviq-progress-picker"></span>'
+            + '    <div class="moviq-progress-bar">'
+            + '        <span class="moviq-progress-buffer"></span>'
+            + '        <span class="moviq-progress-time"></span>'
+            + '    </div>'
+            + '</div>'
+            + '<div class="moviq-controls-right">'
+            + '    <div class="moviq-dropdown">'
+            + '        <button class="moviq-btn moviq-dropdown-toggle" type="button" data-toggle="dropdown" title="Moviq Menu">'
+            + '            <span class="fa fa-cog"></span>'
+            + '        </button>'
+            + '        <ul class="moviq-dropdown-menu" role="menu">'
+            + '            <li role="presentation">'
+            + '                <button class="moviq-btn moviq-btn-cc" role="menuitem" tabindex="-1" title="Closed Captions">'
+            + '                    <i class="fa fa-cc"></i>'
+            + '                </button>'
+            + '            </li>'
+            + '            <li role="presentation">'
+            + '                <button class="moviq-btn moviq-btn-speed" role="menuitem" tabindex="-1" title="Playback Speed">'
+            + '                    <i class="fa fa-clock-o"></i>'
+            + '                </button>'
+            + '            </li>'
+            + '            <li role="presentation">'
+            + '                <button class="moviq-btn moviq-btn-quality" role="menuitem" tabindex="-1" title="Video Quality">'
+            + '                    <em>HD</em>'
+            + '                </button>'
+            + '            </li>'
+            + '        </ul>'
+            + '    </div>'
+            + '    <button class="moviq-btn moviq-btn-mute" title="Mute/Unmute sound">'
+            + '        <span class="fa fa-volume-off"></span>'
+            + '    </button>'
+            + '    <button class="moviq-btn moviq-btn-fullscreen" title="Switch to full screen">'
+            + '        <span class="fa fa-arrows-alt"></span>'
+            + '    </button>'
+            + '</div>'
+            + '</div>'
+            + '</div>';
+        
+        return {
+            controls: controls
+        };
+    }());
+    
     /*
     // Private button functionality
     */
     buttons = (function () {
-        var buttonHandles,
+        var movi,
+            $video,
+            video,
             togglePlay,
             toggleCaptions,
             buttonsToShow,
@@ -164,31 +262,11 @@
             fullscreenIn,
             fullscreenOut,
             toggleMute,
-            bindEvents,
-            getButtonHandle,
-            getIconHandle;
+            init,
+            bindButtonEvents;
         
-        buttonHandles = {
-            controls: '.moviq-controls',
-            play: '.moviq-btn-play',
-            mute: '.moviq-btn-mute',
-            fullscreen: '.moviq-btn-fullscreen',
-            cc: '.moviq-btn-cc',
-            speed: '.moviq-speed',
-            quality: '.moviq-quality'
-        };
-        
-        getButtonHandle = function (movi, buttonHandle) {
-            return movi.container.controls.find(buttonHandle);
-        };
-        
-        getIconHandle = function (movi, buttonHandle) {
-            return movi.container.controls.find(buttonHandle + ' i');
-        };
-        
-        togglePlay = function (movi) {
-            var video = movi.container.html5Video,
-                playIcon = getIconHandle(movi, buttonHandles.play);
+        togglePlay = function () {
+            var playIcon = handles.controls.getIconHandle(movi, handles.controls.play);
 
             if (video.paused || video.ended) {
                 playIcon.removeClass('fa-play').addClass('fa-pause');
@@ -201,8 +279,8 @@
             }
         };
         
-        toggleFullscreen = function (movi) {
-            var container = movi.container.jqHandle;
+        toggleFullscreen = function () {
+            var container = movi.container.$handle;
             
             if (container.hasClass('fullscreen')) {
                 fullscreenOut(movi);
@@ -213,10 +291,10 @@
             }
         };
         
-        fullscreenIn = function (movi) {
+        fullscreenIn = function () {
             var container = movi.container.domHandle,
-                $container = movi.container.jqHandle,
-                $icon = getIconHandle(movi, buttonHandles.fullscreen),
+                $container = movi.container.$handle,
+                $icon = handles.controls.getIconHandle(movi, handles.controls.fullscreen),
                 locale = movi.locale.errors.buttons;
 
             if (container.requestFullscreen) {
@@ -235,9 +313,9 @@
             $icon.removeClass('fa-arrows-alt').addClass('fa-compress'); // fa-expand
         };
         
-        fullscreenOut = function (movi) {
-            var $container = movi.container.jqHandle,
-                $icon = getIconHandle(movi, buttonHandles.fullscreen);
+        fullscreenOut = function () {
+            var $container = movi.container.$handle,
+                $icon = handles.controls.getIconHandle(movi, handles.controls.fullscreen);
             
             $container.removeClass('fullscreen');
             $icon.removeClass('fa-compress').addClass('fa-arrows-alt'); // fa-expand
@@ -252,10 +330,9 @@
             }
         };
         
-        toggleCaptions = function (movi) {
-            var ccButton = getButtonHandle(movi, buttonHandles.cc),
-                video = movi.container.html5Video,
-                track = movi.container.html5Video.textTracks[0];
+        toggleCaptions = function () {
+            var ccButton = handles.controls.getHandle(movi, handles.controls.cc),
+                track = video.textTracks[0];
 
             if (ccButton.hasClass('selected')) {
                 ccButton.removeClass('selected');
@@ -272,9 +349,8 @@
             }
         };
         
-        toggleMute = function (movi) {
-            var $icon = getIconHandle(movi, buttonHandles.mute),
-                video = movi.container.html5Video;
+        toggleMute = function () {
+            var $icon = handles.controls.getIconHandle(movi, handles.controls.mute);
 
             video.muted = !video.muted;
 
@@ -287,9 +363,7 @@
             }
         };
         
-        buttonsToShow = function (movi) {
-            var video = movi.container.html5Video;
-            
+        buttonsToShow = function () {
             return {
                 play: true,
                 volume: true,
@@ -300,13 +374,23 @@
             };
         };
         
-        bindEvents = function (movi, btns) {
-            var playBtn = getButtonHandle(movi, buttonHandles.play),
-                ccButton = getButtonHandle(movi, buttonHandles.cc),
-                speedBtn = getButtonHandle(movi, buttonHandles.speed),
-                qualityBtn = getButtonHandle(movi, buttonHandles.quality),
-                muteBtn = getButtonHandle(movi, buttonHandles.mute),
-                fullscreenBtn = getButtonHandle(movi, buttonHandles.fullscreen);
+        bindButtonEvents = function (btns) {
+            var playBtn = handles.controls.getHandle(movi, handles.controls.play),
+                ccButton = handles.controls.getHandle(movi, handles.controls.cc),
+                speedBtn = handles.controls.getHandle(movi, handles.controls.speed),
+                qualityBtn = handles.controls.getHandle(movi, handles.controls.quality),
+                muteBtn = handles.controls.getHandle(movi, handles.controls.mute),
+                fullscreenBtn = handles.controls.getHandle(movi, handles.controls.fullscreen);
+            
+            movi.container.$handle
+                .on('mouseenter', function (event) {
+                    movi.container.$controls.stop().fadeTo(500, 0.9);
+                    movi.container.$header.stop().fadeTo(500, 0.9);
+                })
+                .on('mouseleave', function (event) {
+                    movi.container.$controls.stop().fadeOut();
+                    movi.container.$header.stop().fadeOut();
+                });
             
             playBtn.on('click', function (event) {
                 var state = btns.togglePlay();
@@ -363,16 +447,161 @@
             });
         };
         
+        init = function (moviInstance, btns) {
+            movi = moviInstance;
+            $video = movi.container.$video;
+            video = movi.container.html5Video;
+            
+            bindButtonEvents(btns);
+            
+            return {
+                togglePlay: togglePlay,
+                toggleCaptions: toggleCaptions,
+                toggleFullscreen: toggleFullscreen,
+                toggleMute: toggleMute,
+                buttonsToShow: buttonsToShow
+            };
+        };
+        
         return {
-            togglePlay: togglePlay,
-            toggleCaptions: toggleCaptions,
-            buttonsToShow: buttonsToShow,
-            toggleFullscreen: toggleFullscreen,
-            toggleMute: toggleMute,
-            bindEvents: bindEvents
+            init: init
         };
         
     }()); // /buttons
+    
+    progress = (function () {
+        var movi,
+            $video,
+            video,
+            $bar,
+            $timeBar,
+            $bufferBar,
+            $timeDisplay,
+            init,
+            bindProgressEvents,
+            formatTime,
+            coverage,
+            meters,
+            timePickerActive = false;
+        
+        coverage = {
+            getPositionPercent: function () {
+                return (100 * (video.currentTime / video.duration));
+            },
+            getBufferedPercent: function () {
+                if (video.buffered.length > 0) {
+                    return (100 * (video.buffered.end(0) / video.duration));
+                } else {
+                    return 0;
+                }
+            },
+            getAmountConsumed: function () {
+                throw new Error('NOT IMPLEMENTED');
+            }
+        };
+        
+        meters = {
+            setPosition: function (pageX) {
+                var percent = meters.getCoordinates(pageX).percent;
+                
+                meters.updateDisplay(percent);
+                video.currentTime = ((video.duration * percent) / 100);
+            },
+            getCoordinates: function (pageX) {
+                var position = (pageX - $bar.offset().left),
+                    percent = ((100 * position) / $bar.width());
+                
+                if (percent > 100) {
+                    percent = 100;
+                } else if (percent < 0) {
+                    percent = 0;
+                }
+                
+                return {
+                    position: position,
+                    percent: percent
+                };
+            },
+            getPosition: function (mousePageX) {
+                var coordinates = meters.getCoordinates(mousePageX),
+                    time = (video.duration * (coordinates.percent / 100));
+                
+                return {
+                    time: formatTime(time),
+                    left: coordinates.position
+                };
+            },
+            updateDisplay: function (positionPercent) {
+                var newPositionPercent = positionPercent || coverage.getPositionPercent(),
+                    bufferedPercent = coverage.getBufferedPercent(),
+                    currentTime = formatTime(video.currentTime);
+                
+                if (video.duration > 0) {
+                    currentTime += ' / ' + formatTime(video.duration);
+                }
+                    
+                $timeBar.css('width', newPositionPercent + '%');
+                $bufferBar.css('width', bufferedPercent + '%');
+                
+                if (!timePickerActive) {
+                    $timeDisplay.text(currentTime);
+                }
+            }
+        };
+        
+        formatTime = function (seconds) {
+            var m, s;
+            
+            m = Math.floor(seconds / 60) < 10 ? "0" + Math.floor(seconds / 60) : Math.floor(seconds / 60);
+            s = Math.floor(seconds - (m * 60)) < 10 ? "0" + Math.floor(seconds - (m * 60)) : Math.floor(seconds - (m * 60));
+            
+            return m + ":" + s;
+        };
+        
+        bindProgressEvents = function () {
+            var $display = handles.controls.getHandle(movi, handles.controls.progress_timeDisplay),
+                $picker = handles.controls.getHandle(movi, handles.controls.progress_timePicker);
+            
+            $video.on('timeupdate', function () {
+                meters.updateDisplay();
+            });
+            
+            $bar
+                .on('mousedown', function (event) {
+                    meters.setPosition(event.pageX);
+                })
+                .on('mouseleave', function (event) {
+                    $picker.text('');
+                    timePickerActive = false;
+                })
+                .on('mousemove', function (event) {
+                    var position = meters.getPosition(event.pageX);
+                    
+                    timePickerActive = true;
+                    $display.text('');
+                    $picker.text(position.time);
+                    $picker.css('left', position.left);
+                });
+        };
+        
+        init = function (moviInstance) {
+            movi = moviInstance;
+            $video = movi.container.$video;
+            video = movi.container.html5Video;
+            $bar = handles.controls.getHandle(movi, handles.controls.progress_bar);
+            $timeBar = handles.controls.getHandle(movi, handles.controls.progress_time);
+            $bufferBar = handles.controls.getHandle(movi, handles.controls.progress_buffer);
+            $timeDisplay = handles.controls.getHandle(movi, handles.controls.progress_timeDisplay);
+            
+            bindProgressEvents();
+            meters.updateDisplay();
+        };
+        
+        return {
+            init: init
+        };
+        
+    }()); // /progress
     
     /*
     // Private source functionality
@@ -437,7 +666,7 @@
         
     }()); // /sources
     
-    bindVideos = function (jqSelector) {
+    bindVideos = function (jqSelector, eventEmitter, locale) {
         var videos,
             result = [],
             video,
@@ -457,7 +686,7 @@
         }
         
         for (i = 0; i < videos.length; i += 1) {
-            result.push(new Video($(videos[i])));
+            result.push(new Video($(videos[i]), eventEmitter, locale));
         }
         
         return result;

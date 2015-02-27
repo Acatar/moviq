@@ -12,50 +12,22 @@
 </head>
 <body>
     <h1>Simple Example</h1>
-
-    <div class="moviq-video">
-<!--        data-manifest="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch.ism/Manifest"-->
-        <video preload="auto">
-            <source src="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_1500kbps_AAC_und_ch2_96kbps.mp4" type="video/mp4" />
-            <track label="English" kind="captions" srclang="en" src="../_public/captions/example.vtt">
-            <track label="English" kind="captions" srclang="sp" src="../_public/captions/example.vtt">
-            <p>Your browser does not support the video tag.</p>
-        </video>
-        <div class="moviq-header">Acatar Pitch</div>
-        <div class="moviq-controls">
-            <div class="moviq-progress-bar">
-                <div class="moviq-progress">
-                    <span class="moviq-progress-buffer"></span>
-                    <span class="moviq-progress-time"></span>
-                </div>
-            </div>
-            <div class="moviq-controls-enclosure">
-                <div class="moviq-controls-left">
-                    <div class="moviq-btn moviq-btn-play" title="Play/Pause video">
-                        <i class="fa fa-play"></i>
-                    </div>
-                </div>
-                <div class="moviq-controls-right">
-                    <div class="moviq-btn moviq-btn-cc" title="Closed Captions">
-                        <i class="fa fa-cc"></i>
-                    </div>
-                    <div class="moviq-btn moviq-btn-speed" title="Playback Speed">
-                        <i class="fa fa-clock-o"></i>
-                    </div>
-                    <div class="moviq-btn moviq-btn-quality" title="Video Quality">
-                        <em>HD</em>
-                    </div>
-                    <div class="moviq-btn moviq-btn-mute" title="Mute/Unmute sound">
-                        <i class="fa fa-volume-off"></i>
-                    </div>
-                    <div class="moviq-btn moviq-btn-fullscreen" title="Switch to full screen">
-                        <i class="fa fa-arrows-alt"></i>
-                    </div>
-                </div>
-            </div>
+    <div id="main">
+        
+        <div class="moviq-video">
+        <!--        data-manifest="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch.ism/Manifest"-->
+            <div class="moviq-header">Acatar Pitch</div>
+            <video preload="auto">
+                <source src="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_1500kbps_AAC_und_ch2_96kbps.mp4" type="video/mp4" />
+                <track label="English" kind="captions" srclang="en" src="../_public/captions/example.vtt">
+                <track label="English" kind="captions" srclang="sp" src="../_public/captions/example.vtt">
+                <p>Your browser does not support the video tag.</p>
+            </video>
         </div>
+    
     </div>
-
+    
+    
     <script src="../../src/moviq.js"></script>
     <script>
         moviq.bindAll();
