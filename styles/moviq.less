@@ -1,0 +1,236 @@
+/*
+// Variables and mixins
+*/
+@video-controls-width: 60%;
+@video-controls-min-width: 960px;
+@video-controls-max-width: 1024px;
+
+@progress-control-width: 260px;
+@progress-bar-width: 240px;
+
+@btn-size: 34px;
+@progress-size: 10px;
+@controls-left-size: 45px; //34px;
+@controls-right-size: 125px;
+
+@control-background: rgba(0, 0, 0, .8);
+@background-color: #0F212C;
+@progress-bar-color: #FD104A;
+@btn-hover-color: @progress-bar-color;
+@text-color: #fff;
+@font-size: 18px;
+@header-font-weight: 300;
+
+@fullscreen-zindex: 2147483647;
+
+.backface-visibility(@visibility) {
+    -webkit-backface-visibility: @visibility;
+       -moz-backface-visibility: @visibility;
+        -ms-backface-visibility: @visibility;
+         -o-backface-visibility: @visibility;
+            backface-visibility: @visibility;
+}
+
+.rgba(@r, @g, @b, @alpha) {
+    @colour: rgb(@r, @g, @b);
+    @alphaColour: hsla(hue(@colour), saturation(@colour), lightness(@colour), @alpha);
+    @alphaColour: rgba(@r, @g, @b, @alpha);
+    @ieAlphaColour: argb(@alphaColour);
+    
+    background-color: @colour; // Fallback for older browsers
+    // This will be ignored by browsers that don't support it.
+    background-color: @alphaColour;
+    
+    // OldIE hacks
+    .lt-ie9 & { //assumes you have conditional commented <html> tags
+        zoom: 1; // hasLayout
+        background-color: transparent;
+        -ms-filter:  "progid:DXImageTransform.Microsoft.gradient(startColorstr=@{ieAlphaColour}, endColorstr=@{ieAlphaColour})"; // IE 8+
+        filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=@{ieAlphaColour}, endColorstr=@{ieAlphaColour})"; // IE 6 & 7
+    }
+    
+}
+
+.box-shadow (@h-shadow, @v-shadow, @blur, @color) {
+	-webkit-box-shadow: @h-shadow @v-shadow @blur @color;
+	   -moz-box-shadow: @h-shadow @v-shadow @blur @color;
+	        box-shadow: @h-shadow @v-shadow @blur @color;
+}
+
+.border-radius (@radius: 2px) {
+	-webkit-border-radius: @radius;
+	   -moz-border-radius: @radius;
+	        border-radius: @radius;
+
+    -webkit-background-clip: padding-box;
+       -moz-background-clip: padding;
+	        background-clip: padding-box;
+}
+
+/*
+// Video Player
+*/
+.moviq-video {
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 */
+	height: 0;
+	overflow:hidden;
+	background:#000;
+	color:#ccc;
+    margin: auto;
+    .box-shadow(0, 0, 5px, rgba(0,0,0,0.5));
+    
+    &:-webkit-full-screen {
+        position: absolute !important;
+        left: -5px !important;
+        right: -5px !important;
+        top: -5px !important;
+        bottom: -5px !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0px !important;
+        padding: 0;
+        
+        .moviq-controls {
+            margin: auto;
+            width: @video-controls-width;
+            min-width: @video-controls-min-width;
+            max-width: @video-controls-max-width;
+            .border-radius();
+        }
+    }
+    
+    video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    
+    /* Hide the Shadow DOM video controls in full-screen mode */
+    video::-webkit-media-controls-enclosure {
+      display:none !important;
+    }
+    
+    .moviq-header{
+        position:absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 10px 10px;
+        color: @text-color;
+        font-size: @font-size;
+        font-weight: @header-font-weight;
+        text-align: center;
+        background: rgba(0,0,0,0.4);
+        text-transform: uppercase;
+        .backface-visibility(hidden);
+        z-index: @fullscreen-zindex;
+    }
+
+    .moviq-controls {
+        color: @text-color;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: @btn-size + @progress-size;
+        padding-bottom: 0;
+        background-color: @control-background;
+        z-index: @fullscreen-zindex;
+
+        .moviq-controls-enclosure {
+            margin: auto;
+            
+            .moviq-controls-left {
+                position: absolute;
+                left: 0;
+                bottom: 2px;
+                padding-left: 5px;
+            }
+            
+            .moviq-progress {
+                position: absolute;
+                left: @controls-left-size;
+                right: @controls-right-size;
+                bottom: 13px;
+                
+                .moviq-progress-display,
+                .moviq-progress-picker {
+                    font-size: .5em;
+                }
+                
+                .moviq-progress-picker {
+                    position: absolute;
+                    top: -12px;
+                }
+                
+                .moviq-progress-bar {
+                    width: 100%;
+                    background-color: transparent;
+                    height: 10px;
+                    border: 1px solid rgba(255,255,255,0.2);
+                    cursor: pointer;
+                    
+                    span {
+                        position: absolute;
+                        height: 10px;
+                    }
+
+                    .moviq-progress-buffer {
+                        z-index:5;
+                        width:0;
+                        background: rgba(255,255,255,0.2);
+                    }
+
+                    .moviq-progress-time {
+                        z-index:10;
+                        width:0;
+                        background-color: @progress-bar-color;
+                    }
+                }
+            }
+            
+            .moviq-controls-right {
+                position: absolute;
+                right: 0;
+                bottom: 2px;
+                padding-right: 5px;
+            }
+            
+            .moviq-dropdown {
+                display: inline-block;
+                
+                .moviq-dropdown-menu {
+                    display: none;
+                    list-style-type: none;
+                }
+            }
+            
+            .moviq-btn {
+                width: @btn-size;
+                height: @btn-size;
+                cursor: pointer;
+                font-size: @font-size;
+                background-color: transparent;
+                color: @text-color;
+                border: none;
+
+                &:hover,
+                &.selected {
+                    color: @btn-hover-color;
+                }
+                
+                &.moviq-btn-quality {
+                    font-weight: 700;
+                    font-size: .9em;
+                    margin-top: .1em;
+                }
+            }
+            
+        } // /enclosure
+
+    } // /controls
+   
+} // /.video-container
