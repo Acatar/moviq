@@ -46,7 +46,7 @@
     
     /* Hide the Shadow DOM video controls in full-screen mode */
     video::-webkit-media-controls-enclosure {
-      display:none !important;
+      display: none !important;
     }
     
     .moviq-header{
@@ -75,8 +75,33 @@
         padding-bottom: 0;
         background-color: @control-background;
         z-index: @fullscreen-zindex;
+        
+        &.with-quality {
+            height: @controls-more-in-size;
+            
+            .moviq-controls-quality {
+                display: block;
+            }
+        }
+        
+        &.with-speed {
+            height: @controls-more-in-size;
+            
+            .moviq-controls-speed {
+                display: block;
+            }
+        }
+        
+        &.with-cc {
+            height: @controls-more-in-size;
+            
+            .moviq-controls-cc {
+                display: block;
+            }
+        }
 
-        .moviq-controls-enclosure {
+        .moviq-controls-enclosure,
+        .moviq-controls-enclosure-more {
             margin: auto;
             
             .moviq-controls-left {
@@ -135,15 +160,6 @@
                 padding-right: 5px;
             }
             
-            .moviq-dropdown {
-                display: inline-block;
-                
-                .moviq-dropdown-menu {
-                    display: none;
-                    list-style-type: none;
-                }
-            }
-            
             .moviq-btn {
                 width: @btn-size;
                 height: @btn-size;
@@ -158,14 +174,44 @@
                     color: @btn-hover-color;
                 }
                 
-                &.moviq-btn-quality {
+                &.moviq-btn-text {
                     font-weight: 700;
-                    font-size: .9em;
-                    margin-top: .1em;
+//                    font-size: .9em;
+//                    margin-top: .1em;
                 }
             }
             
         } // /enclosure
+        
+        .moviq-controls-enclosure-more {
+            position: absolute;
+            bottom: @btn-size;
+            left: 10px;
+            right: 10px;
+            display: none;
+            
+            .moviq-btn,
+            input,
+            output {
+                float: right;
+                
+                &.moviq-btn-text {
+                    font-weight: 700;
+//                    font-size: .9em;
+//                    margin-top: .1em;
+                }
+                
+                &.moviq-speed-chooser {
+                    margin-top: 0;
+                }
+                
+                &.moviq-current-speed {
+                    margin-left: 10px;
+                    width:40px;
+                }
+            }
+        
+        } // /.moviq-controls-enclosure-more
 
     } // /controls
    

@@ -1,16 +1,24 @@
 /*global jQuery, console*/
+
+// TODO:
+// 1. Fire events when interacting with the progress bar
+// 2. Get content via the manifest file
+// 3. Calculate Watch Coverage
+// 4. Calculate Re-watch data
+// 5. Wire up the drop-down menu
+
 (function (exports, $) {
     "use strict";
     
     var Video,
         VideoContainer,
         Buttons,
-        buttons,
+        buttonsImplementation,
         progress,
         Events,
-        events,
+        eventsImplementation,
         EventEmitter,
-        moviqEventEmitter,
+        jqueryEventEmitter,
         sources,
         bindVideos,
         bindEvents,
@@ -20,12 +28,18 @@
             header: '.moviq-header',
             controls: {
                 control_container: '.moviq-controls',
+                more_controls_container: '.moviq-controls-enclosure-more',
                 play: '.moviq-btn-play',
                 mute: '.moviq-btn-mute',
                 fullscreen: '.moviq-btn-fullscreen',
                 cc: '.moviq-btn-cc',
-                speed: '.moviq-speed',
-                quality: '.moviq-quality',
+                choose_cc: '.moviq-btn-choose-cc',
+                speed: '.moviq-btn-speed',
+                speed_chooser: '.moviq-speed-chooser',
+                speed_current: '.moviq-current-speed',
+                choose_speed: '.moviq-btn-choose-speed',
+                quality: '.moviq-btn-quality',
+                choose_quality: '.moviq-btn-choose-quality',
                 progress: '.moviq-progress',
                 progress_bar: '.moviq-progress-bar',
                 progress_buffer: '.moviq-progress-buffer',
@@ -35,6 +49,7 @@
                 buttons_right: '.moviq-buttons-right',
                 controls_left: '.moviq-controls-left',
                 controls_right: '.moviq-controls-right',
+                subMenus: ['with-speed', 'with-quality', 'with-cc'],
                 getHandle: function (movi, buttonHandle) {
                     return movi.container.$controls.find(buttonHandle);
                 },
@@ -49,14 +64,23 @@
     */
     Video = function ($videoContainer, eventEmitter, locale) {
         var self = this,
-            cc;
+            existingControls = $videoContainer.find(handles.controls.control_container),
+            cc,
+            btns,
+            prog;
         
-        $videoContainer.append(html.controls);
+        if (existingControls.length < 1) {
+            $videoContainer.append(html.controls);
+        }
         
         self.locale = locale || defaultLocale;
-        self.events = new Events(eventEmitter || moviqEventEmitter);
+        self.events = new Events(eventsImplementation(eventEmitter || jqueryEventEmitter()));
         self.container = new VideoContainer($videoContainer);
-        self.buttons = new Buttons(self);
+        
+        btns = buttonsImplementation.init(self);
+        prog = progress.init(self);
+        
+        self.buttons = new Buttons(btns);
         
         if (self.container.manifest) {
             self.container.sources = sources.getSourcesByManifest(self);
@@ -91,88 +115,73 @@
     };
     
     /*
-    // The button handlers for a given video
+    // The interface for button handlers
+    // expect an instance per video instance
     */
-    Buttons = function (movi) {
+    Buttons = function (buttons) {
         var self = this,
-            btns = buttons.init(movi, self),
-            prog = progress.init(movi);
+            btns = buttons || {};
         
-        self.togglePlay = function () { return btns.togglePlay(); };
-        self.toggleFullscreen = function () { return btns.toggleFullscreen(); };
-        self.toggleCaptions = function () { return btns.toggleCaptions(); };
-        self.toggleMute = function () { return btns.toggleMute(); };
-        self.toggleQuality = function () { return btns.toggleQuality(); };
-        self.toggleSpeed = function () { return btns.toggleSpeed(); };
+        self.togglePlay = btns.togglePlay;
+        self.toggleFullscreen = btns.toggleFullscreen;
+        self.toggleCaptions = btns.toggleCaptions;
+        self.toggleMute = btns.toggleMute;
+        self.toggleQuality = btns.toggleQuality;
+        self.changeQuality = btns.changeQuality;
+        self.toggleSpeed = btns.toggleSpeed;
+        self.changeSpeed = btns.changeSpeed;
+        self.toggleMore = btns.toggleMore;
+    };
+    
+    /*
+    // The interface for event emitters
+    */
+    EventEmitter = function (implementation) {
+        var self = this;
+        
+        if (!implementation) {
+            throw new Error('An implementation is required to create a new EventEmitter');
+        }
+        
+        if (typeof implementation.emit !== 'function') {
+            throw new Error('An EventEmitter implementation must have an emit function');
+        }
+        
+        if (implementation.emit.length !== 2) {
+            throw new Error('The emit function of an EventEmitter implementation must have two arguments: type, data');
+        }
+        
+        self.emit = implementation.emit;
     };
     
     /*
     // The events for a given video
     */
-    Events = function (eventEmitter) {
-        var trigger;
+    Events = function (eventsImplementation) {
+        var self = this,
+            ignore = function () {};
         
-        this.onLoadMetadata = function () {};
-        this.onTimeUpdate = function () {};
-        this.onCanPlay = function () {};
-        this.onCanPlayThrough = function () {};
-        this.onVideoEnded = function () {};
-        this.onSeeking = function () {};
-        this.onSeeked = function () {};
-        this.onWaiting = function () {};
-
-        this.onError = function (message) {
-            trigger('moviq-error', { message: message });
-            throw new Error(message);
-        };
-        
-        this.onPlay = function (event) {
-            trigger('moviq-play', { event: event });
-        };
-        
-        this.onPause = function (event) {
-            trigger('moviq-pause', { event: event });
-        };
-        
-        this.onShowCaptions = function (event) {
-            trigger('moviq-show-captions', { event: event });
-        };
-        
-        this.onHideCaptions = function (event) {
-            trigger('moviq-hide-captions', { event: event });
-        };
-        
-        this.onToggleSpeed = function (speed, event) {
-            trigger('moviq-toggle-speed', { speed: speed, event: event });
-        };
-        
-        this.onToggleQuality = function (quality, event) {
-            trigger('moviq-toggle-quality', { quality: quality, event: event });
-        };
-        
-        this.onSoundOn = function (event) {
-            trigger('moviq-sound-on', { event: event });
-        };
-        
-        this.onSoundOff = function (event) {
-            trigger('moviq-sound-off', { event: event });
-        };
-        
-        this.onFullscreenOn = function (event) {
-            trigger('moviq-fullscreen-on', { event: event });
-        };
-        
-        
-        this.onFullscreenOff = function (event) {
-            trigger('moviq-fullscreen-off', { event: event });
-        };
-        
-        trigger = function (type, data) {
-            $(document)
-                .trigger(type, [data])
-                .trigger('moviq-event', [type, data]);
-        };
-        
+        self.onLoadMetadata = eventsImplementation.onLoadMetadata || ignore;
+        self.onTimeUpdate = eventsImplementation.onTimeUpdate || ignore;
+        self.onCanPlay = eventsImplementation.onCanPlay || ignore;
+        self.onCanPlayThrough = eventsImplementation.onCanPlayThrough || ignore;
+        self.onVideoEnded = eventsImplementation.onVideoEnded || ignore;
+        self.onSeeking = eventsImplementation.onSeeking || ignore;
+        self.onSeekComplete = eventsImplementation.onSeekComplete || ignore;
+        self.onWaiting = eventsImplementation.onWaiting || ignore;
+        self.onError = eventsImplementation.onError || ignore;
+        self.onPlay = eventsImplementation.onPlay || ignore;
+        self.onPause = eventsImplementation.onPause || ignore;
+        self.onShowCaptions = eventsImplementation.onShowCaptions || ignore;
+        self.onHideCaptions = eventsImplementation.onHideCaptions || ignore;
+        self.onToggleSpeed = eventsImplementation.onToggleSpeed || ignore;
+        self.onChangeSpeed = eventsImplementation.onChangeSpeed || ignore;
+        self.onToggleQuality = eventsImplementation.onToggleQuality || ignore;
+        self.onChangeQuality = eventsImplementation.onChangeQuality || ignore;
+        self.onSoundOn = eventsImplementation.onSoundOn || ignore;
+        self.onSoundOff = eventsImplementation.onSoundOff || ignore;
+        self.onFullscreenOn = eventsImplementation.onFullscreenOn || ignore;
+        self.onFullscreenOff = eventsImplementation.onFullscreenOff || ignore;
     };
     
     /*
@@ -248,10 +257,80 @@
         };
     }());
     
+    jqueryEventEmitter = function () {
+        return new EventEmitter({
+            emit: function (type, data) {
+                $(document)
+                    .trigger(type, [data])
+                    .trigger('moviq-event', [type, data]);
+            }
+        });
+    };
+    
+    eventsImplementation = function (eventEmitter) {
+        var self = {};
+        
+        self.onError = function (message) {
+            eventEmitter.emit('moviq-error', { message: message });
+            throw new Error(message);
+        };
+        
+        self.onPlay = function (event) {
+            eventEmitter.emit('moviq-play', { event: event });
+        };
+        
+        self.onPause = function (event) {
+            eventEmitter.emit('moviq-pause', { event: event });
+        };
+        
+        self.onShowCaptions = function (event) {
+            eventEmitter.emit('moviq-show-captions', { event: event });
+        };
+        
+        self.onHideCaptions = function (event) {
+            eventEmitter.emit('moviq-hide-captions', { event: event });
+        };
+        
+        self.onToggleSpeed = function (event) {
+            eventEmitter.emit('moviq-toggle-speed', { event: event });
+        };
+        
+        self.onChangeSpeed = function (event, speed) {
+            eventEmitter.emit('moviq-change-speed', { speed: speed, event: event });
+        };
+        
+        self.onToggleQuality = function (event) {
+            eventEmitter.emit('moviq-toggle-quality', { event: event });
+        };
+        
+        self.onChangeQuality = function (quality, event) {
+            eventEmitter.emit('moviq-change-quality', { quality: quality, event: event });
+        };
+        
+        self.onSoundOn = function (event) {
+            eventEmitter.emit('moviq-sound-on', { event: event });
+        };
+        
+        self.onSoundOff = function (event) {
+            eventEmitter.emit('moviq-sound-off', { event: event });
+        };
+        
+        self.onFullscreenOn = function (event) {
+            eventEmitter.emit('moviq-fullscreen-on', { event: event });
+        };
+        
+        
+        self.onFullscreenOff = function (event) {
+            eventEmitter.emit('moviq-fullscreen-off', { event: event });
+        };
+        
+        return self;
+    };
+    
     /*
     // Private button functionality
     */
-    buttons = (function () {
+    buttonsImplementation = (function () {
         var movi,
             $video,
             video,
@@ -262,6 +341,10 @@
             fullscreenIn,
             fullscreenOut,
             toggleMute,
+            toggleSpeed,
+            changeSpeed,
+            toggleSelected,
+            toggleQuality,
             init,
             bindButtonEvents;
         
@@ -363,6 +446,72 @@
             }
         };
         
+        toggleSpeed = function () {
+            var spdClass = 'with-speed',
+                speedButton = handles.controls.getHandle(movi, handles.controls.speed);
+
+            toggleSelected(speedButton, 'with-speed');
+        };
+        
+        changeSpeed = function (speed) {
+            if (typeof speed === 'number') {
+                var newSpeed = speed.toFixed(2),
+                    oldSpeed = movi.container.html5Video.playbackRate.toFixed(2);
+                
+                if (newSpeed !== oldSpeed) {
+                    movi.container.html5Video.playbackRate = speed;
+                    return {
+                        newSpeed: newSpeed,
+                        changed: true
+                    };
+                } else {
+                    return {
+                        newSpeed: newSpeed,
+                        changed: false
+                    };
+                }
+            } else if (typeof speed === 'string') {
+                try {
+                    return changeSpeed(parseFloat(speed));
+                } catch (e) {
+                    return movi.container.html5Video.playbackRate;
+                }
+            } else {
+                return {
+                    newSpeed: movi.container.html5Video.playbackRate.toFixed(2),
+                    changed: false
+                };
+            }
+        };
+        
+        toggleQuality = function () {
+            var spdClass = 'with-quality',
+                qualityButton = handles.controls.getHandle(movi, handles.controls.quality);
+            
+            toggleSelected(qualityButton, 'with-quality');
+        };
+        
+        toggleSelected = function ($selection, containerClass) {
+            if ($selection.hasClass('selected')) {
+                // the class being toggled was selected, de-select it
+                $selection.removeClass('selected');
+                movi.container.$controls.removeClass(containerClass);
+            } else {
+                var i;
+                
+                // clear any other selected menus
+                handles.controls.getHandle(movi, '.selected').removeClass('selected');
+                
+                for (i = 0; i < handles.controls.subMenus.length; i += 1) {
+                    movi.container.$controls.removeClass(handles.controls.subMenus[i]);
+                }
+                
+                // select the class being toggled
+                $selection.addClass('selected');
+                movi.container.$controls.addClass(containerClass);
+            }
+        };
+        
         buttonsToShow = function () {
             return {
                 play: true,
@@ -380,7 +529,9 @@
                 speedBtn = handles.controls.getHandle(movi, handles.controls.speed),
                 qualityBtn = handles.controls.getHandle(movi, handles.controls.quality),
                 muteBtn = handles.controls.getHandle(movi, handles.controls.mute),
-                fullscreenBtn = handles.controls.getHandle(movi, handles.controls.fullscreen);
+                fullscreenBtn = handles.controls.getHandle(movi, handles.controls.fullscreen),
+                speedChooser = handles.controls.getHandle(movi, handles.controls.speed_chooser),
+                speedCurrent = handles.controls.getHandle(movi, handles.controls.speed_current);
             
             movi.container.$handle
                 .on('mouseenter', function (event) {
@@ -413,17 +564,25 @@
             });
             
             speedBtn.on('click', function (event) {
-                // TODO select speed
                 var speed = btns.toggleSpeed();
                 
-                movi.events.onToggleSpeed(speed, event);
+                movi.events.onToggleSpeed(event);
+            });
+            
+            speedChooser.on('change mousemove', function (event) {
+                var speed = btns.changeSpeed(speedChooser.val());
+                speedCurrent.text(speedChooser.val());
+                
+                if (speed.changed) {
+                    movi.events.onChangeSpeed(event, speed.newSpeed);
+                }
             });
             
             qualityBtn.on('click', function (event) {
                 // TODO select quality
                 var quality = btns.toggleQuality();
                 
-                movi.events.onToggleQaulity(quality, event);
+                movi.events.onToggleQuality(event);
             });
             
             muteBtn.on('click', function (event) {
@@ -447,20 +606,27 @@
             });
         };
         
-        init = function (moviInstance, btns) {
+        init = function (moviInstance) {
+            var self;
+            
             movi = moviInstance;
             $video = movi.container.$video;
             video = movi.container.html5Video;
             
-            bindButtonEvents(btns);
-            
-            return {
+            self = {
                 togglePlay: togglePlay,
                 toggleCaptions: toggleCaptions,
                 toggleFullscreen: toggleFullscreen,
                 toggleMute: toggleMute,
+                toggleSpeed: toggleSpeed,
+                changeSpeed: changeSpeed,
+                toggleQuality: toggleQuality,
                 buttonsToShow: buttonsToShow
             };
+            
+            bindButtonEvents(self);
+            
+            return self;
         };
         
         return {
@@ -620,6 +786,7 @@
 
             this.src = source.src;
             this.type = source.type;
+            this.label = source.label;
         };
         
         getSources = function (movi) {
@@ -634,7 +801,7 @@
             }
 
             for (i = 0; i < childSources.length; i += 1) {
-                currentSource = getSource($(childSources[i]), movi.events, movi.locale.errors.sources);
+                currentSource = getSource($(childSources[i]), movi.events, movi.locale.errors.sources, i);
 
                 if (currentSource) {
                     sources.push(currentSource);
@@ -644,18 +811,24 @@
             return sources;
         };
 
-        getSource = function ($source, errorHandler, locale) {
+        getSource = function ($source, errorHandler, locale, count) {
             var src = $source.attr('src'),
-                type = $source.attr('type');
+                type = $source.attr('type'),
+                label = $source.attr('data-label');
 
             if (src && type) {
                 return new Source({
                     src: src,
-                    type: type
+                    type: type,
+                    label: label || 'Q' + ((count || 0) + 1).toString()
                 }, errorHandler, locale);
             }
 
             return null;
+        };
+        
+        getSourcesByManifest = function (movi) {
+            throw new Error('NOT IMPLEMENTED!');
         };
         
         return {
