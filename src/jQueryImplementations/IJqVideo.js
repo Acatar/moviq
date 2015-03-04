@@ -5,7 +5,7 @@ moviqContainer.register({
     factory: function (locale, IVideo) {
         "use strict";
         
-        return function (implementation) {
+        return function (implementation, manifest) {
             var self = new IVideo(implementation),
                 impl = implementation || {};
             

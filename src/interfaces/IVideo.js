@@ -5,7 +5,7 @@ moviqContainer.register({
     factory: function (locale) {
         "use strict";
         
-        return function (implementation) {
+        return function (implementation, manifest) {
             var self = this,
                 impl = implementation || {};
 

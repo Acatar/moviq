@@ -14,70 +14,27 @@
     <h1>Simple Example</h1>
     <div id="main">
         
-        <div class="moviq-video">
+        <div class="moviq-video vid1">
             <div class="moviq-header">Acatar Pitch</div>
 <!--            data-manifest="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch.ism/Manifest"-->
             <video preload="auto">
-                <source src="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_3400kbps_AAC_und_ch2_96kbps.mp4" type="video/mp4" data-label="HD" />
-                <source src="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_1500kbps_AAC_und_ch2_96kbps.mp4" type="video/mp4" data-label="SD" />
-                <source src="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_400kbps_AAC_und_ch2_96kbps.mp4" type="video/mp4" data-label="LD" />
+                <source type="video/mp4" data-label="HD" src="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_3400kbps_AAC_und_ch2_96kbps.mp4" />
+                <source type="video/mp4" data-label="SD" src="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_1500kbps_AAC_und_ch2_96kbps.mp4" />
+                <source type="video/mp4" data-label="LD" src="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_400kbps_AAC_und_ch2_96kbps.mp4" />
                 <track label="English" kind="captions" srclang="en" src="../_public/captions/example.vtt">
-                <track label="English" kind="captions" srclang="sp" src="../_public/captions/example.vtt">
+                <track label="Spanish" kind="captions" srclang="sp" src="../_public/captions/example.vtt">
                 <p>Your browser does not support the video tag.</p>
             </video>
-            <div class="moviq-controls">
-                <div class="moviq-controls-enclosure-more moviq-controls-quality">
-                    <button class="moviq-btn moviq-btn-choose-quality moviq-btn-text" title="Video Quality HD" data-quality="HD">
-                        <em>HD</em>
-                    </button>
-                    <button class="moviq-btn moviq-btn-choose-quality moviq-btn-text" title="Video Quality SD" data-quality="SD">
-                        <em>SD</em>
-                    </button>
-                    <button class="moviq-btn moviq-btn-choose-quality moviq-btn-text" title="Video Quality LD" data-quality="LD">
-                        <em>LD</em>
-                    </button>
-                </div>
-                <div class="moviq-controls-enclosure-more moviq-controls-speed">
-                    <output class=" moviq-btn-text moviq-current-speed">1x</output>
-                    <input class="moviq-speed-chooser" type="range" min=".25" max="3" step=".25" value="1" />
-                </div>
-                <div class="moviq-controls-enclosure-more moviq-controls-cc">
-                
-                </div>
-                <div class="moviq-controls-enclosure">
-                    <div class="moviq-controls-left">
-                        <button class="moviq-btn moviq-btn-play" title="Play/Pause video">
-                            <span class="fa fa-play"></span>
-                        </button>
-                    </div>
-                    <div class="moviq-progress">
-                        <span class="moviq-progress-display"></span>
-                        <span class="moviq-progress-picker"></span>
-                        <div class="moviq-progress-bar">
-                            <span class="moviq-progress-buffer"></span>
-                            <span class="moviq-progress-time"></span>
-                        </div>
-                    </div>
-                    <div class="moviq-controls-right">
-                        <button class="moviq-btn moviq-btn-cc" title="Closed Captions">
-                            <i class="fa fa-cc"></i>
-                        </button>
-                        <button class="moviq-btn moviq-btn-speed" title="Choose Playback Speed">
-                            <i class="fa fa-clock-o"></i>
-                        </button>
-                        <button class="moviq-btn moviq-btn-quality moviq-btn-text" title="Choose Video Quality">
-                            <em>HD</em>
-                        </button>
-                        <button class="moviq-btn moviq-btn-mute" title="Mute or Unmute sound">
-                            <span class="fa fa-volume-off"></span>
-                        </button>
-                        <button class="moviq-btn moviq-btn-fullscreen" title="Toggle Fullscreen">
-                            <span class="fa fa-arrows-alt"></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
+        </div>
+        
+        <br />
+        
+        <div class="moviq-video vid2">
+            <div class="moviq-header">Acatar Pitch</div>
+<!--            data-manifest="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch.ism/Manifest"-->
+            <video preload="auto">
+                <p>Your browser does not support the video tag.</p>
+            </video>
         </div>
     
     </div>
@@ -87,7 +44,20 @@
     <script src="../../release/moviq.js"></script>
     <script>
         var moviq = new Moviq();
-        moviq.bindAll();
+        
+        moviq.ify('.vid1');
+        
+        moviq.ify('.vid2', {
+            sources: [
+                { type: 'video/mp4', label: 'HD', src: 'http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_3400kbps_AAC_und_ch2_96kbps.mp4' },
+                { type: 'video/mp4', label: 'SD', src: 'http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_1500kbps_AAC_und_ch2_96kbps.mp4' },
+                { type: 'video/mp4', label: 'LD', src: 'http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_400kbps_AAC_und_ch2_96kbps.mp4' }
+            ],
+            captions: [
+                { srclang: 'en', label: 'English', src: '../_public/captions/example.vtt' },
+                { srclang: 'sp', label: 'Spanish', src: '../_public/captions/example.vtt' }
+            ]
+        });
     </script>
 </body>
 </html>

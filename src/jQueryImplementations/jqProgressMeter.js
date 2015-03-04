@@ -2,11 +2,12 @@
 moviqContainer.register({
     name: 'jqProgressMeter',
     dependencies: ['locale', 'jqQuerySelectors', 'IProgressMeter'],
-    factory: function (locale, querySelectors, IProgressMeter) {
+    factory: function (locale, querySelectorsCtor, IProgressMeter) {
         "use strict";
         
         var init = function (jqVideo) {
             var movi = jqVideo,
+                querySelectors = querySelectorsCtor(movi),
                 $video,
                 video,
                 $bar,
@@ -22,10 +23,10 @@ moviqContainer.register({
             
             $video = movi.$dom.$video;
             video = movi.dom.video;
-            $bar = querySelectors.controls.getHandle(movi, querySelectors.controls.progress_bar);
-            $timeBar = querySelectors.controls.getHandle(movi, querySelectors.controls.progress_time);
-            $bufferBar = querySelectors.controls.getHandle(movi, querySelectors.controls.progress_buffer);
-            $timeDisplay = querySelectors.controls.getHandle(movi, querySelectors.controls.progress_timeDisplay);
+            $bar = querySelectors.controls.getHandle(querySelectors.controls.progress_bar);
+            $timeBar = querySelectors.controls.getHandle(querySelectors.controls.progress_time);
+            $bufferBar = querySelectors.controls.getHandle(querySelectors.controls.progress_buffer);
+            $timeDisplay = querySelectors.controls.getHandle(querySelectors.controls.progress_timeDisplay);
 
             coverage = {
                 getPositionPercent: function () {
@@ -102,8 +103,8 @@ moviqContainer.register({
             };
 
             bindProgressEvents = function () {
-                var $display = querySelectors.controls.getHandle(movi, querySelectors.controls.progress_timeDisplay),
-                    $picker = querySelectors.controls.getHandle(movi, querySelectors.controls.progress_timePicker);
+                var $display = querySelectors.controls.getHandle(querySelectors.controls.progress_timeDisplay),
+                    $picker = querySelectors.controls.getHandle(querySelectors.controls.progress_timePicker);
 
                 $video.on('timeupdate', function () {
                     meters.updateDisplay();

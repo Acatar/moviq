@@ -18,7 +18,7 @@
             eventEmitter,
             sourceParser,
             sourceManifestParser,
-            htmlTemplates,
+            htmlTemplateGenerator,
             eventHandlers,
             Video,
             videoInitializer;
@@ -86,13 +86,13 @@
         });
         
         scope.register({
-            name: 'htmlTemplates',
+            name: 'htmlTemplateGenerator',
             factory: function () {
-                if (!htmlTemplates) {
-                    htmlTemplates = scope.resolve('defaultHtmlTemplates');
+                if (!htmlTemplateGenerator) {
+                    htmlTemplateGenerator = scope.resolve('jqHtmlTemplateGenerator');
                 }
                 
-                return htmlTemplates;
+                return htmlTemplateGenerator;
             }
         });
         
@@ -132,7 +132,7 @@
 
         //! Create an instance of IMoviq to return as the result
         output = new Moviq({
-            bindTo: initializer.bindVideos,
+            ify: initializer.bindVideos,
             bindAll: initializer.bindVideos
         });
         

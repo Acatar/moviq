@@ -13,15 +13,15 @@ moviqContainer.register({
                 eventHandlers.onError(locale.errors.interfaces.requiresImplementation);
             }
 
-            if (typeof impl.bindTo !== 'function') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'bindTo');
+            if (typeof impl.ify !== 'function') {
+                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'ify');
             }
             
             if (typeof impl.bindAll !== 'function') {
                 eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'bindAll');
             }
 
-            self.bindTo = impl.bindTo;
+            self.ify = impl.ify;
             self.bindAll = impl.bindAll;
         };
     }

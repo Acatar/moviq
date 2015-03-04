@@ -6,7 +6,8 @@ moviqContainer.register({
         "use strict";
         
         var getSource,
-            getSources;
+            getSources,
+            convertSources;
         
         getSources = function (movi) {
             var sources = [],
@@ -46,8 +47,20 @@ moviqContainer.register({
             return null;
         };
         
+        convertSources = function (sourceArray) {
+            var i,
+                sources = [];
+            
+            for (i = 0; i < sourceArray.length; i += 1) {
+                sources.push(new Source(sourceArray[i]));
+            }
+            
+            return sources;
+        };
+        
         return new ISourceParser({
-            getSources: getSources
+            getSources: getSources,
+            convertSources: convertSources
         });
     }
 });

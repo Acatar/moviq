@@ -17,8 +17,8 @@ moviqContainer.register({
                 throw new Error(locale.errors.interfaces.requiresProperty + 'bindVideos');
             }
             
-            if (impl.bindVideos.length !== 1) {
-                throw new Error(locale.errors.interfaces.requiresArguments + 'querySelector');
+            if (impl.bindVideos.length !== 2) {
+                throw new Error(locale.errors.interfaces.requiresArguments + 'querySelector, manifest');
             }
 
             self.bindVideos = impl.bindVideos;
