@@ -38,7 +38,7 @@
                     </button>
                 </div>
                 <div class="moviq-controls-enclosure-more moviq-controls-speed">
-                    <output class=" moviq-btn-text moviq-current-speed">1</output>
+                    <output class=" moviq-btn-text moviq-current-speed">1x</output>
                     <input class="moviq-speed-chooser" type="range" min=".25" max="3" step=".25" value="1" />
                 </div>
                 <div class="moviq-controls-enclosure-more moviq-controls-cc">
@@ -83,8 +83,10 @@
     </div>
     
     
-    <script src="../../src/moviq.js"></script>
+    <script src="../../lib/hilary.min.js"></script>
+    <script src="../../release/moviq.js"></script>
     <script>
+        var moviq = new Moviq();
         moviq.bindAll();
     </script>
 </body>

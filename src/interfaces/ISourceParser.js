@@ -1,0 +1,27 @@
+/*globals moviqContainer*/
+moviqContainer.register({
+    name: 'ISourceParser',
+    dependencies: ['locale'],
+    factory: function (locale) {
+        "use strict";
+        
+        return function (implementation) {
+            var self = this,
+                impl = implementation || {};
+            
+            if (!implementation) {
+                throw new Error(locale.errors.interfaces.requiresImplementation);
+            }
+
+            if (typeof impl.getSources !== 'function') {
+                throw new Error(locale.errors.interfaces.requiresProperty + 'getSources');
+            }
+            
+            if (impl.getSources.length !== 1) {
+                throw new Error(locale.errors.interfaces.requiresArguments + 'iVideo');
+            }
+            
+            self.getSources = impl.getSources;
+        };
+    }
+});
