@@ -183,19 +183,24 @@ moviqContainer.register({
 
             toggleCaptions = function () {
                 var ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc),
-                    track = video.textTracks[0];
-
-                if (ccButton.hasClass('selected')) {
-                    ccButton.removeClass('selected');
-                    if (track) {
-                        track.mode = 'hidden';
-                        return 0;
-                    }
+                    track = video.textTracks[0],
+                    moreThanOne = video.textTracks.length > 1;
+                
+                if (moreThanOne) {
+                    toggleSelected(ccButton, 'with-cc');
                 } else {
-                    ccButton.addClass('selected');
-                    if (track) {
-                        track.mode = 'showing';
-                        return 1;
+                    if (ccButton.hasClass('selected')) {
+                        ccButton.removeClass('selected');
+                        if (track) {
+                            track.mode = 'hidden';
+                            return 0;
+                        }
+                    } else {
+                        ccButton.addClass('selected');
+                        if (track) {
+                            track.mode = 'showing';
+                            return 1;
+                        }
                     }
                 }
             };

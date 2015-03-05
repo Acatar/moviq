@@ -132,8 +132,8 @@ moviqContainer.register({
             if (typeof impl.makeControlsMarkup !== "function") {
                 eventHandlers.onError(locale.errors.interfaces.requiresProperty + "makeControlsMarkup");
             }
-            if (impl.makeControlsMarkup.length !== 1) {
-                eventHandlers.onError(locale.errors.interfaces.requiresArguments + "videoContainer");
+            if (impl.makeControlsMarkup.length !== 2) {
+                eventHandlers.onError(locale.errors.interfaces.requiresArguments + "sources, captions");
             }
             if (typeof impl.makeSourceMarkup !== "function") {
                 eventHandlers.onError(locale.errors.interfaces.requiresProperty + "makeSourceMarkup");
@@ -622,18 +622,22 @@ moviqContainer.register({
                 }
             };
             toggleCaptions = function() {
-                var ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc), track = video.textTracks[0];
-                if (ccButton.hasClass("selected")) {
-                    ccButton.removeClass("selected");
-                    if (track) {
-                        track.mode = "hidden";
-                        return 0;
-                    }
+                var ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc), track = video.textTracks[0], moreThanOne = video.textTracks.length > 1;
+                if (moreThanOne) {
+                    toggleSelected(ccButton, "with-cc");
                 } else {
-                    ccButton.addClass("selected");
-                    if (track) {
-                        track.mode = "showing";
-                        return 1;
+                    if (ccButton.hasClass("selected")) {
+                        ccButton.removeClass("selected");
+                        if (track) {
+                            track.mode = "hidden";
+                            return 0;
+                        }
+                    } else {
+                        ccButton.addClass("selected");
+                        if (track) {
+                            track.mode = "showing";
+                            return 1;
+                        }
                     }
                 }
             };
@@ -755,12 +759,18 @@ moviqContainer.register({
     factory: function(locale, htmlTemplates, IHtmlTemplateGenerator, querySelectorsCtor, $) {
         "use strict";
         var makeControlsMarkup, makeSourceMarkup, makeCaptionMarkup, makeHeaderMarkup, makeVideoMarkup;
-        makeControlsMarkup = function(sources) {
-            var $markup, $qualityMenu, querySelectors = querySelectorsCtor(), i;
+        makeControlsMarkup = function(sources, captions) {
+            var $markup, $qualityMenu, $ccMenu, querySelectors = querySelectorsCtor(), i;
             $markup = $(htmlTemplates.controls);
             $qualityMenu = $markup.find(querySelectors.controls.quality_menu);
+            $ccMenu = $markup.find(querySelectors.controls.cc_menu);
             for (i = 0; i < sources.length; i += 1) {
                 $qualityMenu.append(htmlTemplates.qualityButton.replace(/\{0\}/g, sources[i].label));
+            }
+            if (captions) {
+                for (i = 0; i < captions.length; i += 1) {
+                    $ccMenu.append(htmlTemplates.ccButton.replace(/\{0\}/g, captions[i].label));
+                }
             }
             return $markup[0];
         };
@@ -910,7 +920,8 @@ moviqContainer.register({
                 mute: ".moviq-btn-mute",
                 fullscreen: ".moviq-btn-fullscreen",
                 cc: ".moviq-btn-cc",
-                choose_cc: ".moviq-btn-choose-cc",
+                cc_choice: ".moviq-btn-choose-cc",
+                cc_menu: ".moviq-controls-cc",
                 speed: ".moviq-btn-speed",
                 speed_chooser: ".moviq-speed-chooser",
                 speed_current: ".moviq-current-speed",
@@ -1072,7 +1083,7 @@ moviqContainer.register({
                 cc.mode = "hidden";
             }
             if (existingControls.length < 1) {
-                self.$dom.$handle.append(htmlTemplateGenerator.makeControlsMarkup(self.sources));
+                self.$dom.$handle.append(htmlTemplateGenerator.makeControlsMarkup(self.sources, self.captions));
             }
             self.$dom.$controls = $videoContainer.children(querySelectors.controls.control_container).first();
             self.dom.controls = self.$dom.$controls[0];

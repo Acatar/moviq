@@ -60,8 +60,9 @@ moviqContainer.register({
 
                 if (self.captions.length > 0) {
                     // $('video')[1].addTextTrack('captions', caption.label, caption.srclang);
-                    // addCue
+                    // need to addCue from VTT manually
                     // we might be better off adding this to the markup before appending the container
+                    // or (warning - hack) we could copy the  HTML and reset the container HTML
                     self.$dom.$video.append(htmlTemplateGenerator.makeCaptionMarkup(self.captions));
                 }
             } else if (self.dom.video.dataset.manifest) {
@@ -82,7 +83,7 @@ moviqContainer.register({
             }
 
             if (existingControls.length < 1) {
-                self.$dom.$handle.append(htmlTemplateGenerator.makeControlsMarkup(self.sources));
+                self.$dom.$handle.append(htmlTemplateGenerator.makeControlsMarkup(self.sources, self.captions));
             }
             
             self.$dom.$controls = $videoContainer.children(querySelectors.controls.control_container).first();

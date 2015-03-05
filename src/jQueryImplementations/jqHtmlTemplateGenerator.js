@@ -11,17 +11,25 @@ moviqContainer.register({
             makeHeaderMarkup,
             makeVideoMarkup;
         
-        makeControlsMarkup = function (sources) {
+        makeControlsMarkup = function (sources, captions) {
             var $markup,
                 $qualityMenu,
+                $ccMenu,
                 querySelectors = querySelectorsCtor(),
                 i;
             
             $markup = $(htmlTemplates.controls);
             $qualityMenu = $markup.find(querySelectors.controls.quality_menu);
+            $ccMenu = $markup.find(querySelectors.controls.cc_menu);
             
             for (i = 0; i < sources.length; i += 1) {
                 $qualityMenu.append(htmlTemplates.qualityButton.replace(/\{0\}/g, sources[i].label));
+            }
+            
+            if (captions) {
+                for (i = 0; i < captions.length; i += 1) {
+                    $ccMenu.append(htmlTemplates.ccButton.replace(/\{0\}/g, captions[i].label));
+                }
             }
             
             return $markup[0];

@@ -206,3 +206,8 @@
   margin-left: 10px;
   width: 40px;
 }
+.moviq-video .moviq-controls .moviq-controls-enclosure-more .moviq-btn.moviq-btn-choose-cc,
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input.moviq-btn-choose-cc,
+.moviq-video .moviq-controls .moviq-controls-enclosure-more output.moviq-btn-choose-cc {
+  width: 80px;
+}

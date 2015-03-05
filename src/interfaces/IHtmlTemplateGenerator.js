@@ -17,8 +17,8 @@ moviqContainer.register({
                 eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'makeControlsMarkup');
             }
             
-            if (impl.makeControlsMarkup.length !== 1) {
-                eventHandlers.onError(locale.errors.interfaces.requiresArguments + 'videoContainer');
+            if (impl.makeControlsMarkup.length !== 2) {
+                eventHandlers.onError(locale.errors.interfaces.requiresArguments + 'sources, captions');
             }
             
             if (typeof impl.makeSourceMarkup !== 'function') {
