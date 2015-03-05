@@ -1,4 +1,4 @@
-/*! moviq-build 2015-03-04 */
+/*! moviq-build 2015-03-05 */
 
 /*!
 // The IoC Container that all moviq components are registered in
@@ -147,9 +147,23 @@ moviqContainer.register({
             if (impl.makeCaptionMarkup.length !== 1) {
                 eventHandlers.onError(locale.errors.interfaces.requiresArguments + "iCaptionArray");
             }
+            if (typeof impl.makeHeaderMarkup !== "function") {
+                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "makeHeaderMarkup");
+            }
+            if (impl.makeHeaderMarkup.length !== 1) {
+                eventHandlers.onError(locale.errors.interfaces.requiresArguments + "header");
+            }
+            if (typeof impl.makeVideoMarkup !== "function") {
+                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "makeVideoMarkup");
+            }
+            if (impl.makeVideoMarkup.length !== 1) {
+                eventHandlers.onError(locale.errors.interfaces.requiresArguments + "poster");
+            }
             self.makeControlsMarkup = impl.makeControlsMarkup;
             self.makeSourceMarkup = impl.makeSourceMarkup;
             self.makeCaptionMarkup = impl.makeCaptionMarkup;
+            self.makeHeaderMarkup = impl.makeHeaderMarkup;
+            self.makeVideoMarkup = impl.makeVideoMarkup;
         };
     }
 });
@@ -448,18 +462,24 @@ moviqContainer.register({
     dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
-        var controls, qualityButton, ccButton, sourceElement, trackElement;
+        var controls, qualityButton, ccButton, sourceElement, trackElement, header, video, videoWithPoster;
         controls = '<div class="moviq-controls">' + '<div class="moviq-controls-enclosure-more moviq-controls-quality">' + "</div>" + '<div class="moviq-controls-enclosure-more moviq-controls-speed">' + '<output class=" moviq-btn-text moviq-current-speed">1x</output>' + '<input class="moviq-speed-chooser" type="range" min=".25" max="3" step=".25" value="1" aria-label="Choose a playback speed" />' + "</div>" + '<div class="moviq-controls-enclosure-more moviq-controls-cc">' + "</div>" + '<div class="moviq-controls-enclosure">' + '<div class="moviq-controls-left">' + '<button class="moviq-btn moviq-btn-play" aria-label="Play or pause the video">' + '<span class="fa fa-play"></span>' + "</button>" + "</div>" + '<div class="moviq-progress">' + '<span class="moviq-progress-display"></span>' + '<span class="moviq-progress-picker"></span>' + '<div class="moviq-progress-bar" aria-label="This bar shows the current position of the video, as well as the amount buffered. You can click anywhere in this bar to seek to a new position.">' + '<span class="moviq-progress-buffer"></span>' + '<span class="moviq-progress-time"></span>' + "</div>" + "</div>" + '<div class="moviq-controls-right">' + '<button class="moviq-btn moviq-btn-cc" aria-label="Toggle closed captions. This will open a menu, if more than one text track is available.">' + '<i class="fa fa-cc"></i>' + "</button>" + '<button class="moviq-btn moviq-btn-speed" aria-label="Toggle the controls for choosing a playback speed">' + '<i class="fa fa-clock-o"></i>' + "</button>" + '<button class="moviq-btn moviq-btn-quality moviq-btn-text" aria-label="Toggle the video quality options">' + "<em>HD</em>" + "</button>" + '<button class="moviq-btn moviq-btn-mute" aria-label="Mute or unmute sound">' + '<span class="fa fa-volume-off"></span>' + "</button>" + '<button class="moviq-btn moviq-btn-fullscreen" aria-label="Toggle fullscreen">' + '<span class="fa fa-arrows-alt"></span>' + "</button>" + "</div>" + "</div>" + "</div>";
         qualityButton = '<button class="moviq-btn moviq-btn-choose-quality moviq-btn-text" aria-label="Set the video quality to: {0}" data-quality="{0}">' + "<em>{0}</em>" + "</button>";
         ccButton = '<button class="moviq-btn moviq-btn-choose-cc moviq-btn-text" aria-label="Set the closed captions to: {0}" data-quality="{0}">' + "<em>{0}</em>" + "</button>";
         sourceElement = '<source type="{type}" data-label="{label}" src="{src}" />';
         trackElement = '<track label="{label}" kind="captions" srclang="{srclang}" src="{src}">';
+        header = '<div class="moviq-header">{header}</div>';
+        video = '<video preload="auto">' + "<p>Your browser does not support the video tag.</p>" + "</video>";
+        videoWithPoster = '<video preload="auto" poster="{poster}">' + "<p>Your browser does not support the video tag.</p>" + "</video>";
         return {
             controls: controls,
             qualityButton: qualityButton,
             ccButton: ccButton,
             sourceElement: sourceElement,
-            trackElement: trackElement
+            trackElement: trackElement,
+            header: header,
+            video: video,
+            videoWithPoster: videoWithPoster
         };
     }
 });
@@ -734,7 +754,7 @@ moviqContainer.register({
     dependencies: [ "locale", "defaultHtmlTemplates", "IHtmlTemplateGenerator", "jqQuerySelectors", "jQuery" ],
     factory: function(locale, htmlTemplates, IHtmlTemplateGenerator, querySelectorsCtor, $) {
         "use strict";
-        var makeControlsMarkup, makeSourceMarkup, makeCaptionMarkup;
+        var makeControlsMarkup, makeSourceMarkup, makeCaptionMarkup, makeHeaderMarkup, makeVideoMarkup;
         makeControlsMarkup = function(sources) {
             var $markup, $qualityMenu, querySelectors = querySelectorsCtor(), i;
             $markup = $(htmlTemplates.controls);
@@ -758,10 +778,22 @@ moviqContainer.register({
             }
             return markup;
         };
+        makeHeaderMarkup = function(header) {
+            return htmlTemplates.header.replace(/\{header\}/, header);
+        };
+        makeVideoMarkup = function(poster) {
+            if (poster) {
+                return htmlTemplates.videoWithPoster.replace(/\{poster\}/, poster);
+            } else {
+                return htmlTemplates.video;
+            }
+        };
         return new IHtmlTemplateGenerator({
             makeControlsMarkup: makeControlsMarkup,
             makeSourceMarkup: makeSourceMarkup,
-            makeCaptionMarkup: makeCaptionMarkup
+            makeCaptionMarkup: makeCaptionMarkup,
+            makeHeaderMarkup: makeHeaderMarkup,
+            makeVideoMarkup: makeVideoMarkup
         });
     }
 });
@@ -1009,10 +1041,20 @@ moviqContainer.register({
                 }
             });
             if (manifest) {
+                if (manifest.header) {
+                    self.$dom.$handle.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
+                    self.$dom.$header = self.$dom.$handle.children(querySelectors.header).first();
+                    self.dom.header = self.$dom.$header[0];
+                }
+                if (self.$dom.$video.length < 1) {
+                    self.$dom.$handle.append(htmlTemplateGenerator.makeVideoMarkup(manifest.poster));
+                    self.$dom.$video = self.$dom.$handle.children("video").first();
+                    self.dom.video = self.$dom.$video[0];
+                }
                 self.sources = sourceParser.convertSources(manifest.sources);
                 self.captions = sourceParser.convertCaptions(manifest.captions);
                 if (self.sources.length > 0) {
-                    self.$dom.$video.append(htmlTemplateGenerator.makeSourceMarkup(self.sources));
+                    self.dom.video.src = self.sources[0].src;
                 }
                 if (self.captions.length > 0) {
                     self.$dom.$video.append(htmlTemplateGenerator.makeCaptionMarkup(self.captions));

@@ -30,11 +30,12 @@
         <br />
         
         <div class="moviq-video vid2">
+<!--
             <div class="moviq-header">Acatar Pitch</div>
-<!--            data-manifest="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch.ism/Manifest"-->
             <video preload="auto">
                 <p>Your browser does not support the video tag.</p>
             </video>
+-->
         </div>
     
     </div>
@@ -50,6 +51,8 @@
         vid1 = moviq.ify('.vid1');
         
         vid2 = moviq.ify('.vid2', {
+            poster: '',
+            header: 'Acatar Pitch 2',
             sources: [
                 { type: 'video/mp4', label: 'HD', src: 'http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_3400kbps_AAC_und_ch2_96kbps.mp4' },
                 { type: 'video/mp4', label: 'SD', src: 'http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_1500kbps_AAC_und_ch2_96kbps.mp4' },

@@ -37,15 +37,31 @@ moviqContainer.register({
             });
             
             if (manifest) {
-                // the manifest was passed in as an argument
+                // the manifest was passed in as an argument -
+                // scaffold out the video element
+                if (manifest.header) {
+                    self.$dom.$handle.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
+                    self.$dom.$header = self.$dom.$handle.children(querySelectors.header).first();
+                    self.dom.header = self.$dom.$header[0];
+                }
+                
+                if (self.$dom.$video.length < 1) {
+                    self.$dom.$handle.append(htmlTemplateGenerator.makeVideoMarkup(manifest.poster));
+                    self.$dom.$video = self.$dom.$handle.children('video').first();
+                    self.dom.video = self.$dom.$video[0];
+                }
+                
                 self.sources = sourceParser.convertSources(manifest.sources);
                 self.captions = sourceParser.convertCaptions(manifest.captions);
                 
                 if (self.sources.length > 0) {
-                    self.$dom.$video.append(htmlTemplateGenerator.makeSourceMarkup(self.sources));
+                    self.dom.video.src = self.sources[0].src;
                 }
 
                 if (self.captions.length > 0) {
+                    // $('video')[1].addTextTrack('captions', caption.label, caption.srclang);
+                    // addCue
+                    // we might be better off adding this to the markup before appending the container
                     self.$dom.$video.append(htmlTemplateGenerator.makeCaptionMarkup(self.captions));
                 }
             } else if (self.dom.video.dataset.manifest) {
@@ -62,7 +78,7 @@ moviqContainer.register({
             cc = self.dom.video.textTracks[0];
 
             if (cc) {
-                cc.mode = 'hidden';
+                cc.mode = 'hidden'; // showing // disabled
             }
 
             if (existingControls.length < 1) {

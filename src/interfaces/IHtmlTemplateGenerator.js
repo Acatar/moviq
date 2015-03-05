@@ -36,10 +36,28 @@ moviqContainer.register({
             if (impl.makeCaptionMarkup.length !== 1) {
                 eventHandlers.onError(locale.errors.interfaces.requiresArguments + 'iCaptionArray');
             }
+            
+            if (typeof impl.makeHeaderMarkup !== 'function') {
+                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'makeHeaderMarkup');
+            }
+            
+            if (impl.makeHeaderMarkup.length !== 1) {
+                eventHandlers.onError(locale.errors.interfaces.requiresArguments + 'header');
+            }
+            
+            if (typeof impl.makeVideoMarkup !== 'function') {
+                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'makeVideoMarkup');
+            }
+            
+            if (impl.makeVideoMarkup.length !== 1) {
+                eventHandlers.onError(locale.errors.interfaces.requiresArguments + 'poster');
+            }
 
             self.makeControlsMarkup = impl.makeControlsMarkup;
             self.makeSourceMarkup = impl.makeSourceMarkup;
             self.makeCaptionMarkup = impl.makeCaptionMarkup;
+            self.makeHeaderMarkup = impl.makeHeaderMarkup;
+            self.makeVideoMarkup = impl.makeVideoMarkup;
         };
     }
 });

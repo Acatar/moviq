@@ -7,7 +7,9 @@ moviqContainer.register({
         
         var makeControlsMarkup,
             makeSourceMarkup,
-            makeCaptionMarkup;
+            makeCaptionMarkup,
+            makeHeaderMarkup,
+            makeVideoMarkup;
         
         makeControlsMarkup = function (sources) {
             var $markup,
@@ -53,10 +55,27 @@ moviqContainer.register({
             return markup;
         };
         
+        makeHeaderMarkup = function (header) {
+            return htmlTemplates.header
+                    .replace(/\{header\}/, header);
+        };
+        
+        
+        makeVideoMarkup = function (poster) {
+            if (poster) {
+                return htmlTemplates.videoWithPoster
+                        .replace(/\{poster\}/, poster);
+            } else {
+                return htmlTemplates.video;
+            }
+        };
+        
         return new IHtmlTemplateGenerator({
             makeControlsMarkup: makeControlsMarkup,
             makeSourceMarkup: makeSourceMarkup,
-            makeCaptionMarkup: makeCaptionMarkup
+            makeCaptionMarkup: makeCaptionMarkup,
+            makeHeaderMarkup : makeHeaderMarkup,
+            makeVideoMarkup: makeVideoMarkup
         });
         
     }

@@ -9,7 +9,10 @@ moviqContainer.register({
             qualityButton,
             ccButton,
             sourceElement,
-            trackElement;
+            trackElement,
+            header,
+            video,
+            videoWithPoster;
         
         controls =
             '<div class="moviq-controls">'
@@ -69,13 +72,27 @@ moviqContainer.register({
         
         sourceElement = '<source type="{type}" data-label="{label}" src="{src}" />';
         trackElement = '<track label="{label}" kind="captions" srclang="{srclang}" src="{src}">';
+        header = '<div class="moviq-header">{header}</div>';
+        
+        video =
+            '<video preload="auto">'
+                + '<p>Your browser does not support the video tag.</p>'
+            + '</video>';
+        
+        videoWithPoster =
+            '<video preload="auto" poster="{poster}">'
+                + '<p>Your browser does not support the video tag.</p>'
+            + '</video>';
         
         return {
             controls: controls,
             qualityButton: qualityButton,
             ccButton: ccButton,
             sourceElement: sourceElement,
-            trackElement: trackElement
+            trackElement: trackElement,
+            header: header,
+            video: video,
+            videoWithPoster: videoWithPoster
         };
     }
 });
