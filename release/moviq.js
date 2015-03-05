@@ -1029,11 +1029,62 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "jqVideo",
-    dependencies: [ "locale", "IJqVideo", "jqQuerySelectors", "eventHandlers", "jqButtons", "jqProgressMeter", "sourceParser", "sourceManifestParser", "htmlTemplateGenerator" ],
-    factory: function(locale, IJqVideo, querySelectorsCtor, eventHandlers, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator) {
+    dependencies: [ "locale", "IJqVideo", "jqQuerySelectors", "eventHandlers", "jqButtons", "jqProgressMeter", "sourceParser", "sourceManifestParser", "htmlTemplateGenerator", "jQuery" ],
+    factory: function(locale, IJqVideo, querySelectorsCtor, eventHandlers, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, $) {
         "use strict";
-        return function($videoContainer, manifest) {
-            var self, querySelectors = querySelectorsCtor($videoContainer), existingControls = $videoContainer.find(querySelectors.controls.control_container), cc, btns, prog, controlsMarkup, scaffold, i;
+        var jqVideo, handleMoviqManifest, handleManifestUrl, handleHtml5Markup, addNotSupportedMessage, hideCC, addControls;
+        handleMoviqManifest = function(self, manifest, querySelectors) {
+            var scaffold = $("<div>");
+            if (manifest.header) {
+                scaffold.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
+            }
+            if (self.$dom.$video.length < 1) {
+                scaffold.append(htmlTemplateGenerator.makeVideoMarkup(manifest.poster));
+            }
+            self.sources = sourceParser.convertSources(manifest.sources);
+            self.captions = sourceParser.convertCaptions(manifest.captions);
+            if (self.sources.length > 0) {
+                scaffold.children("video")[0].src = self.sources[0].src;
+            }
+            if (self.captions.length > 0) {
+                scaffold.children("video").append(htmlTemplateGenerator.makeCaptionMarkup(self.captions));
+            }
+            self.$dom.$handle.html(scaffold.html());
+            self.$dom.$header = self.$dom.$handle.children(querySelectors.header).first();
+            self.dom.header = self.$dom.$header[0];
+            self.$dom.$video = self.$dom.$handle.children("video").first();
+            self.dom.video = self.$dom.$video[0];
+        };
+        handleManifestUrl = function(self) {
+            self.manifestUrl = self.dom.video.dataset.manifest;
+            self.sources = sourceManifestParser.getSourcesByManifest(self.dom.video.dataset.manifest);
+            self.captions = undefined;
+        };
+        handleHtml5Markup = function(self) {
+            self.sources = sourceParser.getSources(self);
+            self.captions = sourceParser.getCaptions(self);
+        };
+        addNotSupportedMessage = function(self) {
+            if (self.$dom.$video.children(".video-not-supported").length < 1) {
+                self.$dom.$video.append('<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>");
+            }
+        };
+        hideCC = function(self) {
+            var cc = self.dom.video.textTracks[0];
+            if (cc) {
+                cc.mode = "hidden";
+            }
+        };
+        addControls = function(self, querySelectors) {
+            var existingControls = self.$dom.$handle.find(querySelectors.controls.control_container);
+            if (existingControls.length < 1) {
+                self.$dom.$handle.append(htmlTemplateGenerator.makeControlsMarkup(self.sources, self.captions));
+            }
+            self.$dom.$controls = self.$dom.$handle.children(querySelectors.controls.control_container).first();
+            self.dom.controls = self.$dom.$controls[0];
+        };
+        jqVideo = function($videoContainer, manifest) {
+            var self, querySelectors = querySelectorsCtor($videoContainer), btns, prog, controlsMarkup, i;
             self = new IJqVideo({
                 events: eventHandlers,
                 sources: undefined,
@@ -1055,51 +1106,21 @@ moviqContainer.register({
                 }
             });
             if (manifest) {
-                scaffold = $("<div>");
-                if (manifest.header) {
-                    scaffold.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
-                }
-                if (self.$dom.$video.length < 1) {
-                    scaffold.append(htmlTemplateGenerator.makeVideoMarkup(manifest.poster));
-                }
-                self.sources = sourceParser.convertSources(manifest.sources);
-                self.captions = sourceParser.convertCaptions(manifest.captions);
-                if (self.sources.length > 0) {
-                    scaffold.children("video")[0].src = self.sources[0].src;
-                }
-                if (self.captions.length > 0) {
-                    scaffold.children("video").append(htmlTemplateGenerator.makeCaptionMarkup(self.captions));
-                }
-                self.$dom.$handle.html(scaffold.html());
-                self.$dom.$header = self.$dom.$handle.children(querySelectors.header).first();
-                self.dom.header = self.$dom.$header[0];
-                self.$dom.$video = self.$dom.$handle.children("video").first();
-                self.dom.video = self.$dom.$video[0];
+                handleMoviqManifest(self, manifest, querySelectors);
             } else if (self.dom.video.dataset.manifest) {
-                self.manifestUrl = self.dom.video.dataset.manifest;
-                self.sources = sourceManifestParser.getSourcesByManifest(self.dom.video.dataset.manifest);
-                self.captions = undefined;
+                handleManifestUrl(self);
             } else {
-                self.sources = sourceParser.getSources(self);
-                self.captions = sourceParser.getCaptions(self);
+                handleHtml5Markup(self);
             }
-            if (self.$dom.$video.children(".video-not-supported").length < 1) {
-                self.$dom.$video.append('<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>");
-            }
-            cc = self.dom.video.textTracks[0];
-            if (cc) {
-                cc.mode = "hidden";
-            }
-            if (existingControls.length < 1) {
-                self.$dom.$handle.append(htmlTemplateGenerator.makeControlsMarkup(self.sources, self.captions));
-            }
-            self.$dom.$controls = $videoContainer.children(querySelectors.controls.control_container).first();
-            self.dom.controls = self.$dom.$controls[0];
+            addNotSupportedMessage(self);
+            hideCC(self);
+            addControls(self, querySelectors);
             self.buttons = jqButtons.init(self);
             self.progressMeter = jqProgressMeter.init(self);
             $videoContainer.addClass("moviqified");
             return self;
         };
+        return jqVideo;
     }
 });
 
