@@ -1,8 +1,8 @@
 /*globals moviqContainer*/
 moviqContainer.register({
     name: 'jqButtons',
-    dependencies: ['locale', 'jqQuerySelectors', 'jQuery'],
-    factory: function (locale, querySelectorsCtor, $) {
+    dependencies: ['locale', 'jqQuerySelectors', 'IButtons', 'jQuery'],
+    factory: function (locale, querySelectorsCtor, Buttons, $) {
         "use strict";
         
         var init,
@@ -303,7 +303,7 @@ moviqContainer.register({
             };
             
             // INIT
-            return {
+            return new Buttons({
                 togglePlay: togglePlay,
                 toggleCaptions: toggleCaptions,
                 toggleFullscreen: toggleFullscreen,
@@ -311,9 +311,8 @@ moviqContainer.register({
                 toggleSpeed: toggleSpeed,
                 changeSpeed: changeSpeed,
                 toggleQuality: toggleQuality,
-                changeQuality: changeQuality,
-                buttonsToShow: buttonsToShow
-            };
+                changeQuality: changeQuality
+            });
         };
         
         init = function (moviInstance) {

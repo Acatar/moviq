@@ -36,7 +36,32 @@ moviqContainer.register({
             self.changeQuality = impl.changeQuality;
             self.toggleSpeed = impl.toggleSpeed;
             self.changeSpeed = impl.changeSpeed;
-            self.toggleMore = impl.toggleMore;
+        };
+    }
+});
+
+moviqContainer.register({
+    name: "ICaption",
+    dependencies: [ "locale", "eventHandlers" ],
+    factory: function(locale, eventHandlers) {
+        "use strict";
+        return function(source) {
+            var self = this;
+            if (!source) {
+                eventHandlers.onError(locale.errors.interfaces.requiresImplementation);
+            }
+            if (typeof source.src !== "string") {
+                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "src");
+            }
+            if (typeof source.srclang !== "string") {
+                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "srclang");
+            }
+            if (typeof source.label !== "string") {
+                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "label");
+            }
+            self.src = source.src;
+            self.srclang = source.srclang;
+            self.label = source.label;
         };
     }
 });
@@ -214,11 +239,23 @@ moviqContainer.register({
             if (impl.getSources.length !== 1) {
                 throw new Error(locale.errors.interfaces.requiresArguments + "iVideo");
             }
+            if (typeof impl.getCaptions !== "function") {
+                throw new Error(locale.errors.interfaces.requiresProperty + "getCaptions");
+            }
+            if (impl.getCaptions.length !== 1) {
+                throw new Error(locale.errors.interfaces.requiresArguments + "iVideo");
+            }
             if (typeof impl.convertSources !== "function") {
                 throw new Error(locale.errors.interfaces.requiresProperty + "convertSources");
             }
             if (impl.convertSources.length !== 1) {
                 throw new Error(locale.errors.interfaces.requiresArguments + "sourceArray");
+            }
+            if (typeof impl.convertCaptions !== "function") {
+                throw new Error(locale.errors.interfaces.requiresProperty + "convertCaptions");
+            }
+            if (impl.convertCaptions.length !== 1) {
+                throw new Error(locale.errors.interfaces.requiresArguments + "captionArray");
             }
             /*!
             // gets the source elements from a video element and converts them to ISource objects
@@ -227,12 +264,25 @@ moviqContainer.register({
             */
             self.getSources = impl.getSources;
             /*!
+            // gets the track elements from a video element and converts them to ICaption objects
+            // @param iVideo (IVideo): the moviq IVideo object to get the tracks for
+            // @returns an Array of ICaption objects
+            */
+            self.getCaptions = impl.getCaptions;
+            /*!
             // converts an array of Object Literals into an array of ISource objects, thus
             // enforcing the interface.
             // @param sourceArray (Array): the array of sources to convert
             // @returns an Array of ISource objects
             */
             self.convertSources = impl.convertSources;
+            /*!
+            // converts an array of Object Literals into an array of ICaption objects, thus
+            // enforcing the interface.
+            // @param captionArray (Array): the array of captions to convert
+            // @returns an Array of ICaption objects
+            */
+            self.convertCaptions = impl.convertCaptions;
         };
     }
 });
@@ -267,9 +317,10 @@ moviqContainer.register({
             var self = this, impl = implementation || {};
             self.events = impl.events;
             self.buttons = impl.buttons;
-            self.progress = impl.progress;
-            self.manifest = impl.manifest;
+            self.progressMeter = impl.progressMeter;
+            self.manifestUrl = impl.manifestUrl;
             self.sources = impl.sources;
+            self.captions = impl.captions;
             self.dom = {
                 handle: impl.dom.handle,
                 video: impl.dom.video,
@@ -433,8 +484,8 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "jqButtons",
-    dependencies: [ "locale", "jqQuerySelectors", "jQuery" ],
-    factory: function(locale, querySelectorsCtor, $) {
+    dependencies: [ "locale", "jqQuerySelectors", "IButtons", "jQuery" ],
+    factory: function(locale, querySelectorsCtor, Buttons, $) {
         "use strict";
         var init, bindButtonEvents, handlers;
         bindButtonEvents = function(movi, btns, querySelectors) {
@@ -643,7 +694,7 @@ moviqContainer.register({
                     movi.$dom.$controls.addClass(containerClass);
                 }
             };
-            return {
+            return new Buttons({
                 togglePlay: togglePlay,
                 toggleCaptions: toggleCaptions,
                 toggleFullscreen: toggleFullscreen,
@@ -651,9 +702,8 @@ moviqContainer.register({
                 toggleSpeed: toggleSpeed,
                 changeSpeed: changeSpeed,
                 toggleQuality: toggleQuality,
-                changeQuality: changeQuality,
-                buttonsToShow: buttonsToShow
-            };
+                changeQuality: changeQuality
+            });
         };
         init = function(moviInstance) {
             var querySelectors = querySelectorsCtor(moviInstance), handls = handlers(moviInstance, querySelectors);
@@ -807,6 +857,7 @@ moviqContainer.register({
             };
             bindProgressEvents();
             meters.updateDisplay();
+            return meters;
         };
         return new IProgressMeter({
             init: init
@@ -858,10 +909,10 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "jqSourceParser",
-    dependencies: [ "locale", "ISource", "ISourceParser", "jQuery" ],
-    factory: function(locale, Source, ISourceParser, $) {
+    dependencies: [ "locale", "ISource", "ICaption", "ISourceParser", "jQuery" ],
+    factory: function(locale, Source, Caption, SourceParser, $) {
         "use strict";
-        var getSource, getSources, convertSources;
+        var getSource, getSources, getCaption, getCaptions, convertSources, convertCaptions;
         getSources = function(movi) {
             var sources = [], source = getSource(movi.$dom.$video), childSources = movi.$dom.$video.children("source"), currentSource, i;
             if (source) {
@@ -886,6 +937,27 @@ moviqContainer.register({
             }
             return null;
         };
+        getCaptions = function(movi) {
+            var captions = [], tracks = movi.$dom.$video.children("track"), currentCaption, i;
+            for (i = 0; i < tracks.length; i += 1) {
+                currentCaption = getCaption($(tracks[i]), i);
+                if (currentCaption) {
+                    captions.push(currentCaption);
+                }
+            }
+            return captions;
+        };
+        getCaption = function($caption, count) {
+            var src = $caption.attr("src"), lang = $caption.attr("srclang"), label = $caption.attr("label"), kind = $caption.attr("kind");
+            if (src && lang && kind === "captions") {
+                return new Caption({
+                    src: src,
+                    srclang: lang,
+                    label: label || "unknown"
+                });
+            }
+            return null;
+        };
         convertSources = function(sourceArray) {
             var i, sources = [];
             for (i = 0; i < sourceArray.length; i += 1) {
@@ -893,9 +965,18 @@ moviqContainer.register({
             }
             return sources;
         };
-        return new ISourceParser({
+        convertCaptions = function(captionArray) {
+            var i, captions = [];
+            for (i = 0; i < captionArray.length; i += 1) {
+                captions.push(new Caption(captionArray[i]));
+            }
+            return captions;
+        };
+        return new SourceParser({
             getSources: getSources,
-            convertSources: convertSources
+            getCaptions: getCaptions,
+            convertSources: convertSources,
+            convertCaptions: convertCaptions
         });
     }
 });
@@ -929,7 +1010,7 @@ moviqContainer.register({
             });
             if (manifest) {
                 self.sources = sourceParser.convertSources(manifest.sources);
-                self.captions = manifest.captions;
+                self.captions = sourceParser.convertCaptions(manifest.captions);
                 if (self.sources.length > 0) {
                     self.$dom.$video.append(htmlTemplateGenerator.makeSourceMarkup(self.sources));
                 }
@@ -942,9 +1023,9 @@ moviqContainer.register({
                 self.captions = undefined;
             } else {
                 self.sources = sourceParser.getSources(self);
-                self.captions = self.dom.video.textTracks;
+                self.captions = sourceParser.getCaptions(self);
             }
-            cc = self.captions[0];
+            cc = self.dom.video.textTracks[0];
             if (cc) {
                 cc.mode = "hidden";
             }
@@ -954,7 +1035,7 @@ moviqContainer.register({
             self.$dom.$controls = $videoContainer.children(querySelectors.controls.control_container).first();
             self.dom.controls = self.$dom.$controls[0];
             self.buttons = jqButtons.init(self);
-            self.progress = jqProgressMeter.init(self);
+            self.progressMeter = jqProgressMeter.init(self);
             $videoContainer.addClass("moviqified");
             return self;
         };

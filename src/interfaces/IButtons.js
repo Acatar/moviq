@@ -17,7 +17,6 @@ moviqContainer.register({
             self.changeQuality = impl.changeQuality;
             self.toggleSpeed = impl.toggleSpeed;
             self.changeSpeed = impl.changeSpeed;
-            self.toggleMore = impl.toggleMore;
         };
     }
 });

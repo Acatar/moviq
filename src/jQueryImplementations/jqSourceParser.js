@@ -1,13 +1,16 @@
 /*globals moviqContainer, console*/
 moviqContainer.register({
     name: 'jqSourceParser',
-    dependencies: ['locale', 'ISource', 'ISourceParser', 'jQuery'],
-    factory: function (locale, Source, ISourceParser, $) {
+    dependencies: ['locale', 'ISource', 'ICaption', 'ISourceParser', 'jQuery'],
+    factory: function (locale, Source, Caption, SourceParser, $) {
         "use strict";
         
         var getSource,
             getSources,
-            convertSources;
+            getCaption,
+            getCaptions,
+            convertSources,
+            convertCaptions;
         
         getSources = function (movi) {
             var sources = [],
@@ -47,6 +50,40 @@ moviqContainer.register({
             return null;
         };
         
+        getCaptions = function (movi) {
+            var captions = [],
+                tracks = movi.$dom.$video.children('track'),
+                currentCaption,
+                i;
+
+            for (i = 0; i < tracks.length; i += 1) {
+                currentCaption = getCaption($(tracks[i]), i);
+
+                if (currentCaption) {
+                    captions.push(currentCaption);
+                }
+            }
+
+            return captions;
+        };
+
+        getCaption = function ($caption, count) {
+            var src = $caption.attr('src'),
+                lang = $caption.attr('srclang'),
+                label = $caption.attr('label'),
+                kind = $caption.attr('kind');
+
+            if (src && lang && kind === 'captions') {
+                return new Caption({
+                    src: src,
+                    srclang: lang,
+                    label: label || 'unknown'
+                });
+            }
+
+            return null;
+        };
+        
         convertSources = function (sourceArray) {
             var i,
                 sources = [];
@@ -58,9 +95,22 @@ moviqContainer.register({
             return sources;
         };
         
-        return new ISourceParser({
+        convertCaptions = function (captionArray) {
+            var i,
+                captions = [];
+            
+            for (i = 0; i < captionArray.length; i += 1) {
+                captions.push(new Caption(captionArray[i]));
+            }
+            
+            return captions;
+        };
+        
+        return new SourceParser({
             getSources: getSources,
-            convertSources: convertSources
+            getCaptions: getCaptions,
+            convertSources: convertSources,
+            convertCaptions: convertCaptions
         });
     }
 });

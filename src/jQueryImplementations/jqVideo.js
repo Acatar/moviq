@@ -37,8 +37,9 @@ moviqContainer.register({
             });
             
             if (manifest) {
+                // the manifest was passed in as an argument
                 self.sources = sourceParser.convertSources(manifest.sources);
-                self.captions = manifest.captions;
+                self.captions = sourceParser.convertCaptions(manifest.captions);
                 
                 if (self.sources.length > 0) {
                     self.$dom.$video.append(htmlTemplateGenerator.makeSourceMarkup(self.sources));
@@ -48,15 +49,17 @@ moviqContainer.register({
                     self.$dom.$video.append(htmlTemplateGenerator.makeCaptionMarkup(self.captions));
                 }
             } else if (self.dom.video.dataset.manifest) {
+                // a manifest URL was provided in the DOM
                 self.manifestUrl = self.dom.video.dataset.manifest;
                 self.sources = sourceManifestParser.getSourcesByManifest(self.dom.video.dataset.manifest);
                 self.captions = undefined; // TODO
             } else {
+                // use the HTML5 markup
                 self.sources = sourceParser.getSources(self);
-                self.captions = self.dom.video.textTracks;
+                self.captions = sourceParser.getCaptions(self); //self.dom.video.textTracks
             }
 
-            cc = self.captions[0];
+            cc = self.dom.video.textTracks[0];
 
             if (cc) {
                 cc.mode = 'hidden';
@@ -70,7 +73,7 @@ moviqContainer.register({
             self.dom.controls = self.$dom.$controls[0];
             
             self.buttons = jqButtons.init(self);
-            self.progress = jqProgressMeter.init(self);
+            self.progressMeter = jqProgressMeter.init(self);
 
             $videoContainer.addClass('moviqified');
             

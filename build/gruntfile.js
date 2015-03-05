@@ -6,6 +6,7 @@ module.exports = function (grunt) {
             '../src/moviqContainer.js',
             '../src/locales/en_US.js',
             '../src/interfaces/IButtons.js',
+            '../src/interfaces/ICaption.js',
             '../src/interfaces/IEventEmitter.js',
             '../src/interfaces/IEvents.js',
             '../src/interfaces/IHtmlTemplateGenerator.js',

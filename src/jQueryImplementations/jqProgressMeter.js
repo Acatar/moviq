@@ -131,6 +131,8 @@ moviqContainer.register({
             // INIT
             bindProgressEvents();
             meters.updateDisplay();
+            
+            return meters;
         };
         
         return new IProgressMeter({
