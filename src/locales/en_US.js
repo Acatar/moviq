@@ -11,6 +11,9 @@ moviqContainer.register({
             jqButtons: {
                 fullscreenNotSupported: 'Sorry, we don\'t recognize your browser, so we can\'t toggle fullscreen mode.'
             }
+        },
+        messages: {
+            browserNotSupported: 'Sorry, a browser that supports HTML5 video playback is required to view this content.'
         }
     }
 });

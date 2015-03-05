@@ -13,6 +13,7 @@ moviqContainer.register({
                 btns,
                 prog,
                 controlsMarkup,
+                scaffold,
                 i;
             
             self = new IJqVideo({
@@ -39,23 +40,21 @@ moviqContainer.register({
             if (manifest) {
                 // the manifest was passed in as an argument -
                 // scaffold out the video element
+                scaffold = $('<div>');
+                
                 if (manifest.header) {
-                    self.$dom.$handle.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
-                    self.$dom.$header = self.$dom.$handle.children(querySelectors.header).first();
-                    self.dom.header = self.$dom.$header[0];
+                    scaffold.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
                 }
                 
                 if (self.$dom.$video.length < 1) {
-                    self.$dom.$handle.append(htmlTemplateGenerator.makeVideoMarkup(manifest.poster));
-                    self.$dom.$video = self.$dom.$handle.children('video').first();
-                    self.dom.video = self.$dom.$video[0];
+                    scaffold.append(htmlTemplateGenerator.makeVideoMarkup(manifest.poster));
                 }
                 
                 self.sources = sourceParser.convertSources(manifest.sources);
                 self.captions = sourceParser.convertCaptions(manifest.captions);
                 
                 if (self.sources.length > 0) {
-                    self.dom.video.src = self.sources[0].src;
+                    scaffold.children('video')[0].src = self.sources[0].src;
                 }
 
                 if (self.captions.length > 0) {
@@ -63,8 +62,17 @@ moviqContainer.register({
                     // need to addCue from VTT manually
                     // we might be better off adding this to the markup before appending the container
                     // or (warning - hack) we could copy the  HTML and reset the container HTML
-                    self.$dom.$video.append(htmlTemplateGenerator.makeCaptionMarkup(self.captions));
+                    scaffold.children('video').append(htmlTemplateGenerator.makeCaptionMarkup(self.captions));
                 }
+                
+                // replace the contents of the video container with the generated DOM
+                self.$dom.$handle.html(scaffold.html());
+                
+                self.$dom.$header = self.$dom.$handle.children(querySelectors.header).first();
+                self.dom.header = self.$dom.$header[0];
+                self.$dom.$video = self.$dom.$handle.children('video').first();
+                self.dom.video = self.$dom.$video[0];
+                
             } else if (self.dom.video.dataset.manifest) {
                 // a manifest URL was provided in the DOM
                 self.manifestUrl = self.dom.video.dataset.manifest;
@@ -75,7 +83,12 @@ moviqContainer.register({
                 self.sources = sourceParser.getSources(self);
                 self.captions = sourceParser.getCaptions(self); //self.dom.video.textTracks
             }
-
+            
+            // add a "browser not supported" message if it doesn't already exist
+            if (self.$dom.$video.children('.video-not-supported').length < 1) {
+                self.$dom.$video.append('<p class="video-not-supported">' + locale.messages.browserNotSupported + '</p>');
+            }
+            
             cc = self.dom.video.textTracks[0];
 
             if (cc) {

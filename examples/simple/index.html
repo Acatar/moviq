@@ -23,19 +23,13 @@
                 <source type="video/mp4" data-label="LD" src="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_400kbps_AAC_und_ch2_96kbps.mp4" />
                 <track label="English" kind="captions" srclang="en" src="../_public/captions/example.vtt">
                 <track label="Spanish" kind="captions" srclang="sp" src="../_public/captions/example.vtt">
-                <p>Your browser does not support the video tag.</p>
             </video>
         </div>
         
         <br />
         
         <div class="moviq-video vid2">
-<!--
-            <div class="moviq-header">Acatar Pitch</div>
-            <video preload="auto">
-                <p>Your browser does not support the video tag.</p>
-            </video>
--->
+
         </div>
     
     </div>
@@ -54,9 +48,11 @@
             poster: '',
             header: 'Acatar Pitch 2',
             sources: [
+                //{ type: 'video/mp4', label: 'Auto', src: 'http://acatarmedia01.streaming.mediaservices.windows.net/9f23d253-d8c5-4a3e-ba87-addf06fec07c/IntroFlippedTeaching.ism/QualityLevels(3388990)/Fragments(video=0,format=mpd-time-csf)' },
                 { type: 'video/mp4', label: 'HD', src: 'http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_3400kbps_AAC_und_ch2_96kbps.mp4' },
                 { type: 'video/mp4', label: 'SD', src: 'http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_1500kbps_AAC_und_ch2_96kbps.mp4' },
                 { type: 'video/mp4', label: 'LD', src: 'http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_400kbps_AAC_und_ch2_96kbps.mp4' }
+                //{ type: 'application/x-mpegURL', label: 'iOS', src: 'http://acatarmedia01.streaming.mediaservices.windows.net/35825854-9ceb-4485-a01c-c6b5dde4a8f0/AcatarPitch-m3u8-aapl.ism/manifest(format=m3u8-aapl)' }
             ],
             captions: [
                 { srclang: 'en', label: 'English', src: '../_public/captions/example.vtt' },

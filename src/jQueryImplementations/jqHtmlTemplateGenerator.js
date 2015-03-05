@@ -54,7 +54,7 @@ moviqContainer.register({
                 markup = '';
             
             for (i = 0; i < iCaptionArray.length; i += 1) {
-                markup += htmlTemplates.sourceElement
+                markup += htmlTemplates.trackElement
                     .replace(/\{label\}/, iCaptionArray[i].label)
                     .replace(/\{srclang\}/, iCaptionArray[i].srclang)
                     .replace(/\{src\}/, iCaptionArray[i].src);

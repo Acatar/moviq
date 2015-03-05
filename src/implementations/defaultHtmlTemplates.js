@@ -76,12 +76,12 @@ moviqContainer.register({
         
         video =
             '<video preload="auto">'
-                + '<p>Your browser does not support the video tag.</p>'
+                + '<p class="video-not-supported">' + locale.messages.browserNotSupported + '</p>'
             + '</video>';
         
         videoWithPoster =
             '<video preload="auto" poster="{poster}">'
-                + '<p>Your browser does not support the video tag.</p>'
+                + '<p class="video-not-supported">' + locale.messages.browserNotSupported + '</p>'
             + '</video>';
         
         return {

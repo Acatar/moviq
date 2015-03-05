@@ -17,6 +17,9 @@ moviqContainer.register({
             jqButtons: {
                 fullscreenNotSupported: "Sorry, we don't recognize your browser, so we can't toggle fullscreen mode."
             }
+        },
+        messages: {
+            browserNotSupported: "Sorry, a browser that supports HTML5 video playback is required to view this content."
         }
     }
 });
@@ -469,8 +472,8 @@ moviqContainer.register({
         sourceElement = '<source type="{type}" data-label="{label}" src="{src}" />';
         trackElement = '<track label="{label}" kind="captions" srclang="{srclang}" src="{src}">';
         header = '<div class="moviq-header">{header}</div>';
-        video = '<video preload="auto">' + "<p>Your browser does not support the video tag.</p>" + "</video>";
-        videoWithPoster = '<video preload="auto" poster="{poster}">' + "<p>Your browser does not support the video tag.</p>" + "</video>";
+        video = '<video preload="auto">' + '<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>" + "</video>";
+        videoWithPoster = '<video preload="auto" poster="{poster}">' + '<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>" + "</video>";
         return {
             controls: controls,
             qualityButton: qualityButton,
@@ -784,7 +787,7 @@ moviqContainer.register({
         makeCaptionMarkup = function(iCaptionArray) {
             var i, markup = "";
             for (i = 0; i < iCaptionArray.length; i += 1) {
-                markup += htmlTemplates.sourceElement.replace(/\{label\}/, iCaptionArray[i].label).replace(/\{srclang\}/, iCaptionArray[i].srclang).replace(/\{src\}/, iCaptionArray[i].src);
+                markup += htmlTemplates.trackElement.replace(/\{label\}/, iCaptionArray[i].label).replace(/\{srclang\}/, iCaptionArray[i].srclang).replace(/\{src\}/, iCaptionArray[i].src);
             }
             return markup;
         };
@@ -1030,7 +1033,7 @@ moviqContainer.register({
     factory: function(locale, IJqVideo, querySelectorsCtor, eventHandlers, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator) {
         "use strict";
         return function($videoContainer, manifest) {
-            var self, querySelectors = querySelectorsCtor($videoContainer), existingControls = $videoContainer.find(querySelectors.controls.control_container), cc, btns, prog, controlsMarkup, i;
+            var self, querySelectors = querySelectorsCtor($videoContainer), existingControls = $videoContainer.find(querySelectors.controls.control_container), cc, btns, prog, controlsMarkup, scaffold, i;
             self = new IJqVideo({
                 events: eventHandlers,
                 sources: undefined,
@@ -1052,24 +1055,26 @@ moviqContainer.register({
                 }
             });
             if (manifest) {
+                scaffold = $("<div>");
                 if (manifest.header) {
-                    self.$dom.$handle.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
-                    self.$dom.$header = self.$dom.$handle.children(querySelectors.header).first();
-                    self.dom.header = self.$dom.$header[0];
+                    scaffold.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
                 }
                 if (self.$dom.$video.length < 1) {
-                    self.$dom.$handle.append(htmlTemplateGenerator.makeVideoMarkup(manifest.poster));
-                    self.$dom.$video = self.$dom.$handle.children("video").first();
-                    self.dom.video = self.$dom.$video[0];
+                    scaffold.append(htmlTemplateGenerator.makeVideoMarkup(manifest.poster));
                 }
                 self.sources = sourceParser.convertSources(manifest.sources);
                 self.captions = sourceParser.convertCaptions(manifest.captions);
                 if (self.sources.length > 0) {
-                    self.dom.video.src = self.sources[0].src;
+                    scaffold.children("video")[0].src = self.sources[0].src;
                 }
                 if (self.captions.length > 0) {
-                    self.$dom.$video.append(htmlTemplateGenerator.makeCaptionMarkup(self.captions));
+                    scaffold.children("video").append(htmlTemplateGenerator.makeCaptionMarkup(self.captions));
                 }
+                self.$dom.$handle.html(scaffold.html());
+                self.$dom.$header = self.$dom.$handle.children(querySelectors.header).first();
+                self.dom.header = self.$dom.$header[0];
+                self.$dom.$video = self.$dom.$handle.children("video").first();
+                self.dom.video = self.$dom.$video[0];
             } else if (self.dom.video.dataset.manifest) {
                 self.manifestUrl = self.dom.video.dataset.manifest;
                 self.sources = sourceManifestParser.getSourcesByManifest(self.dom.video.dataset.manifest);
@@ -1077,6 +1082,9 @@ moviqContainer.register({
             } else {
                 self.sources = sourceParser.getSources(self);
                 self.captions = sourceParser.getCaptions(self);
+            }
+            if (self.$dom.$video.children(".video-not-supported").length < 1) {
+                self.$dom.$video.append('<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>");
             }
             cc = self.dom.video.textTracks[0];
             if (cc) {
