@@ -1,8 +1,8 @@
 /*globals moviqContainer*/
 moviqContainer.register({
     name: 'IHtmlTemplateGenerator',
-    dependencies: ['locale', 'eventHandlers'],
-    factory: function (locale, eventHandlers) {
+    dependencies: ['locale'],
+    factory: function (locale) {
         "use strict";
         
         return function (implementation) {
@@ -10,47 +10,47 @@ moviqContainer.register({
                 impl = implementation || {};
             
             if (!implementation) {
-                eventHandlers.onError(locale.errors.interfaces.requiresImplementation);
+                throw new Error(locale.errors.interfaces.requiresImplementation);
             }
 
             if (typeof impl.makeControlsMarkup !== 'function') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'makeControlsMarkup');
+                throw new Error(locale.errors.interfaces.requiresProperty + 'makeControlsMarkup');
             }
             
             if (impl.makeControlsMarkup.length !== 2) {
-                eventHandlers.onError(locale.errors.interfaces.requiresArguments + 'sources, captions');
+                throw new Error(locale.errors.interfaces.requiresArguments + 'sources, captions');
             }
             
             if (typeof impl.makeSourceMarkup !== 'function') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'makeSourceMarkup');
+                throw new Error(locale.errors.interfaces.requiresProperty + 'makeSourceMarkup');
             }
             
             if (impl.makeSourceMarkup.length !== 1) {
-                eventHandlers.onError(locale.errors.interfaces.requiresArguments + 'iSourceArray');
+                throw new Error(locale.errors.interfaces.requiresArguments + 'iSourceArray');
             }
             
             if (typeof impl.makeCaptionMarkup !== 'function') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'makeCaptionMarkup');
+                throw new Error(locale.errors.interfaces.requiresProperty + 'makeCaptionMarkup');
             }
             
             if (impl.makeCaptionMarkup.length !== 1) {
-                eventHandlers.onError(locale.errors.interfaces.requiresArguments + 'iCaptionArray');
+                throw new Error(locale.errors.interfaces.requiresArguments + 'iCaptionArray');
             }
             
             if (typeof impl.makeHeaderMarkup !== 'function') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'makeHeaderMarkup');
+                throw new Error(locale.errors.interfaces.requiresProperty + 'makeHeaderMarkup');
             }
             
             if (impl.makeHeaderMarkup.length !== 1) {
-                eventHandlers.onError(locale.errors.interfaces.requiresArguments + 'header');
+                throw new Error(locale.errors.interfaces.requiresArguments + 'header');
             }
             
             if (typeof impl.makeVideoMarkup !== 'function') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'makeVideoMarkup');
+                throw new Error(locale.errors.interfaces.requiresProperty + 'makeVideoMarkup');
             }
             
             if (impl.makeVideoMarkup.length !== 1) {
-                eventHandlers.onError(locale.errors.interfaces.requiresArguments + 'poster');
+                throw new Error(locale.errors.interfaces.requiresArguments + 'poster');
             }
 
             self.makeControlsMarkup = impl.makeControlsMarkup;

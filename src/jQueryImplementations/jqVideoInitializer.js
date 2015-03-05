@@ -1,8 +1,8 @@
 /*globals moviqContainer, console*/
 moviqContainer.register({
     name: 'jqVideoInitializer',
-    dependencies: ['locale', 'Video', 'IVideoInitializer', 'eventEmitter', 'jQuery'],
-    factory: function (locale, Video, IVideoInitializer, eventEmitter, $) {
+    dependencies: ['locale', 'Video', 'IVideoInitializer', 'jQuery'],
+    factory: function (locale, Video, IVideoInitializer, $) {
         "use strict";
         
         return new IVideoInitializer({

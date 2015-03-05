@@ -47,9 +47,14 @@ moviqContainer.register({
             meters = {
                 setPosition: function (pageX) {
                     var percent = meters.getCoordinates(pageX).percent;
-
+                    
+                    // we need to pause, set the position, and then play again to
+                    // make sure that we generate multiple time ranges in the watch
+                    // report. Otherwise, the coverage data will be incorrect.
+                    video.pause();
                     meters.updateDisplay(percent);
                     video.currentTime = ((video.duration * percent) / 100);
+                    video.play();
                 },
                 getCoordinates: function (pageX) {
                     var position = (pageX - $bar.offset().left),

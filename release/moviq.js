@@ -45,26 +45,26 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "ICaption",
-    dependencies: [ "locale", "eventHandlers" ],
-    factory: function(locale, eventHandlers) {
+    dependencies: [ "locale" ],
+    factory: function(locale) {
         "use strict";
-        return function(source) {
+        return function(caption) {
             var self = this;
-            if (!source) {
-                eventHandlers.onError(locale.errors.interfaces.requiresImplementation);
+            if (!caption) {
+                throw new Error(locale.errors.interfaces.requiresImplementation);
             }
-            if (typeof source.src !== "string") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "src");
+            if (typeof caption.src !== "string") {
+                throw new Error(locale.errors.interfaces.requiresProperty + "src");
             }
-            if (typeof source.srclang !== "string") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "srclang");
+            if (typeof caption.srclang !== "string") {
+                throw new Error(locale.errors.interfaces.requiresProperty + "srclang");
             }
-            if (typeof source.label !== "string") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "label");
+            if (typeof caption.label !== "string") {
+                throw new Error(locale.errors.interfaces.requiresProperty + "label");
             }
-            self.src = source.src;
-            self.srclang = source.srclang;
-            self.label = source.label;
+            self.src = caption.src;
+            self.srclang = caption.srclang;
+            self.label = caption.label;
         };
     }
 });
@@ -124,43 +124,43 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "IHtmlTemplateGenerator",
-    dependencies: [ "locale", "eventHandlers" ],
-    factory: function(locale, eventHandlers) {
+    dependencies: [ "locale" ],
+    factory: function(locale) {
         "use strict";
         return function(implementation) {
             var self = this, impl = implementation || {};
             if (!implementation) {
-                eventHandlers.onError(locale.errors.interfaces.requiresImplementation);
+                throw new Error(locale.errors.interfaces.requiresImplementation);
             }
             if (typeof impl.makeControlsMarkup !== "function") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "makeControlsMarkup");
+                throw new Error(locale.errors.interfaces.requiresProperty + "makeControlsMarkup");
             }
             if (impl.makeControlsMarkup.length !== 2) {
-                eventHandlers.onError(locale.errors.interfaces.requiresArguments + "sources, captions");
+                throw new Error(locale.errors.interfaces.requiresArguments + "sources, captions");
             }
             if (typeof impl.makeSourceMarkup !== "function") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "makeSourceMarkup");
+                throw new Error(locale.errors.interfaces.requiresProperty + "makeSourceMarkup");
             }
             if (impl.makeSourceMarkup.length !== 1) {
-                eventHandlers.onError(locale.errors.interfaces.requiresArguments + "iSourceArray");
+                throw new Error(locale.errors.interfaces.requiresArguments + "iSourceArray");
             }
             if (typeof impl.makeCaptionMarkup !== "function") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "makeCaptionMarkup");
+                throw new Error(locale.errors.interfaces.requiresProperty + "makeCaptionMarkup");
             }
             if (impl.makeCaptionMarkup.length !== 1) {
-                eventHandlers.onError(locale.errors.interfaces.requiresArguments + "iCaptionArray");
+                throw new Error(locale.errors.interfaces.requiresArguments + "iCaptionArray");
             }
             if (typeof impl.makeHeaderMarkup !== "function") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "makeHeaderMarkup");
+                throw new Error(locale.errors.interfaces.requiresProperty + "makeHeaderMarkup");
             }
             if (impl.makeHeaderMarkup.length !== 1) {
-                eventHandlers.onError(locale.errors.interfaces.requiresArguments + "header");
+                throw new Error(locale.errors.interfaces.requiresArguments + "header");
             }
             if (typeof impl.makeVideoMarkup !== "function") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "makeVideoMarkup");
+                throw new Error(locale.errors.interfaces.requiresProperty + "makeVideoMarkup");
             }
             if (impl.makeVideoMarkup.length !== 1) {
-                eventHandlers.onError(locale.errors.interfaces.requiresArguments + "poster");
+                throw new Error(locale.errors.interfaces.requiresArguments + "poster");
             }
             self.makeControlsMarkup = impl.makeControlsMarkup;
             self.makeSourceMarkup = impl.makeSourceMarkup;
@@ -173,19 +173,19 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "IMoviq",
-    dependencies: [ "locale", "eventHandlers" ],
-    factory: function(locale, eventHandlers) {
+    dependencies: [ "locale" ],
+    factory: function(locale) {
         "use strict";
         return function(implementation) {
             var self = this, impl = implementation || {};
             if (!implementation) {
-                eventHandlers.onError(locale.errors.interfaces.requiresImplementation);
+                throw new Error(locale.errors.interfaces.requiresImplementation);
             }
             if (typeof impl.ify !== "function") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "ify");
+                throw new Error(locale.errors.interfaces.requiresProperty + "ify");
             }
             if (typeof impl.bindAll !== "function") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "bindAll");
+                throw new Error(locale.errors.interfaces.requiresProperty + "bindAll");
             }
             self.ify = impl.ify;
             self.bindAll = impl.bindAll;
@@ -216,22 +216,22 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "ISource",
-    dependencies: [ "locale", "eventHandlers" ],
-    factory: function(locale, eventHandlers) {
+    dependencies: [ "locale" ],
+    factory: function(locale) {
         "use strict";
         return function(source) {
             var self = this;
             if (!source) {
-                eventHandlers.onError(locale.errors.interfaces.requiresImplementation);
+                throw new Error(locale.errors.interfaces.requiresImplementation);
             }
             if (typeof source.src !== "string") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "src");
+                throw new Error(locale.errors.interfaces.requiresProperty + "src");
             }
             if (typeof source.type !== "string") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "type");
+                throw new Error(locale.errors.interfaces.requiresProperty + "type");
             }
             if (typeof source.label !== "string") {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + "label");
+                throw new Error(locale.errors.interfaces.requiresProperty + "label");
             }
             self.src = source.src;
             self.type = source.type;
@@ -333,11 +333,12 @@ moviqContainer.register({
         return function(implementation, manifest) {
             var self = this, impl = implementation || {};
             self.events = impl.events;
+            self.sources = impl.sources;
+            self.captions = impl.captions;
             self.buttons = impl.buttons;
             self.progressMeter = impl.progressMeter;
             self.manifestUrl = impl.manifestUrl;
-            self.sources = impl.sources;
-            self.captions = impl.captions;
+            self.watchReport = impl.watchReport;
             self.dom = {
                 handle: impl.dom.handle,
                 video: impl.dom.video,
@@ -374,89 +375,103 @@ moviqContainer.register({
     dependencies: [ "locale", "IEventEmitter" ],
     factory: function(locale, IEventEmitter) {
         "use strict";
-        return new IEventEmitter({
-            emit: function(type, data) {
-                console.log("moviq-event", [ type, data ]);
-            }
-        });
+        return function(movi) {
+            return new IEventEmitter({
+                emit: function(type, data) {
+                    console.log("moviq-event", [ type, data ]);
+                    var dat = data, watch;
+                    delete dat.event;
+                    watch = {
+                        type: type,
+                        data: dat,
+                        position: movi.dom.video.currentTime,
+                        eventTime: new Date().toISOString()
+                    };
+                    movi.watchReport.events.push(watch);
+                    movi.watchReport.updateCoverageReport();
+                }
+            });
+        };
     }
 });
 
 moviqContainer.register({
     name: "defaultEventHandlers",
-    dependencies: [ "locale", "eventEmitter" ],
-    factory: function(locale, eventEmitter) {
+    dependencies: [ "locale" ],
+    factory: function(locale) {
         "use strict";
-        var self = {};
-        self.onError = function(message) {
-            eventEmitter.emit("moviq-error", {
-                message: message
-            });
-            throw new Error(message);
+        return function(eventEmitter) {
+            var self = {};
+            self.onError = function(message) {
+                eventEmitter.emit("moviq-error", {
+                    message: message
+                });
+                throw new Error(message);
+            };
+            self.onPlay = function(event) {
+                eventEmitter.emit("moviq-play", {
+                    event: event
+                });
+            };
+            self.onPause = function(event) {
+                eventEmitter.emit("moviq-pause", {
+                    event: event
+                });
+            };
+            self.onShowCaptions = function(event) {
+                eventEmitter.emit("moviq-show-captions", {
+                    event: event
+                });
+            };
+            self.onHideCaptions = function(event) {
+                eventEmitter.emit("moviq-hide-captions", {
+                    event: event
+                });
+            };
+            self.onToggleSpeed = function(event) {
+                eventEmitter.emit("moviq-toggle-speed", {
+                    event: event
+                });
+            };
+            self.onChangeSpeed = function(event, speed) {
+                eventEmitter.emit("moviq-change-speed", {
+                    speed: speed,
+                    event: event
+                });
+            };
+            self.onToggleQuality = function(event) {
+                eventEmitter.emit("moviq-toggle-quality", {
+                    event: event
+                });
+            };
+            self.onChangeQuality = function(quality, event) {
+                eventEmitter.emit("moviq-change-quality", {
+                    quality: quality,
+                    event: event
+                });
+            };
+            self.onSoundOn = function(event) {
+                eventEmitter.emit("moviq-sound-on", {
+                    event: event
+                });
+            };
+            self.onSoundOff = function(event) {
+                eventEmitter.emit("moviq-sound-off", {
+                    event: event
+                });
+            };
+            self.onFullscreenOn = function(event) {
+                eventEmitter.emit("moviq-fullscreen-on", {
+                    event: event
+                });
+            };
+            self.onFullscreenOff = function(event) {
+                eventEmitter.emit("moviq-fullscreen-off", {
+                    event: event
+                });
+            };
+            return self;
         };
-        self.onPlay = function(event) {
-            eventEmitter.emit("moviq-play", {
-                event: event
-            });
-        };
-        self.onPause = function(event) {
-            eventEmitter.emit("moviq-pause", {
-                event: event
-            });
-        };
-        self.onShowCaptions = function(event) {
-            eventEmitter.emit("moviq-show-captions", {
-                event: event
-            });
-        };
-        self.onHideCaptions = function(event) {
-            eventEmitter.emit("moviq-hide-captions", {
-                event: event
-            });
-        };
-        self.onToggleSpeed = function(event) {
-            eventEmitter.emit("moviq-toggle-speed", {
-                event: event
-            });
-        };
-        self.onChangeSpeed = function(event, speed) {
-            eventEmitter.emit("moviq-change-speed", {
-                speed: speed,
-                event: event
-            });
-        };
-        self.onToggleQuality = function(event) {
-            eventEmitter.emit("moviq-toggle-quality", {
-                event: event
-            });
-        };
-        self.onChangeQuality = function(quality, event) {
-            eventEmitter.emit("moviq-change-quality", {
-                quality: quality,
-                event: event
-            });
-        };
-        self.onSoundOn = function(event) {
-            eventEmitter.emit("moviq-sound-on", {
-                event: event
-            });
-        };
-        self.onSoundOff = function(event) {
-            eventEmitter.emit("moviq-sound-off", {
-                event: event
-            });
-        };
-        self.onFullscreenOn = function(event) {
-            eventEmitter.emit("moviq-fullscreen-on", {
-                event: event
-            });
-        };
-        self.onFullscreenOff = function(event) {
-            eventEmitter.emit("moviq-fullscreen-off", {
-                event: event
-            });
-        };
-        return self;
     }
 });
 
@@ -508,7 +523,7 @@ moviqContainer.register({
 moviqContainer.register({
     name: "jqButtons",
     dependencies: [ "locale", "jqQuerySelectors", "IButtons", "jQuery" ],
-    factory: function(locale, querySelectorsCtor, Buttons, $) {
+    factory: function(locale, querySelectorsCtor, IButtons, $) {
         "use strict";
         var init, bindButtonEvents, handlers;
         bindButtonEvents = function(movi, btns, querySelectors) {
@@ -721,7 +736,7 @@ moviqContainer.register({
                     movi.$dom.$controls.addClass(containerClass);
                 }
             };
-            return new Buttons({
+            return new IButtons({
                 togglePlay: togglePlay,
                 toggleCaptions: toggleCaptions,
                 toggleFullscreen: toggleFullscreen,
@@ -748,11 +763,23 @@ moviqContainer.register({
     dependencies: [ "locale", "IEventEmitter", "jQuery" ],
     factory: function(locale, IEventEmitter, $) {
         "use strict";
-        return new IEventEmitter({
-            emit: function(type, data) {
-                $(document).trigger(type, [ data ]).trigger("moviq-event", [ type, data ]);
-            }
-        });
+        return function(movi) {
+            return new IEventEmitter({
+                emit: function(type, data) {
+                    $(document).trigger(type, [ data ]).trigger("moviq-event", [ type, data ]);
+                    var dat = data, watch;
+                    delete dat.event;
+                    watch = {
+                        type: type,
+                        data: dat,
+                        position: movi.dom.video.currentTime,
+                        eventTime: new Date().toISOString()
+                    };
+                    movi.watchReport.events.push(watch);
+                    movi.watchReport.updateCoverageReport();
+                }
+            });
+        };
     }
 });
 
@@ -842,8 +869,10 @@ moviqContainer.register({
             meters = {
                 setPosition: function(pageX) {
                     var percent = meters.getCoordinates(pageX).percent;
+                    video.pause();
                     meters.updateDisplay(percent);
                     video.currentTime = video.duration * percent / 100;
+                    video.play();
                 },
                 getCoordinates: function(pageX) {
                     var position = pageX - $bar.offset().left, percent = 100 * position / $bar.width();
@@ -956,7 +985,7 @@ moviqContainer.register({
 moviqContainer.register({
     name: "jqSourceParser",
     dependencies: [ "locale", "ISource", "ICaption", "ISourceParser", "jQuery" ],
-    factory: function(locale, Source, Caption, SourceParser, $) {
+    factory: function(locale, ISource, ICaption, ISourceParser, $) {
         "use strict";
         var getSource, getSources, getCaption, getCaptions, convertSources, convertCaptions;
         getSources = function(movi) {
@@ -975,7 +1004,7 @@ moviqContainer.register({
         getSource = function($source, count) {
             var src = $source.attr("src"), type = $source.attr("type"), label = $source.attr("data-label");
             if (src && type) {
-                return new Source({
+                return new ISource({
                     src: src,
                     type: type,
                     label: label || "Q" + ((count || 0) + 1).toString()
@@ -996,7 +1025,7 @@ moviqContainer.register({
         getCaption = function($caption, count) {
             var src = $caption.attr("src"), lang = $caption.attr("srclang"), label = $caption.attr("label"), kind = $caption.attr("kind");
             if (src && lang && kind === "captions") {
-                return new Caption({
+                return new ICaption({
                     src: src,
                     srclang: lang,
                     label: label || "unknown"
@@ -1007,18 +1036,18 @@ moviqContainer.register({
         convertSources = function(sourceArray) {
             var i, sources = [];
             for (i = 0; i < sourceArray.length; i += 1) {
-                sources.push(new Source(sourceArray[i]));
+                sources.push(new ISource(sourceArray[i]));
             }
             return sources;
         };
         convertCaptions = function(captionArray) {
             var i, captions = [];
             for (i = 0; i < captionArray.length; i += 1) {
-                captions.push(new Caption(captionArray[i]));
+                captions.push(new ICaption(captionArray[i]));
             }
             return captions;
         };
-        return new SourceParser({
+        return new ISourceParser({
             getSources: getSources,
             getCaptions: getCaptions,
             convertSources: convertSources,
@@ -1029,8 +1058,8 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "jqVideo",
-    dependencies: [ "locale", "IJqVideo", "jqQuerySelectors", "eventHandlers", "jqButtons", "jqProgressMeter", "sourceParser", "sourceManifestParser", "htmlTemplateGenerator", "jQuery" ],
-    factory: function(locale, IJqVideo, querySelectorsCtor, eventHandlers, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, $) {
+    dependencies: [ "locale", "IJqVideo", "jqQuerySelectors", "defaultEventHandlers", "jqEventEmitter", "jqButtons", "jqProgressMeter", "sourceParser", "sourceManifestParser", "htmlTemplateGenerator", "WatchReport", "jQuery" ],
+    factory: function(locale, IJqVideo, querySelectorsCtor, eventHandlers, eventEmitter, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, WatchReport, $) {
         "use strict";
         var jqVideo, handleMoviqManifest, handleManifestUrl, handleHtml5Markup, addNotSupportedMessage, hideCC, addControls;
         handleMoviqManifest = function(self, manifest, querySelectors) {
@@ -1086,12 +1115,13 @@ moviqContainer.register({
         jqVideo = function($videoContainer, manifest) {
             var self, querySelectors = querySelectorsCtor($videoContainer), btns, prog, controlsMarkup, i;
             self = new IJqVideo({
-                events: eventHandlers,
+                events: undefined,
                 sources: undefined,
                 captions: undefined,
                 buttons: undefined,
                 progress: undefined,
                 manifestUrl: undefined,
+                watchReport: undefined,
                 $dom: {
                     $handle: $videoContainer,
                     $video: $videoContainer.children("video").first(),
@@ -1105,6 +1135,8 @@ moviqContainer.register({
                     header: $videoContainer.children(querySelectors.header).first()[0]
                 }
             });
+            self.events = eventHandlers(eventEmitter(self));
+            self.watchReport = new WatchReport(self);
             if (manifest) {
                 handleMoviqManifest(self, manifest, querySelectors);
             } else if (self.dom.video.dataset.manifest) {
@@ -1126,8 +1158,8 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "jqVideoInitializer",
-    dependencies: [ "locale", "Video", "IVideoInitializer", "eventEmitter", "jQuery" ],
-    factory: function(locale, Video, IVideoInitializer, eventEmitter, $) {
+    dependencies: [ "locale", "Video", "IVideoInitializer", "jQuery" ],
+    factory: function(locale, Video, IVideoInitializer, $) {
         "use strict";
         return new IVideoInitializer({
             bindVideos: function(jqSelector, manifest) {
@@ -1151,6 +1183,54 @@ moviqContainer.register({
     }
 });
 
+moviqContainer.register({
+    name: "CoverageReport",
+    dependencies: [ "locale" ],
+    factory: function(locale) {
+        "use strict";
+        return function(data) {
+            var self = this, dat = data || {};
+            self.timeRanges = dat.timeRanges;
+            self.duration = dat.duration;
+            self.durationConsumed = dat.durationConsumed;
+            self.coverage = dat.coverage;
+            self.roundedCoverage = Math.round(dat.coverage);
+        };
+    }
+});
+
+moviqContainer.register({
+    name: "WatchReport",
+    dependencies: [ "locale", "CoverageReport" ],
+    factory: function(locale, CoverageReport) {
+        "use strict";
+        return function(movi) {
+            var self = this, videoElement = movi.dom.video;
+            self.events = [];
+            self.coverageReport = undefined;
+            self.updateCoverageReport = function() {
+                var i, timeRange, timeRanges = [], durationConsumed = 0, coverage = 0, veTimeRanges = videoElement.played || {}, duration = videoElement.duration;
+                for (i = 0; i < veTimeRanges.length; i += 1) {
+                    timeRange = {
+                        start: veTimeRanges.start(i),
+                        end: veTimeRanges.end(i)
+                    };
+                    timeRanges.push(timeRange);
+                    durationConsumed += timeRange.end - timeRange.start;
+                }
+                coverage = durationConsumed * 100 / duration;
+                self.coverageReport = new CoverageReport({
+                    timeRanges: timeRanges,
+                    duration: duration,
+                    durationConsumed: durationConsumed,
+                    coverage: coverage
+                });
+                return self.coverageReport;
+            };
+        };
+    }
+});
+
 /*!
 // The composition root. This is where we choose the implementations that will
 // make up this instance of Moviq.
@@ -1163,7 +1243,7 @@ moviqContainer.register({
     // and registering these decisions to be used by other modules.
     */
     compose = function(scope) {
-        var locale, eventEmitter, sourceParser, sourceManifestParser, htmlTemplateGenerator, eventHandlers, Video, videoInitializer;
+        var locale, sourceParser, sourceManifestParser, htmlTemplateGenerator, Video, videoInitializer;
         /*!
         // Most of what we are trying to accomplish here, is to create singletons for instances that
         // can be re-used during the application lifecycle. We use a lazy-loading pattern here, resolving
@@ -1176,24 +1256,6 @@ moviqContainer.register({
                     locale = scope.resolve("locale::en_US");
                 }
                 return locale;
-            }
-        });
-        scope.register({
-            name: "eventEmitter",
-            factory: function() {
-                if (!eventEmitter) {
-                    eventEmitter = scope.resolve("jqEventEmitter");
-                }
-                return eventEmitter;
-            }
-        });
-        scope.register({
-            name: "eventHandlers",
-            factory: function() {
-                if (!eventHandlers) {
-                    eventHandlers = scope.resolve("defaultEventHandlers");
-                }
-                return eventHandlers;
             }
         });
         scope.register({

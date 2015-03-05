@@ -15,11 +15,9 @@
     */
     compose = function (scope) {
         var locale,
-            eventEmitter,
             sourceParser,
             sourceManifestParser,
             htmlTemplateGenerator,
-            eventHandlers,
             Video,
             videoInitializer;
         
@@ -40,27 +38,27 @@
             }
         });
         
-        scope.register({
-            name: 'eventEmitter',
-            factory: function () {
-                if (!eventEmitter) {
-                    eventEmitter = scope.resolve('jqEventEmitter');
-                }
-                
-                return eventEmitter;
-            }
-        });
+//        scope.register({
+//            name: 'eventEmitter',
+//            factory: function () {
+//                if (!eventEmitter) {
+//                    eventEmitter = scope.resolve('jqEventEmitter');
+//                }
+//
+//                return eventEmitter;
+//            }
+//        });
         
-        scope.register({
-            name: 'eventHandlers',
-            factory: function () {
-                if (!eventHandlers) {
-                    eventHandlers = scope.resolve('defaultEventHandlers');
-                }
-                
-                return eventHandlers;
-            }
-        });
+//        scope.register({
+//            name: 'eventHandlers',
+//            factory: function () {
+//                if (!eventHandlers) {
+//                    eventHandlers = scope.resolve('defaultEventHandlers');
+//                }
+//
+//                return eventHandlers;
+//            }
+//        });
         
         scope.register({
             name: 'sourceParser',

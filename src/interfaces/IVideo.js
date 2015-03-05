@@ -10,11 +10,12 @@ moviqContainer.register({
                 impl = implementation || {};
 
             self.events = impl.events;
+            self.sources = impl.sources;
+            self.captions = impl.captions;
             self.buttons = impl.buttons;
             self.progressMeter = impl.progressMeter;
             self.manifestUrl = impl.manifestUrl;
-            self.sources = impl.sources;
-            self.captions = impl.captions;
+            self.watchReport = impl.watchReport;
             
             self.dom = {
                 handle: impl.dom.handle,

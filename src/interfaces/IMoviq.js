@@ -1,8 +1,8 @@
 /*globals moviqContainer*/
 moviqContainer.register({
     name: 'IMoviq',
-    dependencies: ['locale', 'eventHandlers'],
-    factory: function (locale, eventHandlers) {
+    dependencies: ['locale'],
+    factory: function (locale) {
         "use strict";
         
         return function (implementation) {
@@ -10,15 +10,15 @@ moviqContainer.register({
                 impl = implementation || {};
             
             if (!implementation) {
-                eventHandlers.onError(locale.errors.interfaces.requiresImplementation);
+                throw new Error(locale.errors.interfaces.requiresImplementation);
             }
 
             if (typeof impl.ify !== 'function') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'ify');
+                throw new Error(locale.errors.interfaces.requiresProperty + 'ify');
             }
             
             if (typeof impl.bindAll !== 'function') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'bindAll');
+                throw new Error(locale.errors.interfaces.requiresProperty + 'bindAll');
             }
 
             self.ify = impl.ify;

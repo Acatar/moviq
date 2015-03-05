@@ -2,7 +2,7 @@
 moviqContainer.register({
     name: 'jqButtons',
     dependencies: ['locale', 'jqQuerySelectors', 'IButtons', 'jQuery'],
-    factory: function (locale, querySelectorsCtor, Buttons, $) {
+    factory: function (locale, querySelectorsCtor, IButtons, $) {
         "use strict";
         
         var init,
@@ -308,7 +308,7 @@ moviqContainer.register({
             };
             
             // INIT
-            return new Buttons({
+            return new IButtons({
                 togglePlay: togglePlay,
                 toggleCaptions: toggleCaptions,
                 toggleFullscreen: toggleFullscreen,

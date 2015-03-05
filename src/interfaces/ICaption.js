@@ -1,32 +1,32 @@
 /*globals moviqContainer*/
 moviqContainer.register({
     name: 'ICaption',
-    dependencies: ['locale', 'eventHandlers'],
-    factory: function (locale, eventHandlers) {
+    dependencies: ['locale'],
+    factory: function (locale) {
         "use strict";
         
-        return function (source) {
+        return function (caption) {
             var self = this;
             
-            if (!source) {
-                eventHandlers.onError(locale.errors.interfaces.requiresImplementation);
+            if (!caption) {
+                throw new Error(locale.errors.interfaces.requiresImplementation);
             }
 
-            if (typeof source.src !== 'string') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'src');
+            if (typeof caption.src !== 'string') {
+                throw new Error(locale.errors.interfaces.requiresProperty + 'src');
             }
             
-            if (typeof source.srclang !== 'string') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'srclang');
+            if (typeof caption.srclang !== 'string') {
+                throw new Error(locale.errors.interfaces.requiresProperty + 'srclang');
             }
             
-            if (typeof source.label !== 'string') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'label');
+            if (typeof caption.label !== 'string') {
+                throw new Error(locale.errors.interfaces.requiresProperty + 'label');
             }
 
-            self.src = source.src;
-            self.srclang = source.srclang;
-            self.label = source.label;
+            self.src = caption.src;
+            self.srclang = caption.srclang;
+            self.label = caption.label;
         };
     }
 });

@@ -2,7 +2,7 @@
 moviqContainer.register({
     name: 'jqSourceParser',
     dependencies: ['locale', 'ISource', 'ICaption', 'ISourceParser', 'jQuery'],
-    factory: function (locale, Source, Caption, SourceParser, $) {
+    factory: function (locale, ISource, ICaption, ISourceParser, $) {
         "use strict";
         
         var getSource,
@@ -40,7 +40,7 @@ moviqContainer.register({
                 label = $source.attr('data-label');
 
             if (src && type) {
-                return new Source({
+                return new ISource({
                     src: src,
                     type: type,
                     label: label || 'Q' + ((count || 0) + 1).toString()
@@ -74,7 +74,7 @@ moviqContainer.register({
                 kind = $caption.attr('kind');
 
             if (src && lang && kind === 'captions') {
-                return new Caption({
+                return new ICaption({
                     src: src,
                     srclang: lang,
                     label: label || 'unknown'
@@ -89,7 +89,7 @@ moviqContainer.register({
                 sources = [];
             
             for (i = 0; i < sourceArray.length; i += 1) {
-                sources.push(new Source(sourceArray[i]));
+                sources.push(new ISource(sourceArray[i]));
             }
             
             return sources;
@@ -100,13 +100,13 @@ moviqContainer.register({
                 captions = [];
             
             for (i = 0; i < captionArray.length; i += 1) {
-                captions.push(new Caption(captionArray[i]));
+                captions.push(new ICaption(captionArray[i]));
             }
             
             return captions;
         };
         
-        return new SourceParser({
+        return new ISourceParser({
             getSources: getSources,
             getCaptions: getCaptions,
             convertSources: convertSources,

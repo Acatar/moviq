@@ -1,27 +1,27 @@
 /*globals moviqContainer*/
 moviqContainer.register({
     name: 'ISource',
-    dependencies: ['locale', 'eventHandlers'],
-    factory: function (locale, eventHandlers) {
+    dependencies: ['locale'],
+    factory: function (locale) {
         "use strict";
         
         return function (source) {
             var self = this;
             
             if (!source) {
-                eventHandlers.onError(locale.errors.interfaces.requiresImplementation);
+                throw new Error(locale.errors.interfaces.requiresImplementation);
             }
 
             if (typeof source.src !== 'string') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'src');
+                throw new Error(locale.errors.interfaces.requiresProperty + 'src');
             }
             
             if (typeof source.type !== 'string') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'type');
+                throw new Error(locale.errors.interfaces.requiresProperty + 'type');
             }
             
             if (typeof source.label !== 'string') {
-                eventHandlers.onError(locale.errors.interfaces.requiresProperty + 'label');
+                throw new Error(locale.errors.interfaces.requiresProperty + 'label');
             }
 
             self.src = source.src;

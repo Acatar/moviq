@@ -20,6 +20,7 @@ module.exports = function (grunt) {
             '../src/implementations/consoleEventEmitter.js',
             '../src/implementations/defaultEventHandlers.js',
             '../src/implementations/defaultHtmlTemplates.js',
+            '../src/implementations/simpleEventEmitter.js',
             '../src/jQueryImplementations/IJqVideo.js',
             '../src/jQueryImplementations/jqButtons.js',
             '../src/jQueryImplementations/jqEventEmitter.js',
@@ -29,6 +30,8 @@ module.exports = function (grunt) {
             '../src/jQueryImplementations/jqSourceParser.js',
             '../src/jQueryImplementations/jqVideo.js',
             '../src/jQueryImplementations/jqVideoInitializer.js',
+            '../src/models/CoverageReport.js',
+            '../src/models/WatchReport.js',
             '../src/moviqBootstrapper.js'
         ];
 

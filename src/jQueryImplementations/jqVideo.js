@@ -1,8 +1,8 @@
 /*globals moviqContainer*/
 moviqContainer.register({
     name: 'jqVideo',
-    dependencies: ['locale', 'IJqVideo', 'jqQuerySelectors', 'eventHandlers', 'jqButtons', 'jqProgressMeter', 'sourceParser', 'sourceManifestParser', 'htmlTemplateGenerator', 'jQuery'],
-    factory: function (locale, IJqVideo, querySelectorsCtor, eventHandlers, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, $) {
+    dependencies: ['locale', 'IJqVideo', 'jqQuerySelectors', 'defaultEventHandlers', 'jqEventEmitter', 'jqButtons', 'jqProgressMeter', 'sourceParser', 'sourceManifestParser', 'htmlTemplateGenerator', 'WatchReport', 'jQuery'],
+    factory: function (locale, IJqVideo, querySelectorsCtor, eventHandlers, eventEmitter, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, WatchReport, $) {
         "use strict";
         
         var jqVideo,
@@ -94,12 +94,13 @@ moviqContainer.register({
                 i;
             
             self = new IJqVideo({
-                events: eventHandlers,
+                events: undefined,
                 sources: undefined,
                 captions: undefined,
                 buttons: undefined,
                 progress: undefined,
                 manifestUrl: undefined,
+                watchReport: undefined,
                 $dom: {
                     $handle: $videoContainer,
                     $video: $videoContainer.children('video').first(),
@@ -113,6 +114,10 @@ moviqContainer.register({
                     header: $videoContainer.children(querySelectors.header).first()[0]
                 }
             });
+            
+            // add properties that require self to be passed into the constructors
+            self.events = eventHandlers(eventEmitter(self));
+            self.watchReport = new WatchReport(self);
             
             if (manifest) {
                 handleMoviqManifest(self, manifest, querySelectors);
