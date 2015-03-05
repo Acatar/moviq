@@ -36,7 +36,7 @@ moviqContainer.register({
                     timeRanges: timeRanges,
                     duration: duration,
                     durationConsumed: durationConsumed,
-                    coverage: coverage
+                    coverageAsPercent: coverage
                 });
                 
                 return self.coverageReport;

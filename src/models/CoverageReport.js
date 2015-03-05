@@ -12,8 +12,8 @@ moviqContainer.register({
             self.timeRanges = dat.timeRanges;
             self.duration = dat.duration;
             self.durationConsumed = dat.durationConsumed;
-            self.coverage = dat.coverage;
-            self.roundedCoverage = Math.round(dat.coverage);
+            self.coverageAsPercent = dat.coverageAsPercent;
+            self.roundedCoverageAsPercent = Math.round(dat.coverageAsPercent);
         };
     }
 });
