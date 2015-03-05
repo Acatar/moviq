@@ -5,9 +5,8 @@ moviqContainer.register({
     factory: function (locale, querySelectorsCtor, IProgressMeter) {
         "use strict";
         
-        var init = function (jqVideo) {
-            var movi = jqVideo,
-                querySelectors = querySelectorsCtor(movi),
+        var init = function (movi) {
+            var querySelectors = querySelectorsCtor(movi),
                 $video,
                 video,
                 $bar,

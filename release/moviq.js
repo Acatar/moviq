@@ -843,8 +843,8 @@ moviqContainer.register({
     dependencies: [ "locale", "jqQuerySelectors", "IProgressMeter" ],
     factory: function(locale, querySelectorsCtor, IProgressMeter) {
         "use strict";
-        var init = function(jqVideo) {
-            var movi = jqVideo, querySelectors = querySelectorsCtor(movi), $video, video, $bar, $timeBar, $bufferBar, $timeDisplay, init, bindProgressEvents, formatTime, coverage, meters, timePickerActive = false;
+        var init = function(movi) {
+            var querySelectors = querySelectorsCtor(movi), $video, video, $bar, $timeBar, $bufferBar, $timeDisplay, init, bindProgressEvents, formatTime, coverage, meters, timePickerActive = false;
             $video = movi.$dom.$video;
             video = movi.dom.video;
             $bar = querySelectors.controls.getHandle(querySelectors.controls.progress_bar);
