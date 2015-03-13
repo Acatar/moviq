@@ -92,22 +92,22 @@ module.exports = function (grunt) {
         copy: {
             js: {
                 files: [
-                    { src: ['../lib/hilary.min.js'], dest: '../examples/node/public/scripts/lib/hilary/hilary.min.js', filter: 'isFile' },
-                    { src: ['../release/moviq.js'], dest: '../examples/node/public/scripts/moviq.js', filter: 'isFile' },
-                    { src: ['../release/moviq.js.map'], dest: '../examples/node/public/scripts/moviq.js.map', filter: 'isFile' },
-                    { src: ['../release/moviq.min.js'], dest: '../examples/node/public/scripts/moviq.min.js', filter: 'isFile' },
-                    { src: ['../release/moviq.min.js.map'], dest: '../examples/node/public/scripts/moviq.min.js.map', filter: 'isFile' }
+                    { src: ['../lib/hilary.min.js'], dest: '../examples/nodeapp/public/scripts/lib/hilary/hilary.min.js', filter: 'isFile' },
+                    { src: ['../release/moviq.js'], dest: '../examples/nodeapp/public/scripts/moviq.js', filter: 'isFile' },
+                    { src: ['../release/moviq.js.map'], dest: '../examples/nodeapp/public/scripts/moviq.js.map', filter: 'isFile' },
+                    { src: ['../release/moviq.min.js'], dest: '../examples/nodeapp/public/scripts/moviq.min.js', filter: 'isFile' },
+                    { src: ['../release/moviq.min.js.map'], dest: '../examples/nodeapp/public/scripts/moviq.min.js.map', filter: 'isFile' }
                 ]
             },
             css: {
                 files: [
-                    { src: ['../styles/moviq.css'], dest: '../examples/node/public/styles/moviq.css', filter: 'isFile' }
+                    { src: ['../styles/moviq.css'], dest: '../examples/nodeapp/public/styles/moviq.css', filter: 'isFile' }
                 ]
             },
             examples: {
                 files: [
-                    { src: ['../examples/_public/captions/example.vtt'], dest: '../examples/node/public/captions/example.vtt', filter: 'isFile' },
-                    { src: ['../examples/_public/styles/main.css'], dest: '../examples/node/public/styles/main.css', filter: 'isFile' }
+                    { src: ['../examples/_public/captions/example.vtt'], dest: '../examples/nodeapp/public/captions/example.vtt', filter: 'isFile' },
+                    { src: ['../examples/_public/styles/main.css'], dest: '../examples/nodeapp/public/styles/main.css', filter: 'isFile' }
                 ]
             }
         }
