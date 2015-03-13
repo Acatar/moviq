@@ -28,7 +28,10 @@ moviqContainer.register({
             
             if (captions) {
                 for (i = 0; i < captions.length; i += 1) {
-                    $ccMenu.append(htmlTemplates.ccButton.replace(/\{0\}/g, captions[i].label));
+                    $ccMenu.append(htmlTemplates.ccButton
+                                   .replace(/\{lang\}/g, captions[i].label)
+                                   .replace(/\{id\}/g, i.toString())
+                        );
                 }
             }
             
@@ -57,7 +60,8 @@ moviqContainer.register({
                 markup += htmlTemplates.trackElement
                     .replace(/\{label\}/, iCaptionArray[i].label)
                     .replace(/\{srclang\}/, iCaptionArray[i].srclang)
-                    .replace(/\{src\}/, iCaptionArray[i].src);
+                    .replace(/\{src\}/, iCaptionArray[i].src)
+                    .replace(/\{id\}/, i.toString());
             }
             
             return markup;

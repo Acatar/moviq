@@ -44,7 +44,17 @@ module.exports = function (grunt) {
         watch: {
             js: {
                 files: '../src/**/*.js',
-                tasks: ["uglify:debug", "uglify:release"],
+                tasks: ["uglify:debug", "uglify:release", "copy:js"],
+                options: { nospawn: true, livereload: true, debounceDelay: 250 }
+            },
+            css: {
+                files: '../styles/moviq.css',
+                tasks: ["copy:css"],
+                options: { nospawn: true, livereload: true, debounceDelay: 250 }
+            },
+            examples: {
+                files: '../examples/_public/**/*',
+                tasks: ["copy:examples"],
                 options: { nospawn: true, livereload: true, debounceDelay: 250 }
             }
         },
@@ -78,12 +88,35 @@ module.exports = function (grunt) {
                     '../release/moviq.min.js': hilaryFiles
                 }
             }
+        },
+        copy: {
+            js: {
+                files: [
+                    { src: ['../lib/hilary.min.js'], dest: '../examples/node/public/scripts/lib/hilary/hilary.min.js', filter: 'isFile' },
+                    { src: ['../release/moviq.js'], dest: '../examples/node/public/scripts/moviq.js', filter: 'isFile' },
+                    { src: ['../release/moviq.js.map'], dest: '../examples/node/public/scripts/moviq.js.map', filter: 'isFile' },
+                    { src: ['../release/moviq.min.js'], dest: '../examples/node/public/scripts/moviq.min.js', filter: 'isFile' },
+                    { src: ['../release/moviq.min.js.map'], dest: '../examples/node/public/scripts/moviq.min.js.map', filter: 'isFile' }
+                ]
+            },
+            css: {
+                files: [
+                    { src: ['../styles/moviq.css'], dest: '../examples/node/public/styles/moviq.css', filter: 'isFile' }
+                ]
+            },
+            examples: {
+                files: [
+                    { src: ['../examples/_public/captions/example.vtt'], dest: '../examples/node/public/captions/example.vtt', filter: 'isFile' },
+                    { src: ['../examples/_public/styles/main.css'], dest: '../examples/node/public/styles/main.css', filter: 'isFile' }
+                ]
+            }
         }
     });
 
     // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
     // Default task(s).
     grunt.registerTask('default', ['watch']);

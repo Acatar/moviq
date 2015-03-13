@@ -12,6 +12,7 @@ moviqContainer.register({
         bindButtonEvents = function (movi, btns, querySelectors) {
             var playBtn = querySelectors.controls.getHandle(querySelectors.controls.play),
                 ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc),
+                ccChoice = querySelectors.controls.getHandle(querySelectors.controls.cc_choice),
                 speedBtn = querySelectors.controls.getHandle(querySelectors.controls.speed),
                 qualityBtn = querySelectors.controls.getHandle(querySelectors.controls.quality),
                 qualityChoice = querySelectors.controls.getHandle(querySelectors.controls.quality_choice),
@@ -49,6 +50,17 @@ moviqContainer.register({
                     movi.events.onHideCaptions(event);
                 }
             });
+            
+            ccChoice.on('click', function (event) {
+                var self = $(event.currentTarget),
+                    state = btns.changeCaption(self);
+
+                if (state.toggle === 1) {
+                    movi.events.onShowCaptions(state.lang, event);
+                } else if (state.toggle === 0) {
+                    movi.events.onHideCaptions(state.lang, event);
+                }
+            });
 
             speedBtn.on('click', function (event) {
                 var speed = btns.toggleSpeed();
@@ -66,7 +78,6 @@ moviqContainer.register({
             });
 
             qualityBtn.on('click', function (event) {
-                // TODO select quality
                 var quality = btns.toggleQuality();
 
                 movi.events.onToggleQuality(event);
@@ -106,6 +117,8 @@ moviqContainer.register({
                 video = movi.dom.video,
                 togglePlay,
                 toggleCaptions,
+                toggleTextTrack,
+                changeCaption,
                 buttonsToShow,
                 toggleFullscreen,
                 fullscreenIn,
@@ -113,7 +126,7 @@ moviqContainer.register({
                 toggleMute,
                 toggleSpeed,
                 changeSpeed,
-                toggleSelected,
+                toggleSubmenu,
                 toggleQuality,
                 changeQuality;
 
@@ -187,22 +200,40 @@ moviqContainer.register({
                     moreThanOne = video.textTracks.length > 1;
                 
                 if (moreThanOne) {
-                    toggleSelected(ccButton, 'with-cc');
+                    return toggleSubmenu(ccButton, 'with-cc');
                 } else {
-                    if (ccButton.hasClass('selected')) {
-                        ccButton.removeClass('selected');
-                        if (track) {
-                            track.mode = 'hidden';
-                            return 0;
-                        }
-                    } else {
-                        ccButton.addClass('selected');
-                        if (track) {
-                            track.mode = 'showing';
-                            return 1;
-                        }
+                    return toggleTextTrack(ccButton, movi.captions[0].srclang, track);
+                }
+            };
+            
+            toggleTextTrack = function (ccButton, lang, track) {
+                if (ccButton.hasClass('selected')) {
+                    ccButton.removeClass('selected');
+                    if (track) {
+                        track.mode = 'hidden';
+                        return {
+                            state: 0,
+                            lang: lang
+                        };
+                    }
+                } else {
+                    ccButton.addClass('selected');
+                    if (track) {
+                        track.mode = 'showing';
+                        return {
+                            state: 1,
+                            lang: lang
+                        };
                     }
                 }
+            };
+            
+            changeCaption = function (choiceButton) {
+                var lang = choiceButton.attr('data-lang'),
+                    i = parseInt(choiceButton.attr('data-id'), 10),
+                    track = video.textTracks[i];
+                
+                return toggleTextTrack(choiceButton, lang, track);
             };
 
             toggleMute = function () {
@@ -223,7 +254,7 @@ moviqContainer.register({
                 var spdClass = 'with-speed',
                     speedButton = querySelectors.controls.getHandle(querySelectors.controls.speed);
 
-                toggleSelected(speedButton, 'with-speed');
+                toggleSubmenu(speedButton, 'with-speed');
             };
 
             changeSpeed = function (speed) {
@@ -261,7 +292,7 @@ moviqContainer.register({
                 var spdClass = 'with-quality',
                     qualityButton = querySelectors.controls.getHandle(querySelectors.controls.quality);
 
-                toggleSelected(qualityButton, 'with-quality');
+                toggleSubmenu(qualityButton, 'with-quality');
             };
 
             changeQuality = function (label) {
@@ -278,15 +309,18 @@ moviqContainer.register({
 
                 querySelectors.controls.getHandle(querySelectors.controls.quality + ' em').text(source.label);
                 position = video.currentTime;
-                video.pause();
+                
+                if (!video.paused) {
+                    togglePlay();
+                }
                 $video.attr('src', source.src);
                 video.currentTime = position;
-                video.play();
+                togglePlay();
 
                 return source;
             };
 
-            toggleSelected = function ($selection, containerClass) {
+            toggleSubmenu = function ($selection, containerClass) {
                 if ($selection.hasClass('selected')) {
                     // the class being toggled was selected, de-select it
                     $selection.removeClass('selected');
@@ -294,9 +328,10 @@ moviqContainer.register({
                 } else {
                     var i;
 
-                    // clear any other selected menus
-                    querySelectors.controls.getHandle('.selected').removeClass('selected');
-
+                    // clear any other selected menu buttons
+                    querySelectors.controls.getHandle(querySelectors.controls.subMenuButton + '.selected').removeClass('selected');
+                    
+                    // clear any open submenus (i.e. with-speed, with-quality, etc.)
                     for (i = 0; i < querySelectors.controls.subMenus.length; i += 1) {
                         movi.$dom.$controls.removeClass(querySelectors.controls.subMenus[i]);
                     }
@@ -311,6 +346,7 @@ moviqContainer.register({
             return new IButtons({
                 togglePlay: togglePlay,
                 toggleCaptions: toggleCaptions,
+                changeCaption: changeCaption,
                 toggleFullscreen: toggleFullscreen,
                 toggleMute: toggleMute,
                 toggleSpeed: toggleSpeed,
@@ -325,6 +361,10 @@ moviqContainer.register({
                 handls = handlers(moviInstance, querySelectors);
             
             bindButtonEvents(moviInstance, handls, querySelectors);
+            
+            if (moviInstance.captions.length > 1) {
+                querySelectors.controls.getHandle(querySelectors.controls.cc).addClass(querySelectors.controls.subMenuButtonClassName);
+            }
             
             return handls;
         };

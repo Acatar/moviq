@@ -6,13 +6,13 @@ moviqContainer.register({
         "use strict";
         
         return function (movi) {
-            var self = this,
-                videoElement = movi.dom.video;
+            var self = this;
 
             self.events = [];
             self.coverageReport = undefined;
             self.updateCoverageReport = function () {
-                var i,
+                var videoElement = movi.dom.video,
+                    i,
                     timeRange,
                     timeRanges = [],
                     durationConsumed = 0,

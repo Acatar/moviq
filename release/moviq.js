@@ -1,4 +1,4 @@
-/*! moviq-build 2015-03-05 */
+/*! moviq-build 2015-03-13 */
 
 /*!
 // The IoC Container that all moviq components are registered in
@@ -34,6 +34,7 @@ moviqContainer.register({
             self.togglePlay = impl.togglePlay;
             self.toggleFullscreen = impl.toggleFullscreen;
             self.toggleCaptions = impl.toggleCaptions;
+            self.changeCaption = impl.changeCaption;
             self.toggleMute = impl.toggleMute;
             self.toggleQuality = impl.toggleQuality;
             self.changeQuality = impl.changeQuality;
@@ -418,13 +419,15 @@ moviqContainer.register({
                     event: event
                 });
             };
-            self.onShowCaptions = function(event) {
+            self.onShowCaptions = function(lang, event) {
                 eventEmitter.emit("moviq-show-captions", {
+                    language: lang,
                     event: event
                 });
             };
-            self.onHideCaptions = function(event) {
+            self.onHideCaptions = function(lang, event) {
                 eventEmitter.emit("moviq-hide-captions", {
+                    language: lang,
                     event: event
                 });
             };
@@ -481,11 +484,11 @@ moviqContainer.register({
     factory: function(locale) {
         "use strict";
         var controls, qualityButton, ccButton, sourceElement, trackElement, header, video, videoWithPoster;
-        controls = '<div class="moviq-controls">' + '<div class="moviq-controls-enclosure-more moviq-controls-quality">' + "</div>" + '<div class="moviq-controls-enclosure-more moviq-controls-speed">' + '<output class=" moviq-btn-text moviq-current-speed">1x</output>' + '<input class="moviq-speed-chooser" type="range" min=".25" max="3" step=".25" value="1" aria-label="Choose a playback speed" />' + "</div>" + '<div class="moviq-controls-enclosure-more moviq-controls-cc">' + "</div>" + '<div class="moviq-controls-enclosure">' + '<div class="moviq-controls-left">' + '<button class="moviq-btn moviq-btn-play" aria-label="Play or pause the video">' + '<span class="fa fa-play"></span>' + "</button>" + "</div>" + '<div class="moviq-progress">' + '<span class="moviq-progress-display"></span>' + '<span class="moviq-progress-picker"></span>' + '<div class="moviq-progress-bar" aria-label="This bar shows the current position of the video, as well as the amount buffered. You can click anywhere in this bar to seek to a new position.">' + '<span class="moviq-progress-buffer"></span>' + '<span class="moviq-progress-time"></span>' + "</div>" + "</div>" + '<div class="moviq-controls-right">' + '<button class="moviq-btn moviq-btn-cc" aria-label="Toggle closed captions. This will open a menu, if more than one text track is available.">' + '<i class="fa fa-cc"></i>' + "</button>" + '<button class="moviq-btn moviq-btn-speed" aria-label="Toggle the controls for choosing a playback speed">' + '<i class="fa fa-clock-o"></i>' + "</button>" + '<button class="moviq-btn moviq-btn-quality moviq-btn-text" aria-label="Toggle the video quality options">' + "<em>HD</em>" + "</button>" + '<button class="moviq-btn moviq-btn-mute" aria-label="Mute or unmute sound">' + '<span class="fa fa-volume-off"></span>' + "</button>" + '<button class="moviq-btn moviq-btn-fullscreen" aria-label="Toggle fullscreen">' + '<span class="fa fa-arrows-alt"></span>' + "</button>" + "</div>" + "</div>" + "</div>";
+        controls = '<div class="moviq-controls">' + '<div class="moviq-controls-enclosure-more moviq-controls-quality">' + "</div>" + '<div class="moviq-controls-enclosure-more moviq-controls-speed">' + '<output class=" moviq-btn-text moviq-current-speed">1x</output>' + '<input class="moviq-speed-chooser" type="range" min=".25" max="3" step=".25" value="1" aria-label="Choose a playback speed" />' + "</div>" + '<div class="moviq-controls-enclosure-more moviq-controls-cc">' + "</div>" + '<div class="moviq-controls-enclosure">' + '<div class="moviq-controls-left">' + '<button class="moviq-btn moviq-btn-play" aria-label="Play or pause the video">' + '<span class="fa fa-play"></span>' + "</button>" + "</div>" + '<div class="moviq-progress">' + '<span class="moviq-progress-display"></span>' + '<span class="moviq-progress-picker"></span>' + '<div class="moviq-progress-bar" aria-label="This bar shows the current position of the video, as well as the amount buffered. You can click anywhere in this bar to seek to a new position.">' + '<span class="moviq-progress-buffer"></span>' + '<span class="moviq-progress-time"></span>' + "</div>" + "</div>" + '<div class="moviq-controls-right">' + '<button class="moviq-btn moviq-btn-cc" aria-label="Toggle closed captions. This will open a menu, if more than one text track is available.">' + '<i class="fa fa-cc"></i>' + "</button>" + '<button class="moviq-btn moviq-btn-speed moviq-btn-submenu" aria-label="Toggle the controls for choosing a playback speed">' + '<i class="fa fa-clock-o"></i>' + "</button>" + '<button class="moviq-btn moviq-btn-quality moviq-btn-submenu moviq-btn-text" aria-label="Toggle the video quality options">' + "<em>HD</em>" + "</button>" + '<button class="moviq-btn moviq-btn-mute" aria-label="Mute or unmute sound">' + '<span class="fa fa-volume-off"></span>' + "</button>" + '<button class="moviq-btn moviq-btn-fullscreen" aria-label="Toggle fullscreen">' + '<span class="fa fa-arrows-alt"></span>' + "</button>" + "</div>" + "</div>" + "</div>";
         qualityButton = '<button class="moviq-btn moviq-btn-choose-quality moviq-btn-text" aria-label="Set the video quality to: {0}" data-quality="{0}">' + "<em>{0}</em>" + "</button>";
-        ccButton = '<button class="moviq-btn moviq-btn-choose-cc moviq-btn-text" aria-label="Set the closed captions to: {0}" data-quality="{0}">' + "<em>{0}</em>" + "</button>";
+        ccButton = '<button class="moviq-btn moviq-btn-choose-cc moviq-btn-text" aria-label="Set the closed captions to: {lang}" data-lang="{lang}" data-id="{id}">' + "<em>{lang}</em>" + "</button>";
         sourceElement = '<source type="{type}" data-label="{label}" src="{src}" />';
-        trackElement = '<track label="{label}" kind="captions" srclang="{srclang}" src="{src}">';
+        trackElement = '<track label="{label}" kind="captions" srclang="{srclang}" src="{src}" data-id="{id}">';
         header = '<div class="moviq-header">{header}</div>';
         video = '<video preload="auto">' + '<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>" + "</video>";
         videoWithPoster = '<video preload="auto" poster="{poster}">' + '<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>" + "</video>";
@@ -499,6 +502,19 @@ moviqContainer.register({
             video: video,
             videoWithPoster: videoWithPoster
         };
+    }
+});
+
+moviqContainer.register({
+    name: "simpleEventEmitter",
+    dependencies: [ "locale", "IEventEmitter" ],
+    factory: function(locale, IEventEmitter) {
+        "use strict";
+        return new IEventEmitter({
+            emit: function(type, data) {
+                console.log("moviq-event", [ type, data ]);
+            }
+        });
     }
 });
 
@@ -527,7 +543,7 @@ moviqContainer.register({
         "use strict";
         var init, bindButtonEvents, handlers;
         bindButtonEvents = function(movi, btns, querySelectors) {
-            var playBtn = querySelectors.controls.getHandle(querySelectors.controls.play), ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc), speedBtn = querySelectors.controls.getHandle(querySelectors.controls.speed), qualityBtn = querySelectors.controls.getHandle(querySelectors.controls.quality), qualityChoice = querySelectors.controls.getHandle(querySelectors.controls.quality_choice), muteBtn = querySelectors.controls.getHandle(querySelectors.controls.mute), fullscreenBtn = querySelectors.controls.getHandle(querySelectors.controls.fullscreen), speedChooser = querySelectors.controls.getHandle(querySelectors.controls.speed_chooser), speedCurrent = querySelectors.controls.getHandle(querySelectors.controls.speed_current);
+            var playBtn = querySelectors.controls.getHandle(querySelectors.controls.play), ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc), ccChoice = querySelectors.controls.getHandle(querySelectors.controls.cc_choice), speedBtn = querySelectors.controls.getHandle(querySelectors.controls.speed), qualityBtn = querySelectors.controls.getHandle(querySelectors.controls.quality), qualityChoice = querySelectors.controls.getHandle(querySelectors.controls.quality_choice), muteBtn = querySelectors.controls.getHandle(querySelectors.controls.mute), fullscreenBtn = querySelectors.controls.getHandle(querySelectors.controls.fullscreen), speedChooser = querySelectors.controls.getHandle(querySelectors.controls.speed_chooser), speedCurrent = querySelectors.controls.getHandle(querySelectors.controls.speed_current);
             movi.$dom.$handle.on("mouseenter", function(event) {
                 movi.$dom.$controls.stop().fadeTo(500, .9);
                 movi.$dom.$header.stop().fadeTo(500, .9);
@@ -549,6 +565,14 @@ moviqContainer.register({
                     movi.events.onShowCaptions(event);
                 } else if (state === 0) {
                     movi.events.onHideCaptions(event);
+                }
+            });
+            ccChoice.on("click", function(event) {
+                var self = $(event.currentTarget), state = btns.changeCaption(self);
+                if (state.toggle === 1) {
+                    movi.events.onShowCaptions(state.lang, event);
+                } else if (state.toggle === 0) {
+                    movi.events.onHideCaptions(state.lang, event);
                 }
             });
             speedBtn.on("click", function(event) {
@@ -588,7 +612,7 @@ moviqContainer.register({
             });
         };
         handlers = function(movi, querySelectors) {
-            var $video = movi.$dom.$video, video = movi.dom.video, togglePlay, toggleCaptions, buttonsToShow, toggleFullscreen, fullscreenIn, fullscreenOut, toggleMute, toggleSpeed, changeSpeed, toggleSelected, toggleQuality, changeQuality;
+            var $video = movi.$dom.$video, video = movi.dom.video, togglePlay, toggleCaptions, toggleTextTrack, changeCaption, buttonsToShow, toggleFullscreen, fullscreenIn, fullscreenOut, toggleMute, toggleSpeed, changeSpeed, toggleSubmenu, toggleQuality, changeQuality;
             togglePlay = function() {
                 var playIcon = querySelectors.controls.getIconHandle(querySelectors.controls.play);
                 if (video.paused || video.ended) {
@@ -642,22 +666,35 @@ moviqContainer.register({
             toggleCaptions = function() {
                 var ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc), track = video.textTracks[0], moreThanOne = video.textTracks.length > 1;
                 if (moreThanOne) {
-                    toggleSelected(ccButton, "with-cc");
+                    return toggleSubmenu(ccButton, "with-cc");
                 } else {
-                    if (ccButton.hasClass("selected")) {
-                        ccButton.removeClass("selected");
-                        if (track) {
-                            track.mode = "hidden";
-                            return 0;
-                        }
-                    } else {
-                        ccButton.addClass("selected");
-                        if (track) {
-                            track.mode = "showing";
-                            return 1;
-                        }
+                    return toggleTextTrack(ccButton, movi.captions[0].srclang, track);
+                }
+            };
+            toggleTextTrack = function(ccButton, lang, track) {
+                if (ccButton.hasClass("selected")) {
+                    ccButton.removeClass("selected");
+                    if (track) {
+                        track.mode = "hidden";
+                        return {
+                            state: 0,
+                            lang: lang
+                        };
+                    }
+                } else {
+                    ccButton.addClass("selected");
+                    if (track) {
+                        track.mode = "showing";
+                        return {
+                            state: 1,
+                            lang: lang
+                        };
                     }
                 }
+            };
+            changeCaption = function(choiceButton) {
+                var lang = choiceButton.attr("data-lang"), i = parseInt(choiceButton.attr("data-id"), 10), track = video.textTracks[i];
+                return toggleTextTrack(choiceButton, lang, track);
             };
             toggleMute = function() {
                 var $icon = querySelectors.controls.getIconHandle(querySelectors.controls.mute);
@@ -672,7 +709,7 @@ moviqContainer.register({
             };
             toggleSpeed = function() {
                 var spdClass = "with-speed", speedButton = querySelectors.controls.getHandle(querySelectors.controls.speed);
-                toggleSelected(speedButton, "with-speed");
+                toggleSubmenu(speedButton, "with-speed");
             };
             changeSpeed = function(speed) {
                 if (typeof speed === "number") {
@@ -704,7 +741,7 @@ moviqContainer.register({
             };
             toggleQuality = function() {
                 var spdClass = "with-quality", qualityButton = querySelectors.controls.getHandle(querySelectors.controls.quality);
-                toggleSelected(qualityButton, "with-quality");
+                toggleSubmenu(qualityButton, "with-quality");
             };
             changeQuality = function(label) {
                 var source, i, position;
@@ -716,19 +753,21 @@ moviqContainer.register({
                 }
                 querySelectors.controls.getHandle(querySelectors.controls.quality + " em").text(source.label);
                 position = video.currentTime;
-                video.pause();
+                if (!video.paused) {
+                    togglePlay();
+                }
                 $video.attr("src", source.src);
                 video.currentTime = position;
-                video.play();
+                togglePlay();
                 return source;
             };
-            toggleSelected = function($selection, containerClass) {
+            toggleSubmenu = function($selection, containerClass) {
                 if ($selection.hasClass("selected")) {
                     $selection.removeClass("selected");
                     movi.$dom.$controls.removeClass(containerClass);
                 } else {
                     var i;
-                    querySelectors.controls.getHandle(".selected").removeClass("selected");
+                    querySelectors.controls.getHandle(querySelectors.controls.subMenuButton + ".selected").removeClass("selected");
                     for (i = 0; i < querySelectors.controls.subMenus.length; i += 1) {
                         movi.$dom.$controls.removeClass(querySelectors.controls.subMenus[i]);
                     }
@@ -739,6 +778,7 @@ moviqContainer.register({
             return new IButtons({
                 togglePlay: togglePlay,
                 toggleCaptions: toggleCaptions,
+                changeCaption: changeCaption,
                 toggleFullscreen: toggleFullscreen,
                 toggleMute: toggleMute,
                 toggleSpeed: toggleSpeed,
@@ -750,6 +790,9 @@ moviqContainer.register({
         init = function(moviInstance) {
             var querySelectors = querySelectorsCtor(moviInstance), handls = handlers(moviInstance, querySelectors);
             bindButtonEvents(moviInstance, handls, querySelectors);
+            if (moviInstance.captions.length > 1) {
+                querySelectors.controls.getHandle(querySelectors.controls.cc).addClass(querySelectors.controls.subMenuButtonClassName);
+            }
             return handls;
         };
         return {
@@ -799,7 +842,7 @@ moviqContainer.register({
             }
             if (captions) {
                 for (i = 0; i < captions.length; i += 1) {
-                    $ccMenu.append(htmlTemplates.ccButton.replace(/\{0\}/g, captions[i].label));
+                    $ccMenu.append(htmlTemplates.ccButton.replace(/\{lang\}/g, captions[i].label).replace(/\{id\}/g, i.toString()));
                 }
             }
             return $markup[0];
@@ -814,7 +857,7 @@ moviqContainer.register({
         makeCaptionMarkup = function(iCaptionArray) {
             var i, markup = "";
             for (i = 0; i < iCaptionArray.length; i += 1) {
-                markup += htmlTemplates.trackElement.replace(/\{label\}/, iCaptionArray[i].label).replace(/\{srclang\}/, iCaptionArray[i].srclang).replace(/\{src\}/, iCaptionArray[i].src);
+                markup += htmlTemplates.trackElement.replace(/\{label\}/, iCaptionArray[i].label).replace(/\{srclang\}/, iCaptionArray[i].srclang).replace(/\{src\}/, iCaptionArray[i].src).replace(/\{id\}/, i.toString());
             }
             return markup;
         };
@@ -971,6 +1014,8 @@ moviqContainer.register({
                 controls_left: ".moviq-controls-left",
                 controls_right: ".moviq-controls-right",
                 subMenus: [ "with-speed", "with-quality", "with-cc" ],
+                subMenuButtonClassName: "moviq-btn-submenu",
+                subMenuButton: ".moviq-btn-submenu",
                 getHandle: function(buttonHandle) {
                     return movi.$dom.$controls.find(buttonHandle);
                 },
@@ -1205,11 +1250,11 @@ moviqContainer.register({
     factory: function(locale, CoverageReport) {
         "use strict";
         return function(movi) {
-            var self = this, videoElement = movi.dom.video;
+            var self = this;
             self.events = [];
             self.coverageReport = undefined;
             self.updateCoverageReport = function() {
-                var i, timeRange, timeRanges = [], durationConsumed = 0, coverage = 0, veTimeRanges = videoElement.played || {}, duration = videoElement.duration;
+                var videoElement = movi.dom.video, i, timeRange, timeRanges = [], durationConsumed = 0, coverage = 0, veTimeRanges = videoElement.played || {}, duration = videoElement.duration;
                 for (i = 0; i < veTimeRanges.length; i += 1) {
                     timeRange = {
                         start: veTimeRanges.start(i),

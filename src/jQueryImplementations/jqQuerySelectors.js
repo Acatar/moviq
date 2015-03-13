@@ -32,6 +32,8 @@ moviqContainer.register({
                 controls_left: '.moviq-controls-left',
                 controls_right: '.moviq-controls-right',
                 subMenus: ['with-speed', 'with-quality', 'with-cc'],
+                subMenuButtonClassName: 'moviq-btn-submenu',
+                subMenuButton: '.moviq-btn-submenu',
                 getHandle: function (buttonHandle) {
                     return movi.$dom.$controls.find(buttonHandle);
                 },

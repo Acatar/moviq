@@ -21,12 +21,12 @@ moviqContainer.register({
                 eventEmitter.emit('moviq-pause', { event: event });
             };
 
-            self.onShowCaptions = function (event) {
-                eventEmitter.emit('moviq-show-captions', { event: event });
+            self.onShowCaptions = function (lang, event) {
+                eventEmitter.emit('moviq-show-captions', { language: lang, event: event });
             };
 
-            self.onHideCaptions = function (event) {
-                eventEmitter.emit('moviq-hide-captions', { event: event });
+            self.onHideCaptions = function (lang, event) {
+                eventEmitter.emit('moviq-hide-captions', { language: lang, event: event });
             };
 
             self.onToggleSpeed = function (event) {

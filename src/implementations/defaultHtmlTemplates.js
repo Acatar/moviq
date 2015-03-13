@@ -44,10 +44,10 @@ moviqContainer.register({
                         + '<button class="moviq-btn moviq-btn-cc" aria-label="Toggle closed captions. This will open a menu, if more than one text track is available.">'
                             + '<i class="fa fa-cc"></i>'
                         + '</button>'
-                        + '<button class="moviq-btn moviq-btn-speed" aria-label="Toggle the controls for choosing a playback speed">'
+                        + '<button class="moviq-btn moviq-btn-speed moviq-btn-submenu" aria-label="Toggle the controls for choosing a playback speed">'
                             + '<i class="fa fa-clock-o"></i>'
                         + '</button>'
-                        + '<button class="moviq-btn moviq-btn-quality moviq-btn-text" aria-label="Toggle the video quality options">'
+                        + '<button class="moviq-btn moviq-btn-quality moviq-btn-submenu moviq-btn-text" aria-label="Toggle the video quality options">'
                             + '<em>HD</em>'
                         + '</button>'
                         + '<button class="moviq-btn moviq-btn-mute" aria-label="Mute or unmute sound">'
@@ -66,12 +66,12 @@ moviqContainer.register({
                     + '</button>';
         
         ccButton =
-                    '<button class="moviq-btn moviq-btn-choose-cc moviq-btn-text" aria-label="Set the closed captions to: {0}" data-quality="{0}">'
-                        + '<em>{0}</em>'
+                    '<button class="moviq-btn moviq-btn-choose-cc moviq-btn-text" aria-label="Set the closed captions to: {lang}" data-lang="{lang}" data-id="{id}">'
+                        + '<em>{lang}</em>'
                     + '</button>';
         
         sourceElement = '<source type="{type}" data-label="{label}" src="{src}" />';
-        trackElement = '<track label="{label}" kind="captions" srclang="{srclang}" src="{src}">';
+        trackElement = '<track label="{label}" kind="captions" srclang="{srclang}" src="{src}" data-id="{id}">';
         header = '<div class="moviq-header">{header}</div>';
         
         video =

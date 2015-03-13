@@ -1,4 +1,7 @@
-
+                //{ type: 'video/mp4', label: 'Auto', src: 'http://acatarmedia01.streaming.mediaservices.windows.net/9f23d253-d8c5-4a3e-ba87-addf06fec07c/IntroFlippedTeaching.ism/QualityLevels(3388990)/Fragments(video=0,format=mpd-time-csf)' },
+//                { type: 'video/mp4', label: 'HD', src: 'https://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_3400kbps_AAC_und_ch2_96kbps.mp4' },
+//                { type: 'video/mp4', label: 'SD', src: 'https://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_1500kbps_AAC_und_ch2_96kbps.mp4' },
+//                { type: 'video/mp4', label: 'LD', src: 'https://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_400kbps_AAC_und_ch2_96kbps.mp4' },
 
 
 /*global jQuery, console*/
