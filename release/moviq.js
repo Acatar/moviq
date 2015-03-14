@@ -1,4 +1,4 @@
-/*! moviq-build 2015-03-13 */
+/*! moviq-build 2015-03-14 */
 
 /*!
 // The IoC Container that all moviq components are registered in
@@ -744,7 +744,7 @@ moviqContainer.register({
                 toggleSubmenu(qualityButton, "with-quality");
             };
             changeQuality = function(label) {
-                var source, i, position;
+                var source, position, i;
                 for (i = 0; i < movi.sources.length; i += 1) {
                     if (movi.sources[i].label === label) {
                         source = movi.sources[i];
@@ -756,9 +756,12 @@ moviqContainer.register({
                 if (!video.paused) {
                     togglePlay();
                 }
-                $video.attr("src", source.src);
-                video.currentTime = position;
-                togglePlay();
+                video.src = source.src;
+                video.load();
+                $video.one("loadedmetadata", function(event) {
+                    video.currentTime = position;
+                    togglePlay();
+                });
                 return source;
             };
             toggleSubmenu = function($selection, containerClass) {

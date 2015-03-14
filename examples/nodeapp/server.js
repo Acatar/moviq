@@ -1,15 +1,15 @@
 /*jslint node: true*/
-var Hilary = require('hilary'),
-    scope = new Hilary(),
-    url = require('url'),
-    path = require('path'),
-    fs = require('fs'),
-    http = require('http'),
-    compose,
-    start;
+var compose,
+    start,
+    errorCount = 0,
+    lastErrorTime;
 
 compose = function (scope) {
     "use strict";
+    var url = require('url'),
+        path = require('path'),
+        fs = require('fs'),
+        http = require('http');
 
     scope.register({
         name: 'http',
@@ -53,9 +53,40 @@ compose = function (scope) {
 
 start = function () {
     "use strict";
+    var Hilary = require('hilary'),
+        scope = new Hilary();
 
     compose(scope);
     scope.resolve('www');
 };
+
+// This ends up being pretty ugly, like everyone says.
+// while we can re-compose without issues, the request that
+// was causing us the issues keeps plaguing us after a restart.
+process.on('uncaughtException', function (err) {
+    "use strict";
+    var fiveMinsAgo = new Date(new Date().getTime() - 5 * 60000);
+    
+    if (!lastErrorTime) {
+        lastErrorTime = new Date();
+    } else if (fiveMinsAgo.getTime() > lastErrorTime.getTime()) {
+        lastErrorTime = null;
+        errorCount = 0;
+    }
+    
+    if (errorCount < 10) {
+        console.log('restarting: ' + errorCount, err);
+        errorCount += 1;
+
+        // we are in a bad running state - re-compose the application.
+        start();
+    } else {
+        // we are struggling to recover from the error.
+        // exit the process
+        console.log(err);
+        process.exit(500);
+        return;
+    }
+});
 
 start();

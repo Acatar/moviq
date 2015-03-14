@@ -296,26 +296,43 @@ moviqContainer.register({
             };
 
             changeQuality = function (label) {
-                var source,
-                    i,
-                    position;
+                var source, position, i;
 
+                // find the chosen source
                 for (i = 0; i < movi.sources.length; i += 1) {
                     if (movi.sources[i].label === label) {
                         source = movi.sources[i];
                         break;
                     }
                 }
-
+                
+                // update the source label
                 querySelectors.controls.getHandle(querySelectors.controls.quality + ' em').text(source.label);
+                
+                // remember the current position of the video
                 position = video.currentTime;
                 
+                // if the video is playing
                 if (!video.paused) {
+                    // pause the video
                     togglePlay();
                 }
-                $video.attr('src', source.src);
-                video.currentTime = position;
-                togglePlay();
+                
+                // set the new source
+                video.src = source.src;
+                
+                // start to load the video, so we get the metadata
+                video.load();
+                
+                // the next time the loadedmetadata event fires
+                $video.one('loadedmetadata', function (event) {
+                    
+                    // set the position to point where the user switched the source
+                    video.currentTime = position;
+                    
+                    // and start playing the video, again
+                    togglePlay();
+                });
 
                 return source;
             };
