@@ -16,7 +16,11 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   /* Hide the Shadow DOM video controls in full-screen mode */
 }
-.moviq-video:-webkit-full-screen {
+.moviq-video:-webkit-full-screen,
+.moviq-video:-moz-full-screen,
+.moviq-video:-ms-fullscreen,
+.moviq-video:fullscreen,
+.moviq-video.fullscreen {
   position: absolute !important;
   left: -5px !important;
   right: -5px !important;
@@ -27,7 +31,11 @@
   margin: 0px !important;
   padding: 0;
 }
-.moviq-video:-webkit-full-screen .moviq-controls {
+.moviq-video:-webkit-full-screen .moviq-controls,
+.moviq-video:-moz-full-screen .moviq-controls,
+.moviq-video:-ms-fullscreen .moviq-controls,
+.moviq-video:fullscreen .moviq-controls,
+.moviq-video.fullscreen .moviq-controls {
   margin: auto;
   width: 60%;
   min-width: 960px;

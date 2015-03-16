@@ -4,6 +4,7 @@
     "description": "simple example of moviq, using node",
     "main": "server.js",
     "scripts": {
+        "start": "nodemon server.js",
         "test": "node debug server.js"
     },
     "author": "Andy Wright <andes.collab@gmail.com> (https://github.com/losandes)",
