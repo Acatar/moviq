@@ -75,12 +75,12 @@ moviqContainer.register({
         header = '<div class="moviq-header">{header}</div>';
         
         video =
-            '<video preload="auto">'
+            '<video>'
                 + '<p class="video-not-supported">' + locale.messages.browserNotSupported + '</p>'
             + '</video>';
         
         videoWithPoster =
-            '<video preload="auto" poster="{poster}">'
+            '<video poster="{poster}">'
                 + '<p class="video-not-supported">' + locale.messages.browserNotSupported + '</p>'
             + '</video>';
         

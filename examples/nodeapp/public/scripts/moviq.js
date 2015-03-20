@@ -1,4 +1,4 @@
-/*! moviq-build 2015-03-14 */
+/*! moviq-build 2015-03-20 */
 
 /*!
 // The IoC Container that all moviq components are registered in
@@ -490,8 +490,8 @@ moviqContainer.register({
         sourceElement = '<source type="{type}" data-label="{label}" src="{src}" />';
         trackElement = '<track label="{label}" kind="captions" srclang="{srclang}" src="{src}" data-id="{id}">';
         header = '<div class="moviq-header">{header}</div>';
-        video = '<video preload="auto">' + '<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>" + "</video>";
-        videoWithPoster = '<video preload="auto" poster="{poster}">' + '<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>" + "</video>";
+        video = "<video>" + '<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>" + "</video>";
+        videoWithPoster = '<video poster="{poster}">' + '<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>" + "</video>";
         return {
             controls: controls,
             qualityButton: qualityButton,
@@ -652,15 +652,17 @@ moviqContainer.register({
                 $icon.removeClass("fa-arrows-alt").addClass("fa-compress");
             };
             fullscreenOut = function() {
-                var $container = movi.$dom.$handle, $icon = querySelectors.controls.getIconHandle(querySelectors.controls.fullscreen);
+                var container = movi.dom.handle, $container = movi.$dom.$handle, $icon = querySelectors.controls.getIconHandle(querySelectors.controls.fullscreen);
                 $container.removeClass("fullscreen");
                 $icon.removeClass("fa-compress").addClass("fa-arrows-alt");
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
+                if (container.exitFullscreen) {
+                    container.exitFullscreen();
+                } else if (container.msExitFullscreen) {
+                    container.msExitFullscreen();
+                } else if (container.mozCancelFullScreen) {
+                    container.mozCancelFullScreen();
+                } else if (container.webkitExitFullscreen) {
+                    container.webkitExitFullscreen();
                 }
             };
             toggleCaptions = function() {
@@ -971,7 +973,7 @@ moviqContainer.register({
                     var position = meters.getPosition(event.pageX);
                     timePickerActive = true;
                     $display.text("");
-                    $picker.text(position.time);
+                    $picker.text(position.time.replace(/NaN/gi, "00"));
                     $picker.css("left", position.left);
                 });
             };
@@ -1111,12 +1113,14 @@ moviqContainer.register({
         "use strict";
         var jqVideo, handleMoviqManifest, handleManifestUrl, handleHtml5Markup, addNotSupportedMessage, hideCC, addControls;
         handleMoviqManifest = function(self, manifest, querySelectors) {
-            var scaffold = $("<div>");
+            var scaffold = $("<div>"), video;
             if (manifest.header) {
                 scaffold.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
             }
             if (self.$dom.$video.length < 1) {
-                scaffold.append(htmlTemplateGenerator.makeVideoMarkup(manifest.poster));
+                video = htmlTemplateGenerator.makeVideoMarkup(manifest.poster);
+                video = $(video).attr("preload", "none")[0];
+                scaffold.append(video);
             }
             self.sources = sourceParser.convertSources(manifest.sources);
             self.captions = sourceParser.convertCaptions(manifest.captions);
@@ -1131,6 +1135,9 @@ moviqContainer.register({
             self.dom.header = self.$dom.$header[0];
             self.$dom.$video = self.$dom.$handle.children("video").first();
             self.dom.video = self.$dom.$video[0];
+            if (manifest.preload) {
+                self.$dom.$video.attr("preload", manifest.preload);
+            }
         };
         handleManifestUrl = function(self) {
             self.manifestUrl = self.dom.video.dataset.manifest;

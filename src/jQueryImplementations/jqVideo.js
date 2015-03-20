@@ -15,14 +15,17 @@ moviqContainer.register({
         
         // the manifest was passed in as an argument - scaffold out the video element
         handleMoviqManifest = function (self, manifest, querySelectors) {
-            var scaffold = $('<div>');
+            var scaffold = $('<div>'),
+                video;
 
             if (manifest.header) {
                 scaffold.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
             }
 
             if (self.$dom.$video.length < 1) {
-                scaffold.append(htmlTemplateGenerator.makeVideoMarkup(manifest.poster));
+                video = htmlTemplateGenerator.makeVideoMarkup(manifest.poster);
+                video = $(video).attr('preload', 'none')[0];
+                scaffold.append(video);
             }
 
             self.sources = sourceParser.convertSources(manifest.sources);
@@ -44,6 +47,12 @@ moviqContainer.register({
             self.dom.header = self.$dom.$header[0];
             self.$dom.$video = self.$dom.$handle.children('video').first();
             self.dom.video = self.$dom.$video[0];
+            
+            // preload the video, if the manifest defines preload
+            // !do not move this: if preload is set while scaffolding out the video, it will be executed twice.
+            if (manifest.preload) {
+                self.$dom.$video.attr('preload', manifest.preload);
+            }
         };
         
         // a manifest URL was provided in the DOM

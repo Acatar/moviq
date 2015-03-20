@@ -100,10 +100,10 @@ moviqContainer.register({
             formatTime = function (seconds) {
                 var m, s;
 
-                m = Math.floor(seconds / 60) < 10 ? "0" + Math.floor(seconds / 60) : Math.floor(seconds / 60);
-                s = Math.floor(seconds - (m * 60)) < 10 ? "0" + Math.floor(seconds - (m * 60)) : Math.floor(seconds - (m * 60));
+                m = Math.floor(seconds / 60) < 10 ? '0' + Math.floor(seconds / 60) : Math.floor(seconds / 60);
+                s = Math.floor(seconds - (m * 60)) < 10 ? '0' + Math.floor(seconds - (m * 60)) : Math.floor(seconds - (m * 60));
 
-                return m + ":" + s;
+                return m + ':' + s;
             };
 
             bindProgressEvents = function () {
@@ -127,7 +127,7 @@ moviqContainer.register({
 
                         timePickerActive = true;
                         $display.text('');
-                        $picker.text(position.time);
+                        $picker.text(position.time.replace(/NaN/gi, '00'));
                         $picker.css('left', position.left);
                     });
             };
