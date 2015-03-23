@@ -1,8 +1,8 @@
 /*globals moviqContainer*/
 moviqContainer.register({
     name: 'jqVideo',
-    dependencies: ['locale', 'IJqVideo', 'jqQuerySelectors', 'defaultEventHandlers', 'jqEventEmitter', 'jqButtons', 'jqProgressMeter', 'sourceParser', 'sourceManifestParser', 'htmlTemplateGenerator', 'WatchReport', 'jQuery'],
-    factory: function (locale, IJqVideo, querySelectorsCtor, eventHandlers, eventEmitter, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, WatchReport, $) {
+    dependencies: ['locale', 'IJqVideo', 'IManifest', 'jqQuerySelectors', 'defaultEventHandlers', 'jqEventEmitter', 'jqButtons', 'jqProgressMeter', 'sourceParser', 'sourceManifestParser', 'htmlTemplateGenerator', 'WatchReport', 'jQuery'],
+    factory: function (locale, IJqVideo, IManifest, querySelectorsCtor, eventHandlers, eventEmitter, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, WatchReport, $) {
         "use strict";
         
         var jqVideo,
@@ -14,8 +14,9 @@ moviqContainer.register({
             addControls;
         
         // the manifest was passed in as an argument - scaffold out the video element
-        handleMoviqManifest = function (self, manifest, querySelectors) {
+        handleMoviqManifest = function (self, options, querySelectors) {
             var scaffold = $('<div>'),
+                manifest = new IManifest(options),
                 video;
 
             if (manifest.header) {

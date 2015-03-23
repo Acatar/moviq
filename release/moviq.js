@@ -1,4 +1,4 @@
-/*! moviq-build 2015-03-20 */
+/*! moviq-build 2015-03-23 */
 
 /*!
 // The IoC Container that all moviq components are registered in
@@ -173,9 +173,25 @@ moviqContainer.register({
 });
 
 moviqContainer.register({
-    name: "IMoviq",
+    name: "IManifest",
     dependencies: [ "locale" ],
     factory: function(locale) {
+        "use strict";
+        return function(manifest) {
+            var self = this, impl = manifest || {};
+            self.poster = impl.poster;
+            self.header = impl.header;
+            self.preload = impl.preload;
+            self.sources = impl.sources instanceof Array ? impl.sources : [];
+            self.captions = impl.captions instanceof Array ? impl.captions : [];
+        };
+    }
+});
+
+moviqContainer.register({
+    name: "IMoviq",
+    dependencies: [ "locale", "IManifest" ],
+    factory: function(locale, IManifest) {
         "use strict";
         return function(implementation) {
             var self = this, impl = implementation || {};
@@ -190,6 +206,7 @@ moviqContainer.register({
             }
             self.ify = impl.ify;
             self.bindAll = impl.bindAll;
+            self.Manifest = IManifest;
         };
     }
 });
@@ -1108,12 +1125,12 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "jqVideo",
-    dependencies: [ "locale", "IJqVideo", "jqQuerySelectors", "defaultEventHandlers", "jqEventEmitter", "jqButtons", "jqProgressMeter", "sourceParser", "sourceManifestParser", "htmlTemplateGenerator", "WatchReport", "jQuery" ],
-    factory: function(locale, IJqVideo, querySelectorsCtor, eventHandlers, eventEmitter, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, WatchReport, $) {
+    dependencies: [ "locale", "IJqVideo", "IManifest", "jqQuerySelectors", "defaultEventHandlers", "jqEventEmitter", "jqButtons", "jqProgressMeter", "sourceParser", "sourceManifestParser", "htmlTemplateGenerator", "WatchReport", "jQuery" ],
+    factory: function(locale, IJqVideo, IManifest, querySelectorsCtor, eventHandlers, eventEmitter, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, WatchReport, $) {
         "use strict";
         var jqVideo, handleMoviqManifest, handleManifestUrl, handleHtml5Markup, addNotSupportedMessage, hideCC, addControls;
-        handleMoviqManifest = function(self, manifest, querySelectors) {
-            var scaffold = $("<div>"), video;
+        handleMoviqManifest = function(self, options, querySelectors) {
+            var scaffold = $("<div>"), manifest = new IManifest(options), video;
             if (manifest.header) {
                 scaffold.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
             }

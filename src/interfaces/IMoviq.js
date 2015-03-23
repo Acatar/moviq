@@ -1,8 +1,8 @@
 /*globals moviqContainer*/
 moviqContainer.register({
     name: 'IMoviq',
-    dependencies: ['locale'],
-    factory: function (locale) {
+    dependencies: ['locale', 'IManifest'],
+    factory: function (locale, IManifest) {
         "use strict";
         
         return function (implementation) {
@@ -23,6 +23,7 @@ moviqContainer.register({
 
             self.ify = impl.ify;
             self.bindAll = impl.bindAll;
+            self.Manifest = IManifest;
         };
     }
 });

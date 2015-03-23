@@ -10,6 +10,7 @@ module.exports = function (grunt) {
             '../src/interfaces/IEventEmitter.js',
             '../src/interfaces/IEvents.js',
             '../src/interfaces/IHtmlTemplateGenerator.js',
+            '../src/interfaces/IManifest.js',
             '../src/interfaces/IMoviq.js',
             '../src/interfaces/IProgressMeter.js',
             '../src/interfaces/ISource.js',
