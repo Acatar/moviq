@@ -185,14 +185,14 @@ moviqContainer.register({
                 $container.removeClass('fullscreen');
                 $icon.removeClass('fa-compress').addClass('fa-arrows-alt'); // fa-expand
 
-                if (container.exitFullscreen) {
-                    container.exitFullscreen();
-                } else if (container.msExitFullscreen) {
-                    container.msExitFullscreen();
-                } else if (container.mozCancelFullScreen) {
-                    container.mozCancelFullScreen();
-                } else if (container.webkitExitFullscreen) {
-                    container.webkitExitFullscreen();
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
                 }
             };
 

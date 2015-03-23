@@ -672,14 +672,14 @@ moviqContainer.register({
                 var container = movi.dom.handle, $container = movi.$dom.$handle, $icon = querySelectors.controls.getIconHandle(querySelectors.controls.fullscreen);
                 $container.removeClass("fullscreen");
                 $icon.removeClass("fa-compress").addClass("fa-arrows-alt");
-                if (container.exitFullscreen) {
-                    container.exitFullscreen();
-                } else if (container.msExitFullscreen) {
-                    container.msExitFullscreen();
-                } else if (container.mozCancelFullScreen) {
-                    container.mozCancelFullScreen();
-                } else if (container.webkitExitFullscreen) {
-                    container.webkitExitFullscreen();
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
                 }
             };
             toggleCaptions = function() {

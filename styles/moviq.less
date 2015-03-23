@@ -3,6 +3,26 @@
 @import 'variables.less';
 @import 'mixins.less';
 
+.fullscreen() {
+    position: absolute !important;
+    left: -5px !important;
+    right: -5px !important;
+    top: -5px !important;
+    bottom: -5px !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0px !important;
+    padding: 0;
+
+    .moviq-controls {
+        margin: auto;
+        width: @video-controls-width;
+        min-width: @video-controls-min-width;
+        max-width: @video-controls-max-width;
+        .border-radius();
+    }
+}
+
 /*
 // Video Player
 */
@@ -16,29 +36,11 @@
     margin: auto;
     .box-shadow(0, 0, 5px, rgba(0,0,0,0.5));
     
-    &:-webkit-full-screen,
-    &:-moz-full-screen,
-    &:-ms-fullscreen,
-    &:fullscreen,
-    &.fullscreen {
-        position: absolute !important;
-        left: -5px !important;
-        right: -5px !important;
-        top: -5px !important;
-        bottom: -5px !important;
-        width: 100% !important;
-        height: 100% !important;
-        margin: 0px !important;
-        padding: 0;
-        
-        .moviq-controls {
-            margin: auto;
-            width: @video-controls-width;
-            min-width: @video-controls-min-width;
-            max-width: @video-controls-max-width;
-            .border-radius();
-        }
-    }
+    &:-webkit-full-screen { .fullscreen(); }
+    &:-moz-full-screen { .fullscreen(); }
+    &:-ms-full-screen { .fullscreen(); }
+    &:fullscreen { .fullscreen(); }
+    &.fullscreen { .fullscreen(); }
     
     video {
         position: absolute;
