@@ -98,6 +98,10 @@ moviqContainer.register({
             
             self.$dom.$controls = self.$dom.$handle.children(querySelectors.controls.control_container).first();
             self.dom.controls = self.$dom.$controls[0];
+            
+            if (self.captions.length < 1) {
+                self.$dom.$controls.find(querySelectors.controls.cc).attr('disabled', 'disabled').addClass('disabled');
+            }
         };
         
         jqVideo = function ($videoContainer, manifest) {

@@ -199,9 +199,12 @@ moviqContainer.register({
             toggleCaptions = function () {
                 var ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc),
                     track = video.textTracks[0],
+                    none = video.textTracks.length < 1,
                     moreThanOne = video.textTracks.length > 1;
                 
-                if (moreThanOne) {
+                if (none) {
+                    return;
+                } else if (moreThanOne) {
                     return toggleSubmenu(ccButton, 'with-cc');
                 } else {
                     return toggleTextTrack(ccButton, movi.captions[0].srclang, track);

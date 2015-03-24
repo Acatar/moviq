@@ -568,21 +568,26 @@ moviqContainer.register({
         "use strict";
         var grab, prepareCanvas;
         grab = function(movi) {
-            var video = movi.dom.video, canvas = movi.dom.canvas, context, dimensions;
+            var canvas = movi.dom.canvas, context, dimensions;
             if (!canvas || !canvas.getContext) {
                 return;
             }
             context = canvas.getContext("2d");
             dimensions = prepareCanvas(movi);
-            context.fillRect(0, 0, dimensions.width, dimensions.height);
-            context.drawImage(video, 0, 0, dimensions.width, dimensions.height);
+            context.fillRect(0, 0, dimensions.canvasWidth, dimensions.canvasHeight);
+            context.drawImage(movi.dom.video, 0, 0, dimensions.canvasWidth, dimensions.canvasHeight);
         };
         prepareCanvas = function(movi) {
-            var video = movi.dom.video, canvas = movi.dom.canvas, dimensions = {};
-            dimensions.width = movi.dom.handle.clientWidth;
-            dimensions.height = movi.dom.handle.clientHeight;
-            canvas.width = dimensions.width;
-            canvas.height = dimensions.height;
+            var video = movi.dom.video, canvas = movi.dom.canvas, ratio, dimensions = {};
+            ratio = video.videoWidth / video.videoHeight;
+            dimensions.width = video.videoWidth;
+            dimensions.height = parseInt(dimensions.width / ratio, 10);
+            dimensions.canvasWidth = movi.dom.video.clientWidth;
+            dimensions.canvasHeight = movi.dom.video.clientHeight;
+            dimensions.canvasVideoHeight = parseInt(dimensions.canvasWidth / ratio, 10);
+            dimensions.dy = dimensions.canvasVideoHeight - dimensions.canvasHeight;
+            canvas.width = dimensions.canvasWidth;
+            canvas.height = dimensions.canvasHeight;
             return dimensions;
         };
         return new ISnapshot({
@@ -739,8 +744,10 @@ moviqContainer.register({
                 }
             };
             toggleCaptions = function() {
-                var ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc), track = video.textTracks[0], moreThanOne = video.textTracks.length > 1;
-                if (moreThanOne) {
+                var ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc), track = video.textTracks[0], none = video.textTracks.length < 1, moreThanOne = video.textTracks.length > 1;
+                if (none) {
+                    return;
+                } else if (moreThanOne) {
                     return toggleSubmenu(ccButton, "with-cc");
                 } else {
                     return toggleTextTrack(ccButton, movi.captions[0].srclang, track);
@@ -1253,6 +1260,9 @@ moviqContainer.register({
             }
             self.$dom.$controls = self.$dom.$handle.children(querySelectors.controls.control_container).first();
             self.dom.controls = self.$dom.$controls[0];
+            if (self.captions.length < 1) {
+                self.$dom.$controls.find(querySelectors.controls.cc).attr("disabled", "disabled").addClass("disabled");
+            }
         };
         jqVideo = function($videoContainer, manifest) {
             var self, querySelectors = querySelectorsCtor($videoContainer), btns, prog, controlsMarkup, i;
