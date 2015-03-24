@@ -102,6 +102,10 @@ moviqContainer.register({
             if (self.captions.length < 1) {
                 self.$dom.$controls.find(querySelectors.controls.cc).attr('disabled', 'disabled').addClass('disabled');
             }
+            
+            if (self.sources.length < 2) {
+                self.$dom.$controls.find(querySelectors.controls.quality).attr('disabled', 'disabled').addClass('disabled');
+            }
         };
         
         jqVideo = function ($videoContainer, manifest) {

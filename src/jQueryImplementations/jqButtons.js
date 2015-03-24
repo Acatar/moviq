@@ -295,9 +295,14 @@ moviqContainer.register({
 
             toggleQuality = function () {
                 var spdClass = 'with-quality',
-                    qualityButton = querySelectors.controls.getHandle(querySelectors.controls.quality);
-
-                toggleSubmenu(qualityButton, 'with-quality');
+                    qualityButton = querySelectors.controls.getHandle(querySelectors.controls.quality),
+                    none = movi.sources.length < 2;
+                
+                if (none) {
+                    return;
+                } else {
+                    toggleSubmenu(qualityButton, 'with-quality');
+                }
             };
 
             changeQuality = function (label) {

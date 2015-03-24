@@ -822,8 +822,12 @@ moviqContainer.register({
                 }
             };
             toggleQuality = function() {
-                var spdClass = "with-quality", qualityButton = querySelectors.controls.getHandle(querySelectors.controls.quality);
-                toggleSubmenu(qualityButton, "with-quality");
+                var spdClass = "with-quality", qualityButton = querySelectors.controls.getHandle(querySelectors.controls.quality), none = movi.sources.length < 2;
+                if (none) {
+                    return;
+                } else {
+                    toggleSubmenu(qualityButton, "with-quality");
+                }
             };
             changeQuality = function(label) {
                 var source, position, i, hidden = "moviq-hidden";
@@ -1262,6 +1266,9 @@ moviqContainer.register({
             self.dom.controls = self.$dom.$controls[0];
             if (self.captions.length < 1) {
                 self.$dom.$controls.find(querySelectors.controls.cc).attr("disabled", "disabled").addClass("disabled");
+            }
+            if (self.sources.length < 2) {
+                self.$dom.$controls.find(querySelectors.controls.quality).attr("disabled", "disabled").addClass("disabled");
             }
         };
         jqVideo = function($videoContainer, manifest) {
