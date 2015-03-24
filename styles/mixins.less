@@ -14,11 +14,11 @@
     @alphaColour: hsla(hue(@colour), saturation(@colour), lightness(@colour), @alpha);
     @alphaColour: rgba(@r, @g, @b, @alpha);
     @ieAlphaColour: argb(@alphaColour);
-    
+
     background-color: @colour; // Fallback for older browsers
     // This will be ignored by browsers that don't support it.
     background-color: @alphaColour;
-    
+
     // OldIE hacks
     .lt-ie9 & { //assumes you have conditional commented <html> tags
         zoom: 1; // hasLayout
@@ -26,7 +26,7 @@
         -ms-filter:  "progid:DXImageTransform.Microsoft.gradient(startColorstr=@{ieAlphaColour}, endColorstr=@{ieAlphaColour})"; // IE 8+
         filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=@{ieAlphaColour}, endColorstr=@{ieAlphaColour})"; // IE 6 & 7
     }
-    
+
 }
 
 .box-shadow (@h-shadow, @v-shadow, @blur, @color) {
@@ -43,4 +43,12 @@
     -webkit-background-clip: padding-box;
        -moz-background-clip: padding;
 	        background-clip: padding-box;
+}
+
+.transition(@value) {
+    -webkit-transition: @value;
+       -moz-transition: @value;
+         -o-transition: @value;
+            transition: @value;
+
 }

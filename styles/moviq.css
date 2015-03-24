@@ -16,110 +16,10 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   /* Hide the Shadow DOM video controls in full-screen mode */
 }
-.moviq-video:-webkit-full-screen {
-  position: absolute !important;
-  left: -5px !important;
-  right: -5px !important;
-  top: -5px !important;
-  bottom: -5px !important;
-  width: 100% !important;
-  height: 100% !important;
-  margin: 0px !important;
-  padding: 0;
-}
-.moviq-video:-webkit-full-screen .moviq-controls {
-  margin: auto;
-  width: 60%;
-  min-width: 960px;
-  max-width: 1024px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-}
-.moviq-video:-webkit-full-screen.moviq-hide-cursor {
-  cursor: none;
-}
-.moviq-video:-moz-full-screen {
-  position: absolute !important;
-  left: -5px !important;
-  right: -5px !important;
-  top: -5px !important;
-  bottom: -5px !important;
-  width: 100% !important;
-  height: 100% !important;
-  margin: 0px !important;
-  padding: 0;
-}
-.moviq-video:-moz-full-screen .moviq-controls {
-  margin: auto;
-  width: 60%;
-  min-width: 960px;
-  max-width: 1024px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-}
-.moviq-video:-moz-full-screen.moviq-hide-cursor {
-  cursor: none;
-}
-.moviq-video:-ms-full-screen {
-  position: absolute !important;
-  left: -5px !important;
-  right: -5px !important;
-  top: -5px !important;
-  bottom: -5px !important;
-  width: 100% !important;
-  height: 100% !important;
-  margin: 0px !important;
-  padding: 0;
-}
-.moviq-video:-ms-full-screen .moviq-controls {
-  margin: auto;
-  width: 60%;
-  min-width: 960px;
-  max-width: 1024px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-}
-.moviq-video:-ms-full-screen.moviq-hide-cursor {
-  cursor: none;
-}
-.moviq-video:fullscreen {
-  position: absolute !important;
-  left: -5px !important;
-  right: -5px !important;
-  top: -5px !important;
-  bottom: -5px !important;
-  width: 100% !important;
-  height: 100% !important;
-  margin: 0px !important;
-  padding: 0;
-}
-.moviq-video:fullscreen .moviq-controls {
-  margin: auto;
-  width: 60%;
-  min-width: 960px;
-  max-width: 1024px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-}
-.moviq-video:fullscreen.moviq-hide-cursor {
-  cursor: none;
-}
+.moviq-video:-webkit-full-screen,
+.moviq-video:-moz-full-screen,
+.moviq-video:-ms-full-screen,
+.moviq-video:fullscreen,
 .moviq-video.fullscreen {
   position: absolute !important;
   left: -5px !important;
@@ -131,6 +31,10 @@
   margin: 0px !important;
   padding: 0;
 }
+.moviq-video:-webkit-full-screen .moviq-controls,
+.moviq-video:-moz-full-screen .moviq-controls,
+.moviq-video:-ms-full-screen .moviq-controls,
+.moviq-video:fullscreen .moviq-controls,
 .moviq-video.fullscreen .moviq-controls {
   margin: auto;
   width: 60%;
@@ -142,9 +46,6 @@
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-}
-.moviq-video.fullscreen.moviq-hide-cursor {
-  cursor: none;
 }
 .moviq-video .moviq-hidden {
   display: none !important;
@@ -200,19 +101,22 @@
   height: 70px;
 }
 .moviq-video .moviq-controls.with-quality .moviq-controls-quality {
-  display: block;
+  opacity: 1.0;
+  pointer-events: auto;
 }
 .moviq-video .moviq-controls.with-speed {
   height: 70px;
 }
 .moviq-video .moviq-controls.with-speed .moviq-controls-speed {
-  display: block;
+  opacity: 1.0;
+  pointer-events: auto;
 }
 .moviq-video .moviq-controls.with-cc {
   height: 70px;
 }
 .moviq-video .moviq-controls.with-cc .moviq-controls-cc {
-  display: block;
+  opacity: 1.0;
+  pointer-events: auto;
 }
 .moviq-video .moviq-controls .moviq-controls-enclosure,
 .moviq-video .moviq-controls .moviq-controls-enclosure-more {
@@ -295,6 +199,7 @@
 }
 .moviq-video .moviq-controls .moviq-controls-enclosure .moviq-btn.moviq-btn-text,
 .moviq-video .moviq-controls .moviq-controls-enclosure-more .moviq-btn.moviq-btn-text {
+  width: auto;
   font-weight: 700;
 }
 .moviq-video .moviq-controls .moviq-controls-enclosure .moviq-btn.disabled,
@@ -307,7 +212,12 @@
   bottom: 34px;
   left: 10px;
   right: 10px;
-  display: none;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: opacity 0.5s ease;
+  -moz-transition: opacity 0.5s ease;
+  -o-transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease;
 }
 .moviq-video .moviq-controls .moviq-controls-enclosure-more .moviq-btn,
 .moviq-video .moviq-controls .moviq-controls-enclosure-more input,
