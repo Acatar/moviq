@@ -17,8 +17,8 @@ moviqContainer.register({
                 throw new Error(locale.errors.interfaces.requiresProperty + 'formatTime');
             }
             
-            if (impl.formatTime.length !== 1) {
-                throw new Error(locale.errors.interfaces.requiresArguments + 'ITimeFormatter.formatTime(seconds)');
+            if (impl.formatTime.length !== 2) {
+                throw new Error(locale.errors.interfaces.requiresArguments + 'ITimeFormatter.formatTime(seconds, useLeadingZero)');
             }
 
             self.formatTime = impl.formatTime;

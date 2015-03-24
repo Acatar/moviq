@@ -5,10 +5,10 @@ moviqContainer.register({
     factory: function (locale, ITimeFormatter) {
         "use strict";
         
-        var formatTime = function (seconds) {
+        var formatTime = function (seconds, useLeadingZero) {
             var m, s;
 
-            m = Math.floor(seconds / 60) < 10 ? '0' + Math.floor(seconds / 60) : Math.floor(seconds / 60);
+            m = (useLeadingZero && Math.floor(seconds / 60) < 10) ? '0' + Math.floor(seconds / 60) : Math.floor(seconds / 60);
             s = Math.floor(seconds - (m * 60)) < 10 ? '0' + Math.floor(seconds - (m * 60)) : Math.floor(seconds - (m * 60));
 
             return m + ':' + s;

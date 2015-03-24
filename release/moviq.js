@@ -380,8 +380,8 @@ moviqContainer.register({
             if (typeof impl.formatTime !== "function") {
                 throw new Error(locale.errors.interfaces.requiresProperty + "formatTime");
             }
-            if (impl.formatTime.length !== 1) {
-                throw new Error(locale.errors.interfaces.requiresArguments + "ITimeFormatter.formatTime(seconds)");
+            if (impl.formatTime.length !== 2) {
+                throw new Error(locale.errors.interfaces.requiresArguments + "ITimeFormatter.formatTime(seconds, useLeadingZero)");
             }
             self.formatTime = impl.formatTime;
         };
@@ -623,9 +623,9 @@ moviqContainer.register({
     dependencies: [ "locale", "ITimeFormatter" ],
     factory: function(locale, ITimeFormatter) {
         "use strict";
-        var formatTime = function(seconds) {
+        var formatTime = function(seconds, useLeadingZero) {
             var m, s;
-            m = Math.floor(seconds / 60) < 10 ? "0" + Math.floor(seconds / 60) : Math.floor(seconds / 60);
+            m = useLeadingZero && Math.floor(seconds / 60) < 10 ? "0" + Math.floor(seconds / 60) : Math.floor(seconds / 60);
             s = Math.floor(seconds - m * 60) < 10 ? "0" + Math.floor(seconds - m * 60) : Math.floor(seconds - m * 60);
             return m + ":" + s;
         };
@@ -664,9 +664,11 @@ moviqContainer.register({
             movi.$dom.$handle.on("mouseenter", function(event) {
                 movi.$dom.$controls.stop().fadeTo(500, .9);
                 movi.$dom.$header.stop().fadeTo(500, .9);
+                movi.$dom.$handle.removeClass("moviq-hide-cursor");
             }).on("mouseleave", function(event) {
                 movi.$dom.$controls.stop().fadeOut();
                 movi.$dom.$header.stop().fadeOut();
+                movi.$dom.$handle.addClass("moviq-hide-cursor");
             });
             playBtn.on("click", function(event) {
                 var state = btns.togglePlay();
@@ -1345,7 +1347,7 @@ moviqContainer.register({
             self.progressMeter = jqProgressMeter.init(self);
             $videoContainer.addClass("moviqified");
             self.$dom.$video.one("loadedmetadata", function(event) {
-                self.duration = timeFormatter.formatTime(self.dom.video.duration);
+                self.duration = timeFormatter.formatTime(self.dom.video.duration, false);
             });
             return self;
         };

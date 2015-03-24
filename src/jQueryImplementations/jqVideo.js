@@ -162,7 +162,7 @@ moviqContainer.register({
             $videoContainer.addClass('moviqified');
             
             self.$dom.$video.one('loadedmetadata', function (event) {
-                self.duration = timeFormatter.formatTime(self.dom.video.duration);
+                self.duration = timeFormatter.formatTime(self.dom.video.duration, false);
             });
             
             return self;
