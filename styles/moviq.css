@@ -199,6 +199,7 @@
 }
 .moviq-video .moviq-controls .moviq-controls-enclosure .moviq-btn.moviq-btn-text,
 .moviq-video .moviq-controls .moviq-controls-enclosure-more .moviq-btn.moviq-btn-text {
+  width: auto;
   font-weight: 700;
 }
 .moviq-video .moviq-controls .moviq-controls-enclosure .moviq-btn.disabled,
