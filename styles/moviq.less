@@ -35,17 +35,19 @@
 	color:#ccc;
     margin: auto;
     .box-shadow(0, 0, 5px, rgba(0,0,0,0.5));
-    
-    &:-webkit-full-screen { .fullscreen(); }
-    &:-moz-full-screen { .fullscreen(); }
-    &:-ms-full-screen { .fullscreen(); }
-    &:fullscreen { .fullscreen(); }
-    &.fullscreen { .fullscreen(); }
-    
+
+    &:-webkit-full-screen,
+    &:-moz-full-screen,
+    &:-ms-full-screen,
+    &:fullscreen,
+    &.fullscreen {
+        .fullscreen();
+    }
+
     .moviq-hidden {
         display: none !important;
     }
-    
+
     video {
         position: absolute;
         top: 0;
@@ -53,12 +55,12 @@
         width: 100%;
         height: 100%;
     }
-    
+
     /* Hide the Shadow DOM video controls in full-screen mode */
     video::-webkit-media-controls-enclosure {
       display: none !important;
     }
-    
+
     .moviq-snapshot {
         position:absolute;
         top: 0;
@@ -66,7 +68,7 @@
         right: 0;
         z-index: @fullscreen-zindex;
     }
-    
+
     .moviq-header {
         position:absolute;
         top: 0;
@@ -93,26 +95,26 @@
         padding-bottom: 0;
         background-color: @control-background;
         z-index: @fullscreen-zindex;
-        
+
         &.with-quality {
             height: @controls-more-in-size;
-            
+
             .moviq-controls-quality {
                 display: block;
             }
         }
-        
+
         &.with-speed {
             height: @controls-more-in-size;
-            
+
             .moviq-controls-speed {
                 display: block;
             }
         }
-        
+
         &.with-cc {
             height: @controls-more-in-size;
-            
+
             .moviq-controls-cc {
                 display: block;
             }
@@ -123,37 +125,37 @@
             margin: auto;
             word-wrap: normal;
             cursor: default;
-            
+
             .moviq-controls-left {
                 position: absolute;
                 left: 0;
                 bottom: 2px;
                 padding-left: 5px;
             }
-            
+
             .moviq-progress {
                 position: absolute;
                 left: @controls-left-size;
                 right: @controls-right-size;
                 bottom: 13px;
-                
+
                 .moviq-progress-display,
                 .moviq-progress-picker {
                     font-size: .5em;
                 }
-                
+
                 .moviq-progress-picker {
                     position: absolute;
                     top: -12px;
                 }
-                
+
                 .moviq-progress-bar {
                     width: 100%;
                     background-color: transparent;
                     height: 10px;
                     border: 1px solid rgba(255,255,255,0.2);
                     cursor: pointer;
-                    
+
                     span {
                         position: absolute;
                         height: 10px;
@@ -172,14 +174,14 @@
                     }
                 }
             }
-            
+
             .moviq-controls-right {
                 position: absolute;
                 right: 0;
                 bottom: 2px;
                 padding-right: 5px;
             }
-            
+
             .moviq-btn {
                 width: @btn-size;
                 height: @btn-size;
@@ -193,55 +195,55 @@
                 &.selected {
                     color: @btn-hover-color;
                 }
-                
+
                 &.moviq-btn-text {
                     font-weight: 700;
 //                    font-size: .9em;
 //                    margin-top: .1em;
                 }
-                
+
                 &.disabled {
                     color: @text-color-disabled;
                     cursor: default;
                 }
             }
-            
+
         } // /enclosure
-        
+
         .moviq-controls-enclosure-more {
             position: absolute;
             bottom: @btn-size;
             left: 10px;
             right: 10px;
             display: none;
-            
+
             .moviq-btn,
             input,
             output {
                 float: right;
-                
+
                 &.moviq-btn-text {
                     font-weight: 700;
 //                    font-size: .9em;
 //                    margin-top: .1em;
                 }
-                
+
                 &.moviq-speed-chooser {
                     margin-top: 0;
                 }
-                
+
                 &.moviq-current-speed {
                     margin-left: 10px;
                     width:40px;
                 }
-                
+
                 &.moviq-btn-choose-cc {
                     width: 80px;
                 }
             }
-        
+
         } // /.moviq-controls-enclosure-more
 
     } // /controls
-   
+
 } // /.video-container
