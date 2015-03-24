@@ -101,19 +101,22 @@
   height: 70px;
 }
 .moviq-video .moviq-controls.with-quality .moviq-controls-quality {
-  display: block;
+  opacity: 1.0;
+  pointer-events: auto;
 }
 .moviq-video .moviq-controls.with-speed {
   height: 70px;
 }
 .moviq-video .moviq-controls.with-speed .moviq-controls-speed {
-  display: block;
+  opacity: 1.0;
+  pointer-events: auto;
 }
 .moviq-video .moviq-controls.with-cc {
   height: 70px;
 }
 .moviq-video .moviq-controls.with-cc .moviq-controls-cc {
-  display: block;
+  opacity: 1.0;
+  pointer-events: auto;
 }
 .moviq-video .moviq-controls .moviq-controls-enclosure,
 .moviq-video .moviq-controls .moviq-controls-enclosure-more {
@@ -208,7 +211,12 @@
   bottom: 34px;
   left: 10px;
   right: 10px;
-  display: none;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: opacity 0.5s ease;
+  -moz-transition: opacity 0.5s ease;
+  -o-transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease;
 }
 .moviq-video .moviq-controls .moviq-controls-enclosure-more .moviq-btn,
 .moviq-video .moviq-controls .moviq-controls-enclosure-more input,
