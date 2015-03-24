@@ -39,9 +39,6 @@
   -moz-background-clip: padding;
   background-clip: padding-box;
 }
-.moviq-video:-webkit-full-screen.moviq-hide-cursor {
-  cursor: none;
-}
 .moviq-video:-moz-full-screen {
   position: absolute !important;
   left: -5px !important;
@@ -64,9 +61,6 @@
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-}
-.moviq-video:-moz-full-screen.moviq-hide-cursor {
-  cursor: none;
 }
 .moviq-video:-ms-full-screen {
   position: absolute !important;
@@ -91,9 +85,6 @@
   -moz-background-clip: padding;
   background-clip: padding-box;
 }
-.moviq-video:-ms-full-screen.moviq-hide-cursor {
-  cursor: none;
-}
 .moviq-video:fullscreen {
   position: absolute !important;
   left: -5px !important;
@@ -117,9 +108,6 @@
   -moz-background-clip: padding;
   background-clip: padding-box;
 }
-.moviq-video:fullscreen.moviq-hide-cursor {
-  cursor: none;
-}
 .moviq-video.fullscreen {
   position: absolute !important;
   left: -5px !important;
@@ -142,9 +130,6 @@
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-}
-.moviq-video.fullscreen.moviq-hide-cursor {
-  cursor: none;
 }
 .moviq-video .moviq-hidden {
   display: none !important;

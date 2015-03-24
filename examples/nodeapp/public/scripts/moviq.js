@@ -658,17 +658,52 @@ moviqContainer.register({
     dependencies: [ "locale", "jqQuerySelectors", "IButtons", "snapshot", "jQuery" ],
     factory: function(locale, querySelectorsCtor, IButtons, snapshot, $) {
         "use strict";
-        var init, bindButtonEvents, handlers;
+        var init, bindButtonEvents, handlers, cursorManager;
+        cursorManager = function() {
+            var throttle = false, timeout, bind, hide;
+            bind = function() {
+                $(document).mousemove(function(event) {
+                    if (!throttle) {
+                        throttle = false;
+                        clearTimeout(timeout);
+                        $("html").css({
+                            cursor: "default"
+                        });
+                        timeout = setTimeout(hide, 1e3);
+                    }
+                });
+            };
+            hide = function() {
+                $("html").css({
+                    cursor: "none"
+                });
+                throttle = true;
+                setTimeout(function() {
+                    throttle = false;
+                }, 500);
+            };
+            return {
+                bind: bind
+            };
+        };
         bindButtonEvents = function(movi, btns, querySelectors) {
             var playBtn = querySelectors.controls.getHandle(querySelectors.controls.play), ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc), ccChoice = querySelectors.controls.getHandle(querySelectors.controls.cc_choice), speedBtn = querySelectors.controls.getHandle(querySelectors.controls.speed), qualityBtn = querySelectors.controls.getHandle(querySelectors.controls.quality), qualityChoice = querySelectors.controls.getHandle(querySelectors.controls.quality_choice), muteBtn = querySelectors.controls.getHandle(querySelectors.controls.mute), fullscreenBtn = querySelectors.controls.getHandle(querySelectors.controls.fullscreen), speedChooser = querySelectors.controls.getHandle(querySelectors.controls.speed_chooser), speedCurrent = querySelectors.controls.getHandle(querySelectors.controls.speed_current);
             movi.$dom.$handle.on("mouseenter", function(event) {
                 movi.$dom.$controls.stop().fadeTo(500, .9);
                 movi.$dom.$header.stop().fadeTo(500, .9);
-                movi.$dom.$handle.removeClass("moviq-hide-cursor");
+                if ($(event.target).parent().hasClass("fullscreen")) {
+                    $("html").css({
+                        cursor: "default"
+                    });
+                }
             }).on("mouseleave", function(event) {
                 movi.$dom.$controls.stop().fadeOut();
                 movi.$dom.$header.stop().fadeOut();
-                movi.$dom.$handle.addClass("moviq-hide-cursor");
+                if ($(event.target).parent().hasClass("fullscreen")) {
+                    $("html").css({
+                        cursor: "none"
+                    });
+                }
             });
             playBtn.on("click", function(event) {
                 var state = btns.togglePlay();

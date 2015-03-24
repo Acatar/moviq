@@ -7,7 +7,38 @@ moviqContainer.register({
         
         var init,
             bindButtonEvents,
-            handlers;
+            handlers,
+            cursorManager;
+        
+        cursorManager = function () {
+            var throttle = false,
+                timeout,
+                bind,
+                hide;
+            
+            bind = function () {
+                $(document).mousemove(function (event) {
+                    if (!throttle) {
+                        throttle = false;
+                        clearTimeout(timeout);
+                        $('html').css({cursor: 'default'});
+                        timeout = setTimeout(hide, 1000);
+                    }
+                });
+            };
+            
+            hide = function () {
+                $('html').css({cursor: 'none'});
+                throttle = true;
+                setTimeout(function () {
+                    throttle = false;
+                }, 500);
+            };
+            
+            return {
+                bind: bind
+            };
+        };
         
         bindButtonEvents = function (movi, btns, querySelectors) {
             var playBtn = querySelectors.controls.getHandle(querySelectors.controls.play),
@@ -25,12 +56,18 @@ moviqContainer.register({
                 .on('mouseenter', function (event) {
                     movi.$dom.$controls.stop().fadeTo(500, 0.9);
                     movi.$dom.$header.stop().fadeTo(500, 0.9);
-                    movi.$dom.$handle.removeClass('moviq-hide-cursor');
+                    
+                    if ($(event.target).parent().hasClass('fullscreen')) {
+                        $('html').css({cursor: 'default'});
+                    }
                 })
                 .on('mouseleave', function (event) {
                     movi.$dom.$controls.stop().fadeOut();
                     movi.$dom.$header.stop().fadeOut();
-                    movi.$dom.$handle.addClass('moviq-hide-cursor');
+                
+                    if ($(event.target).parent().hasClass('fullscreen')) {
+                        $('html').css({cursor: 'none'});
+                    }
                 });
 
             playBtn.on('click', function (event) {
