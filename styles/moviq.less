@@ -100,7 +100,8 @@
             height: @controls-more-in-size;
 
             .moviq-controls-quality {
-                display: block;
+                opacity: 1.0;
+                pointer-events: auto;
             }
         }
 
@@ -108,7 +109,8 @@
             height: @controls-more-in-size;
 
             .moviq-controls-speed {
-                display: block;
+                opacity: 1.0;
+                pointer-events: auto;
             }
         }
 
@@ -116,7 +118,8 @@
             height: @controls-more-in-size;
 
             .moviq-controls-cc {
-                display: block;
+                opacity: 1.0;
+                pointer-events: auto;
             }
         }
 
@@ -215,7 +218,9 @@
             bottom: @btn-size;
             left: 10px;
             right: 10px;
-            display: none;
+            opacity: 0;
+            pointer-events: none;
+            .transistion(opacity 0.5s ease);
 
             .moviq-btn,
             input,
