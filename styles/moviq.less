@@ -23,6 +23,7 @@
     }
     
     &.moviq-hide-cursor {
+        // todo: this doesn't work
         cursor: none;
     }
 }
@@ -40,13 +41,11 @@
     margin: auto;
     .box-shadow(0, 0, 5px, rgba(0,0,0,0.5));
 
-    &:-webkit-full-screen,
-    &:-moz-full-screen,
-    &:-ms-full-screen,
-    &:fullscreen,
-    &.fullscreen {
-        .fullscreen();
-    }
+    &:-webkit-full-screen { .fullscreen(); }
+    &:-moz-full-screen { .fullscreen(); }
+    &:-ms-full-screen { .fullscreen(); }
+    &:fullscreen { .fullscreen(); }
+    &.fullscreen { .fullscreen(); }
 
     .moviq-hidden {
         display: none !important;
