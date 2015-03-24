@@ -1,0 +1,27 @@
+/*globals moviqContainer*/
+moviqContainer.register({
+    name: 'ITimeFormatter',
+    dependencies: ['locale'],
+    factory: function (locale) {
+        "use strict";
+        
+        return function (implementation) {
+            var self = this,
+                impl = implementation || {};
+            
+            if (!implementation) {
+                throw new Error(locale.errors.interfaces.requiresImplementation);
+            }
+            
+            if (typeof impl.formatTime !== 'function') {
+                throw new Error(locale.errors.interfaces.requiresProperty + 'formatTime');
+            }
+            
+            if (impl.formatTime.length !== 1) {
+                throw new Error(locale.errors.interfaces.requiresArguments + 'ITimeFormatter.formatTime(seconds)');
+            }
+
+            self.formatTime = impl.formatTime;
+        };
+    }
+});

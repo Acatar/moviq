@@ -16,6 +16,7 @@ moviqContainer.register({
             self.progressMeter = impl.progressMeter;
             self.manifestUrl = impl.manifestUrl;
             self.watchReport = impl.watchReport;
+            self.duration = impl.duration;
             
             self.dom = {
                 handle: impl.dom.handle,
