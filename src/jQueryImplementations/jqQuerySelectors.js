@@ -6,6 +6,8 @@ moviqContainer.register({
         
         return {
             header: '.moviq-header',
+            canvas: '.moviq-snapshot',
+            hidden: '.moviq-hidden',
             controls: {
                 control_container: '.moviq-controls',
                 more_controls_container: '.moviq-controls-enclosure-more',

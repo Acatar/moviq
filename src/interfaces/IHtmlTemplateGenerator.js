@@ -45,6 +45,10 @@ moviqContainer.register({
                 throw new Error(locale.errors.interfaces.requiresArguments + 'header');
             }
             
+            if (typeof impl.makeSnapshotMarkup !== 'function') {
+                throw new Error(locale.errors.interfaces.requiresProperty + 'makeSnapshotMarkup');
+            }
+            
             if (typeof impl.makeVideoMarkup !== 'function') {
                 throw new Error(locale.errors.interfaces.requiresProperty + 'makeVideoMarkup');
             }
@@ -57,6 +61,7 @@ moviqContainer.register({
             self.makeSourceMarkup = impl.makeSourceMarkup;
             self.makeCaptionMarkup = impl.makeCaptionMarkup;
             self.makeHeaderMarkup = impl.makeHeaderMarkup;
+            self.makeSnapshotMarkup = impl.makeSnapshotMarkup;
             self.makeVideoMarkup = impl.makeVideoMarkup;
         };
     }

@@ -13,6 +13,7 @@ module.exports = function (grunt) {
             '../src/interfaces/IManifest.js',
             '../src/interfaces/IMoviq.js',
             '../src/interfaces/IProgressMeter.js',
+            '../src/interfaces/ISnapshot.js',
             '../src/interfaces/ISource.js',
             '../src/interfaces/ISourceParser.js',
             '../src/interfaces/ISourceManifestParser.js',
@@ -22,6 +23,7 @@ module.exports = function (grunt) {
             '../src/implementations/defaultEventHandlers.js',
             '../src/implementations/defaultHtmlTemplates.js',
             '../src/implementations/simpleEventEmitter.js',
+            '../src/implementations/snapshot.js',
             '../src/jQueryImplementations/IJqVideo.js',
             '../src/jQueryImplementations/jqButtons.js',
             '../src/jQueryImplementations/jqEventEmitter.js',
@@ -69,7 +71,7 @@ module.exports = function (grunt) {
                     beautify: true,
                     mangle: false,
                     compress: false,
-                    sourceMap: true,
+                    sourceMap: false,
                     drop_console: false,
                     preserveComments: 'some'
                 },
@@ -95,9 +97,9 @@ module.exports = function (grunt) {
                 files: [
                     { src: ['../lib/hilary.min.js'], dest: '../examples/nodeapp/public/scripts/lib/hilary/hilary.min.js', filter: 'isFile' },
                     { src: ['../release/moviq.js'], dest: '../examples/nodeapp/public/scripts/moviq.js', filter: 'isFile' },
-                    { src: ['../release/moviq.js.map'], dest: '../examples/nodeapp/public/scripts/moviq.js.map', filter: 'isFile' },
-                    { src: ['../release/moviq.min.js'], dest: '../examples/nodeapp/public/scripts/moviq.min.js', filter: 'isFile' },
-                    { src: ['../release/moviq.min.js.map'], dest: '../examples/nodeapp/public/scripts/moviq.min.js.map', filter: 'isFile' }
+                    //{ src: ['../release/moviq.js.map'], dest: '../examples/nodeapp/public/scripts/moviq.js.map', filter: 'isFile' },
+                    { src: ['../release/moviq.min.js'], dest: '../examples/nodeapp/public/scripts/moviq.min.js', filter: 'isFile' }
+                    //,{ src: ['../release/moviq.min.js.map'], dest: '../examples/nodeapp/public/scripts/moviq.min.js.map', filter: 'isFile' }
                 ]
             },
             css: {

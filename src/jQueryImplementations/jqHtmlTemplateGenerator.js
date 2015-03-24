@@ -9,6 +9,7 @@ moviqContainer.register({
             makeSourceMarkup,
             makeCaptionMarkup,
             makeHeaderMarkup,
+            makeSnapshotMarkup,
             makeVideoMarkup;
         
         makeControlsMarkup = function (sources, captions) {
@@ -67,6 +68,10 @@ moviqContainer.register({
             return markup;
         };
         
+        makeSnapshotMarkup = function () {
+            return htmlTemplates.canvas;
+        };
+        
         makeHeaderMarkup = function (header) {
             return htmlTemplates.header
                     .replace(/\{header\}/, header);
@@ -87,6 +92,7 @@ moviqContainer.register({
             makeSourceMarkup: makeSourceMarkup,
             makeCaptionMarkup: makeCaptionMarkup,
             makeHeaderMarkup : makeHeaderMarkup,
+            makeSnapshotMarkup: makeSnapshotMarkup,
             makeVideoMarkup: makeVideoMarkup
         });
         

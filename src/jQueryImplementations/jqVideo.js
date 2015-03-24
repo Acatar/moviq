@@ -18,7 +18,10 @@ moviqContainer.register({
             var scaffold = $('<div>'),
                 manifest = new IManifest(options),
                 video;
-
+            
+            // add the snapshot canvas
+            scaffold.append(htmlTemplateGenerator.makeSnapshotMarkup());
+            
             if (manifest.header) {
                 scaffold.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
             }
@@ -48,6 +51,8 @@ moviqContainer.register({
             self.dom.header = self.$dom.$header[0];
             self.$dom.$video = self.$dom.$handle.children('video').first();
             self.dom.video = self.$dom.$video[0];
+            self.$dom.$canvas = self.$dom.$handle.children(querySelectors.canvas).first();
+            self.dom.canvas = self.$dom.$canvas[0];
             
             // preload the video, if the manifest defines preload
             // !do not move this: if preload is set while scaffolding out the video, it will be executed twice.
@@ -115,13 +120,15 @@ moviqContainer.register({
                     $handle: $videoContainer,
                     $video: $videoContainer.children('video').first(),
                     $controls: undefined,
-                    $header: $videoContainer.children(querySelectors.header).first()
+                    $header: $videoContainer.children(querySelectors.header).first(),
+                    $canvas: undefined
                 },
                 dom: {
                     handle: $videoContainer[0],
                     video: $videoContainer.children('video').first()[0],
                     controls: undefined,
-                    header: $videoContainer.children(querySelectors.header).first()[0]
+                    header: $videoContainer.children(querySelectors.header).first()[0],
+                    canvas: undefined
                 }
             });
             

@@ -1,8 +1,8 @@
 /*globals moviqContainer*/
 moviqContainer.register({
     name: 'jqButtons',
-    dependencies: ['locale', 'jqQuerySelectors', 'IButtons', 'jQuery'],
-    factory: function (locale, querySelectorsCtor, IButtons, $) {
+    dependencies: ['locale', 'jqQuerySelectors', 'IButtons', 'snapshot', 'jQuery'],
+    factory: function (locale, querySelectorsCtor, IButtons, snapshot, $) {
         "use strict";
         
         var init,
@@ -298,7 +298,11 @@ moviqContainer.register({
             };
 
             changeQuality = function (label) {
-                var source, position, i;
+                var source, position, i, hidden = 'moviq-hidden';
+                
+                // take a snapshot and place it over the video
+                snapshot.grab(movi);
+                movi.$dom.$handle.children(querySelectors.canvas).removeClass(hidden);
 
                 // find the chosen source
                 for (i = 0; i < movi.sources.length; i += 1) {
@@ -334,6 +338,11 @@ moviqContainer.register({
                     
                     // and start playing the video, again
                     togglePlay();
+                    
+                    // hide the snapshot after the video starts playing again
+                    $video.one('playing', function (event) {
+                        movi.$dom.$handle.children(querySelectors.canvas).addClass(hidden);
+                    });
                 });
 
                 return source;

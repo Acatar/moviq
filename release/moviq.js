@@ -1,5 +1,4 @@
-/*! moviq-build 2015-03-23 */
-
+/*! moviq-build 2015-03-24 */
 /*!
 // The IoC Container that all moviq components are registered in
 */
@@ -157,6 +156,9 @@ moviqContainer.register({
             if (impl.makeHeaderMarkup.length !== 1) {
                 throw new Error(locale.errors.interfaces.requiresArguments + "header");
             }
+            if (typeof impl.makeSnapshotMarkup !== "function") {
+                throw new Error(locale.errors.interfaces.requiresProperty + "makeSnapshotMarkup");
+            }
             if (typeof impl.makeVideoMarkup !== "function") {
                 throw new Error(locale.errors.interfaces.requiresProperty + "makeVideoMarkup");
             }
@@ -167,6 +169,7 @@ moviqContainer.register({
             self.makeSourceMarkup = impl.makeSourceMarkup;
             self.makeCaptionMarkup = impl.makeCaptionMarkup;
             self.makeHeaderMarkup = impl.makeHeaderMarkup;
+            self.makeSnapshotMarkup = impl.makeSnapshotMarkup;
             self.makeVideoMarkup = impl.makeVideoMarkup;
         };
     }
@@ -228,6 +231,27 @@ moviqContainer.register({
                 throw new Error(locale.errors.interfaces.requiresArguments + "iVideo");
             }
             self.init = impl.init;
+        };
+    }
+});
+
+moviqContainer.register({
+    name: "ISnapshot",
+    dependencies: [ "locale" ],
+    factory: function(locale) {
+        "use strict";
+        return function(implementation) {
+            var self = this, impl = implementation || {};
+            if (!implementation) {
+                throw new Error(locale.errors.interfaces.requiresImplementation);
+            }
+            if (typeof impl.grab !== "function") {
+                throw new Error(locale.errors.interfaces.requiresProperty + "grab");
+            }
+            if (impl.grab.length !== 1) {
+                throw new Error(locale.errors.interfaces.requiresArguments + "iVideo");
+            }
+            self.grab = impl.grab;
         };
     }
 });
@@ -500,13 +524,14 @@ moviqContainer.register({
     dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
-        var controls, qualityButton, ccButton, sourceElement, trackElement, header, video, videoWithPoster;
+        var controls, qualityButton, ccButton, sourceElement, trackElement, header, canvas, video, videoWithPoster;
         controls = '<div class="moviq-controls">' + '<div class="moviq-controls-enclosure-more moviq-controls-quality">' + "</div>" + '<div class="moviq-controls-enclosure-more moviq-controls-speed">' + '<output class=" moviq-btn-text moviq-current-speed">1x</output>' + '<input class="moviq-speed-chooser" type="range" min=".25" max="3" step=".25" value="1" aria-label="Choose a playback speed" />' + "</div>" + '<div class="moviq-controls-enclosure-more moviq-controls-cc">' + "</div>" + '<div class="moviq-controls-enclosure">' + '<div class="moviq-controls-left">' + '<button class="moviq-btn moviq-btn-play" aria-label="Play or pause the video">' + '<span class="fa fa-play"></span>' + "</button>" + "</div>" + '<div class="moviq-progress">' + '<span class="moviq-progress-display"></span>' + '<span class="moviq-progress-picker"></span>' + '<div class="moviq-progress-bar" aria-label="This bar shows the current position of the video, as well as the amount buffered. You can click anywhere in this bar to seek to a new position.">' + '<span class="moviq-progress-buffer"></span>' + '<span class="moviq-progress-time"></span>' + "</div>" + "</div>" + '<div class="moviq-controls-right">' + '<button class="moviq-btn moviq-btn-cc" aria-label="Toggle closed captions. This will open a menu, if more than one text track is available.">' + '<i class="fa fa-cc"></i>' + "</button>" + '<button class="moviq-btn moviq-btn-speed moviq-btn-submenu" aria-label="Toggle the controls for choosing a playback speed">' + '<i class="fa fa-clock-o"></i>' + "</button>" + '<button class="moviq-btn moviq-btn-quality moviq-btn-submenu moviq-btn-text" aria-label="Toggle the video quality options">' + "<em>HD</em>" + "</button>" + '<button class="moviq-btn moviq-btn-mute" aria-label="Mute or unmute sound">' + '<span class="fa fa-volume-off"></span>' + "</button>" + '<button class="moviq-btn moviq-btn-fullscreen" aria-label="Toggle fullscreen">' + '<span class="fa fa-arrows-alt"></span>' + "</button>" + "</div>" + "</div>" + "</div>";
         qualityButton = '<button class="moviq-btn moviq-btn-choose-quality moviq-btn-text" aria-label="Set the video quality to: {0}" data-quality="{0}">' + "<em>{0}</em>" + "</button>";
         ccButton = '<button class="moviq-btn moviq-btn-choose-cc moviq-btn-text" aria-label="Set the closed captions to: {lang}" data-lang="{lang}" data-id="{id}">' + "<em>{lang}</em>" + "</button>";
         sourceElement = '<source type="{type}" data-label="{label}" src="{src}" />';
         trackElement = '<track label="{label}" kind="captions" srclang="{srclang}" src="{src}" data-id="{id}">';
         header = '<div class="moviq-header">{header}</div>';
+        canvas = '<canvas class="moviq-snapshot moviq-hidden"></canvas>';
         video = "<video>" + '<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>" + "</video>";
         videoWithPoster = '<video poster="{poster}">' + '<p class="video-not-supported">' + locale.messages.browserNotSupported + "</p>" + "</video>";
         return {
@@ -516,6 +541,7 @@ moviqContainer.register({
             sourceElement: sourceElement,
             trackElement: trackElement,
             header: header,
+            canvas: canvas,
             video: video,
             videoWithPoster: videoWithPoster
         };
@@ -531,6 +557,36 @@ moviqContainer.register({
             emit: function(type, data) {
                 console.log("moviq-event", [ type, data ]);
             }
+        });
+    }
+});
+
+moviqContainer.register({
+    name: "snapshot",
+    dependencies: [ "locale", "ISnapshot" ],
+    factory: function(locale, ISnapshot) {
+        "use strict";
+        var grab, prepareCanvas;
+        grab = function(movi) {
+            var video = movi.dom.video, canvas = movi.dom.canvas, context, dimensions;
+            if (!canvas || !canvas.getContext) {
+                return;
+            }
+            context = canvas.getContext("2d");
+            dimensions = prepareCanvas(movi);
+            context.fillRect(0, 0, dimensions.width, dimensions.height);
+            context.drawImage(video, 0, 0, dimensions.width, dimensions.height);
+        };
+        prepareCanvas = function(movi) {
+            var video = movi.dom.video, canvas = movi.dom.canvas, dimensions = {};
+            dimensions.width = movi.dom.handle.clientWidth;
+            dimensions.height = movi.dom.handle.clientHeight;
+            canvas.width = dimensions.width;
+            canvas.height = dimensions.height;
+            return dimensions;
+        };
+        return new ISnapshot({
+            grab: grab
         });
     }
 });
@@ -555,8 +611,8 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "jqButtons",
-    dependencies: [ "locale", "jqQuerySelectors", "IButtons", "jQuery" ],
-    factory: function(locale, querySelectorsCtor, IButtons, $) {
+    dependencies: [ "locale", "jqQuerySelectors", "IButtons", "snapshot", "jQuery" ],
+    factory: function(locale, querySelectorsCtor, IButtons, snapshot, $) {
         "use strict";
         var init, bindButtonEvents, handlers;
         bindButtonEvents = function(movi, btns, querySelectors) {
@@ -763,7 +819,9 @@ moviqContainer.register({
                 toggleSubmenu(qualityButton, "with-quality");
             };
             changeQuality = function(label) {
-                var source, position, i;
+                var source, position, i, hidden = "moviq-hidden";
+                snapshot.grab(movi);
+                movi.$dom.$handle.children(querySelectors.canvas).removeClass(hidden);
                 for (i = 0; i < movi.sources.length; i += 1) {
                     if (movi.sources[i].label === label) {
                         source = movi.sources[i];
@@ -780,6 +838,9 @@ moviqContainer.register({
                 $video.one("loadedmetadata", function(event) {
                     video.currentTime = position;
                     togglePlay();
+                    $video.one("playing", function(event) {
+                        movi.$dom.$handle.children(querySelectors.canvas).addClass(hidden);
+                    });
                 });
                 return source;
             };
@@ -853,7 +914,7 @@ moviqContainer.register({
     dependencies: [ "locale", "defaultHtmlTemplates", "IHtmlTemplateGenerator", "jqQuerySelectors", "jQuery" ],
     factory: function(locale, htmlTemplates, IHtmlTemplateGenerator, querySelectorsCtor, $) {
         "use strict";
-        var makeControlsMarkup, makeSourceMarkup, makeCaptionMarkup, makeHeaderMarkup, makeVideoMarkup;
+        var makeControlsMarkup, makeSourceMarkup, makeCaptionMarkup, makeHeaderMarkup, makeSnapshotMarkup, makeVideoMarkup;
         makeControlsMarkup = function(sources, captions) {
             var $markup, $qualityMenu, $ccMenu, querySelectors = querySelectorsCtor(), i;
             $markup = $(htmlTemplates.controls);
@@ -883,6 +944,9 @@ moviqContainer.register({
             }
             return markup;
         };
+        makeSnapshotMarkup = function() {
+            return htmlTemplates.canvas;
+        };
         makeHeaderMarkup = function(header) {
             return htmlTemplates.header.replace(/\{header\}/, header);
         };
@@ -898,6 +962,7 @@ moviqContainer.register({
             makeSourceMarkup: makeSourceMarkup,
             makeCaptionMarkup: makeCaptionMarkup,
             makeHeaderMarkup: makeHeaderMarkup,
+            makeSnapshotMarkup: makeSnapshotMarkup,
             makeVideoMarkup: makeVideoMarkup
         });
     }
@@ -1010,6 +1075,8 @@ moviqContainer.register({
         "use strict";
         return {
             header: ".moviq-header",
+            canvas: ".moviq-snapshot",
+            hidden: ".moviq-hidden",
             controls: {
                 control_container: ".moviq-controls",
                 more_controls_container: ".moviq-controls-enclosure-more",
@@ -1131,6 +1198,7 @@ moviqContainer.register({
         var jqVideo, handleMoviqManifest, handleManifestUrl, handleHtml5Markup, addNotSupportedMessage, hideCC, addControls;
         handleMoviqManifest = function(self, options, querySelectors) {
             var scaffold = $("<div>"), manifest = new IManifest(options), video;
+            scaffold.append(htmlTemplateGenerator.makeSnapshotMarkup());
             if (manifest.header) {
                 scaffold.append(htmlTemplateGenerator.makeHeaderMarkup(manifest.header));
             }
@@ -1152,6 +1220,8 @@ moviqContainer.register({
             self.dom.header = self.$dom.$header[0];
             self.$dom.$video = self.$dom.$handle.children("video").first();
             self.dom.video = self.$dom.$video[0];
+            self.$dom.$canvas = self.$dom.$handle.children(querySelectors.canvas).first();
+            self.dom.canvas = self.$dom.$canvas[0];
             if (manifest.preload) {
                 self.$dom.$video.attr("preload", manifest.preload);
             }
@@ -1198,13 +1268,15 @@ moviqContainer.register({
                     $handle: $videoContainer,
                     $video: $videoContainer.children("video").first(),
                     $controls: undefined,
-                    $header: $videoContainer.children(querySelectors.header).first()
+                    $header: $videoContainer.children(querySelectors.header).first(),
+                    $canvas: undefined
                 },
                 dom: {
                     handle: $videoContainer[0],
                     video: $videoContainer.children("video").first()[0],
                     controls: undefined,
-                    header: $videoContainer.children(querySelectors.header).first()[0]
+                    header: $videoContainer.children(querySelectors.header).first()[0],
+                    canvas: undefined
                 }
             });
             self.events = eventHandlers(eventEmitter(self));
@@ -1392,4 +1464,3 @@ moviqContainer.register({
         return output;
     };
 })(window);
-//# sourceMappingURL=moviq.js.map
