@@ -24,10 +24,11 @@
     <script src="/scripts/moviq.js"></script>
     <script>
         var moviq = new Moviq(),
+            vids,
             vid2;
         
-        vid2 = moviq.ify('.vid2', {
-            poster: '',
+        vids = moviq.ify('.vid2', {
+            poster: 'http://dontpanic.acatar.local/shell/assets/download/18b204db-a460-4fbe-89b8-e6670b4cb9e4',
             header: 'Acatar Pitch 2',
             preload: 'metadata',
             sources: [
@@ -40,6 +41,8 @@
                 { srclang: 'sp', label: 'Spanish', src: '/captions/example.vtt' }
             ]
         });
+        
+        vid2 = vids[0];
     </script>
 </body>
 </html>

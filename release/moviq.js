@@ -368,6 +368,27 @@ moviqContainer.register({
 });
 
 moviqContainer.register({
+    name: "ITimeFormatter",
+    dependencies: [ "locale" ],
+    factory: function(locale) {
+        "use strict";
+        return function(implementation) {
+            var self = this, impl = implementation || {};
+            if (!implementation) {
+                throw new Error(locale.errors.interfaces.requiresImplementation);
+            }
+            if (typeof impl.formatTime !== "function") {
+                throw new Error(locale.errors.interfaces.requiresProperty + "formatTime");
+            }
+            if (impl.formatTime.length !== 2) {
+                throw new Error(locale.errors.interfaces.requiresArguments + "ITimeFormatter.formatTime(seconds, useLeadingZero)");
+            }
+            self.formatTime = impl.formatTime;
+        };
+    }
+});
+
+moviqContainer.register({
     name: "IVideo",
     dependencies: [ "locale" ],
     factory: function(locale) {
@@ -381,6 +402,7 @@ moviqContainer.register({
             self.progressMeter = impl.progressMeter;
             self.manifestUrl = impl.manifestUrl;
             self.watchReport = impl.watchReport;
+            self.duration = impl.duration;
             self.dom = {
                 handle: impl.dom.handle,
                 video: impl.dom.video,
@@ -597,6 +619,23 @@ moviqContainer.register({
 });
 
 moviqContainer.register({
+    name: "timeFormatter",
+    dependencies: [ "locale", "ITimeFormatter" ],
+    factory: function(locale, ITimeFormatter) {
+        "use strict";
+        var formatTime = function(seconds, useLeadingZero) {
+            var m, s;
+            m = useLeadingZero && Math.floor(seconds / 60) < 10 ? "0" + Math.floor(seconds / 60) : Math.floor(seconds / 60);
+            s = Math.floor(seconds - m * 60) < 10 ? "0" + Math.floor(seconds - m * 60) : Math.floor(seconds - m * 60);
+            return m + ":" + s;
+        };
+        return new ITimeFormatter({
+            formatTime: formatTime
+        });
+    }
+});
+
+moviqContainer.register({
     name: "IJqVideo",
     dependencies: [ "locale", "IVideo" ],
     factory: function(locale, IVideo) {
@@ -625,9 +664,11 @@ moviqContainer.register({
             movi.$dom.$handle.on("mouseenter", function(event) {
                 movi.$dom.$controls.stop().fadeTo(500, .9);
                 movi.$dom.$header.stop().fadeTo(500, .9);
+                movi.$dom.$handle.removeClass("moviq-hide-cursor");
             }).on("mouseleave", function(event) {
                 movi.$dom.$controls.stop().fadeOut();
                 movi.$dom.$header.stop().fadeOut();
+                movi.$dom.$handle.addClass("moviq-hide-cursor");
             });
             playBtn.on("click", function(event) {
                 var state = btns.togglePlay();
@@ -981,11 +1022,11 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "jqProgressMeter",
-    dependencies: [ "locale", "jqQuerySelectors", "IProgressMeter" ],
-    factory: function(locale, querySelectorsCtor, IProgressMeter) {
+    dependencies: [ "locale", "jqQuerySelectors", "timeFormatter", "IProgressMeter" ],
+    factory: function(locale, querySelectorsCtor, timeFormatter, IProgressMeter) {
         "use strict";
         var init = function(movi) {
-            var querySelectors = querySelectorsCtor(movi), $video, video, $bar, $timeBar, $bufferBar, $timeDisplay, init, bindProgressEvents, formatTime, coverage, meters, timePickerActive = false;
+            var querySelectors = querySelectorsCtor(movi), $video, video, $bar, $timeBar, $bufferBar, $timeDisplay, init, bindProgressEvents, coverage, meters, timePickerActive = false;
             $video = movi.$dom.$video;
             video = movi.dom.video;
             $bar = querySelectors.controls.getHandle(querySelectors.controls.progress_bar);
@@ -1030,14 +1071,14 @@ moviqContainer.register({
                 getPosition: function(mousePageX) {
                     var coordinates = meters.getCoordinates(mousePageX), time = video.duration * (coordinates.percent / 100);
                     return {
-                        time: formatTime(time),
+                        time: timeFormatter.formatTime(time),
                         left: coordinates.position
                     };
                 },
                 updateDisplay: function(positionPercent) {
-                    var newPositionPercent = positionPercent || coverage.getPositionPercent(), bufferedPercent = coverage.getBufferedPercent(), currentTime = formatTime(video.currentTime);
+                    var newPositionPercent = positionPercent || coverage.getPositionPercent(), bufferedPercent = coverage.getBufferedPercent(), currentTime = timeFormatter.formatTime(video.currentTime);
                     if (video.duration > 0) {
-                        currentTime += " / " + formatTime(video.duration);
+                        currentTime += " / " + timeFormatter.formatTime(video.duration);
                     }
                     $timeBar.css("width", newPositionPercent + "%");
                     $bufferBar.css("width", bufferedPercent + "%");
@@ -1045,12 +1086,6 @@ moviqContainer.register({
                         $timeDisplay.text(currentTime);
                     }
                 }
-            };
-            formatTime = function(seconds) {
-                var m, s;
-                m = Math.floor(seconds / 60) < 10 ? "0" + Math.floor(seconds / 60) : Math.floor(seconds / 60);
-                s = Math.floor(seconds - m * 60) < 10 ? "0" + Math.floor(seconds - m * 60) : Math.floor(seconds - m * 60);
-                return m + ":" + s;
             };
             bindProgressEvents = function() {
                 var $display = querySelectors.controls.getHandle(querySelectors.controls.progress_timeDisplay), $picker = querySelectors.controls.getHandle(querySelectors.controls.progress_timePicker);
@@ -1203,8 +1238,8 @@ moviqContainer.register({
 
 moviqContainer.register({
     name: "jqVideo",
-    dependencies: [ "locale", "IJqVideo", "IManifest", "jqQuerySelectors", "defaultEventHandlers", "jqEventEmitter", "jqButtons", "jqProgressMeter", "sourceParser", "sourceManifestParser", "htmlTemplateGenerator", "WatchReport", "jQuery" ],
-    factory: function(locale, IJqVideo, IManifest, querySelectorsCtor, eventHandlers, eventEmitter, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, WatchReport, $) {
+    dependencies: [ "locale", "IJqVideo", "IManifest", "jqQuerySelectors", "defaultEventHandlers", "jqEventEmitter", "jqButtons", "jqProgressMeter", "sourceParser", "sourceManifestParser", "htmlTemplateGenerator", "timeFormatter", "WatchReport", "jQuery" ],
+    factory: function(locale, IJqVideo, IManifest, querySelectorsCtor, eventHandlers, eventEmitter, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, timeFormatter, WatchReport, $) {
         "use strict";
         var jqVideo, handleMoviqManifest, handleManifestUrl, handleHtml5Markup, addNotSupportedMessage, hideCC, addControls;
         handleMoviqManifest = function(self, options, querySelectors) {
@@ -1311,6 +1346,9 @@ moviqContainer.register({
             self.buttons = jqButtons.init(self);
             self.progressMeter = jqProgressMeter.init(self);
             $videoContainer.addClass("moviqified");
+            self.$dom.$video.one("loadedmetadata", function(event) {
+                self.duration = timeFormatter.formatTime(self.dom.video.duration, false);
+            });
             return self;
         };
         return jqVideo;

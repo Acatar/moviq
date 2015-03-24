@@ -1,8 +1,8 @@
 /*globals moviqContainer, console*/
 moviqContainer.register({
     name: 'jqProgressMeter',
-    dependencies: ['locale', 'jqQuerySelectors', 'IProgressMeter'],
-    factory: function (locale, querySelectorsCtor, IProgressMeter) {
+    dependencies: ['locale', 'jqQuerySelectors', 'timeFormatter', 'IProgressMeter'],
+    factory: function (locale, querySelectorsCtor, timeFormatter, IProgressMeter) {
         "use strict";
         
         var init = function (movi) {
@@ -15,7 +15,6 @@ moviqContainer.register({
                 $timeDisplay,
                 init,
                 bindProgressEvents,
-                formatTime,
                 coverage,
                 meters,
                 timePickerActive = false;
@@ -75,17 +74,17 @@ moviqContainer.register({
                         time = (video.duration * (coordinates.percent / 100));
 
                     return {
-                        time: formatTime(time),
+                        time: timeFormatter.formatTime(time),
                         left: coordinates.position
                     };
                 },
                 updateDisplay: function (positionPercent) {
                     var newPositionPercent = positionPercent || coverage.getPositionPercent(),
                         bufferedPercent = coverage.getBufferedPercent(),
-                        currentTime = formatTime(video.currentTime);
+                        currentTime = timeFormatter.formatTime(video.currentTime);
 
                     if (video.duration > 0) {
-                        currentTime += ' / ' + formatTime(video.duration);
+                        currentTime += ' / ' + timeFormatter.formatTime(video.duration);
                     }
 
                     $timeBar.css('width', newPositionPercent + '%');
@@ -95,15 +94,6 @@ moviqContainer.register({
                         $timeDisplay.text(currentTime);
                     }
                 }
-            };
-
-            formatTime = function (seconds) {
-                var m, s;
-
-                m = Math.floor(seconds / 60) < 10 ? '0' + Math.floor(seconds / 60) : Math.floor(seconds / 60);
-                s = Math.floor(seconds - (m * 60)) < 10 ? '0' + Math.floor(seconds - (m * 60)) : Math.floor(seconds - (m * 60));
-
-                return m + ':' + s;
             };
 
             bindProgressEvents = function () {

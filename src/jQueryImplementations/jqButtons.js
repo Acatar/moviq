@@ -25,10 +25,12 @@ moviqContainer.register({
                 .on('mouseenter', function (event) {
                     movi.$dom.$controls.stop().fadeTo(500, 0.9);
                     movi.$dom.$header.stop().fadeTo(500, 0.9);
+                    movi.$dom.$handle.removeClass('moviq-hide-cursor');
                 })
                 .on('mouseleave', function (event) {
                     movi.$dom.$controls.stop().fadeOut();
                     movi.$dom.$header.stop().fadeOut();
+                    movi.$dom.$handle.addClass('moviq-hide-cursor');
                 });
 
             playBtn.on('click', function (event) {

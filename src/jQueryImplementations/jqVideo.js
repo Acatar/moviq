@@ -1,8 +1,8 @@
 /*globals moviqContainer*/
 moviqContainer.register({
     name: 'jqVideo',
-    dependencies: ['locale', 'IJqVideo', 'IManifest', 'jqQuerySelectors', 'defaultEventHandlers', 'jqEventEmitter', 'jqButtons', 'jqProgressMeter', 'sourceParser', 'sourceManifestParser', 'htmlTemplateGenerator', 'WatchReport', 'jQuery'],
-    factory: function (locale, IJqVideo, IManifest, querySelectorsCtor, eventHandlers, eventEmitter, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, WatchReport, $) {
+    dependencies: ['locale', 'IJqVideo', 'IManifest', 'jqQuerySelectors', 'defaultEventHandlers', 'jqEventEmitter', 'jqButtons', 'jqProgressMeter', 'sourceParser', 'sourceManifestParser', 'htmlTemplateGenerator', 'timeFormatter', 'WatchReport', 'jQuery'],
+    factory: function (locale, IJqVideo, IManifest, querySelectorsCtor, eventHandlers, eventEmitter, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, timeFormatter, WatchReport, $) {
         "use strict";
         
         var jqVideo,
@@ -160,6 +160,10 @@ moviqContainer.register({
             self.progressMeter = jqProgressMeter.init(self);
 
             $videoContainer.addClass('moviqified');
+            
+            self.$dom.$video.one('loadedmetadata', function (event) {
+                self.duration = timeFormatter.formatTime(self.dom.video.duration, false);
+            });
             
             return self;
         };
