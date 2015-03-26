@@ -12,6 +12,7 @@ moviqContainer.register({
             trackElement,
             header,
             canvas,
+            poster,
             video,
             videoWithPoster;
         
@@ -75,6 +76,7 @@ moviqContainer.register({
         trackElement = '<track label="{label}" kind="captions" srclang="{srclang}" src="{src}" data-id="{id}">';
         header = '<div class="moviq-header">{header}</div>';
         canvas = '<canvas class="moviq-snapshot moviq-hidden"></canvas>';
+        poster = '<div class="moviq-poster" style="background-image: url({poster});"></div>';
         
         video =
             '<video>'
@@ -94,6 +96,7 @@ moviqContainer.register({
             trackElement: trackElement,
             header: header,
             canvas: canvas,
+            poster: poster,
             video: video,
             videoWithPoster: videoWithPoster
         };

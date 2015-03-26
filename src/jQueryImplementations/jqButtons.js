@@ -345,7 +345,7 @@ moviqContainer.register({
             };
 
             changeQuality = function (label) {
-                var source, position, i, hidden = 'moviq-hidden';
+                var source, position, i, hidden = 'moviq-hidden', shortLabel;
                 
                 // take a snapshot and place it over the video
                 snapshot.grab(movi);
@@ -360,7 +360,8 @@ moviqContainer.register({
                 }
                 
                 // update the source label
-                querySelectors.controls.getHandle(querySelectors.controls.quality + ' em').text(source.label);
+                shortLabel = source.label.length > 2 ? source.label.substr(0, 2) : source.label;
+                querySelectors.controls.getHandle(querySelectors.controls.quality + ' em').text(shortLabel);
                 
                 // remember the current position of the video
                 position = video.currentTime;
