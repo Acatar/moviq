@@ -25,6 +25,7 @@ module.exports = function (grunt) {
             '../src/implementations/simpleEventEmitter.js',
             '../src/implementations/snapshot.js',
             '../src/implementations/timeFormatter.js',
+            // jQuery Implementations
             '../src/jQueryImplementations/IJqVideo.js',
             '../src/jQueryImplementations/jqButtons.js',
             '../src/jQueryImplementations/jqEventEmitter.js',
@@ -36,6 +37,7 @@ module.exports = function (grunt) {
             '../src/jQueryImplementations/jqVideoInitializer.js',
             '../src/models/CoverageReport.js',
             '../src/models/WatchReport.js',
+            // Bootstrapper
             '../src/moviqBootstrapper.js'
         ];
 
