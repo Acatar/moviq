@@ -83,10 +83,9 @@ Hilary.scope('moviqContainer').register({
         
         // by default the first text track will be "showing". We want it to be hidden by default
         hideCC = function (self) {
-            var cc = self.dom.video.textTracks[0];
-
-            if (cc) {
-                cc.mode = 'hidden'; // showing // disabled
+            if (self.dom.video.textTracks.length > 0) {
+                var cc = self.dom.video.textTracks[0];
+                cc.mode = 'hidden'; // showing // disabled            
             }
         };
         

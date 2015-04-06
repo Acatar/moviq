@@ -1321,8 +1321,8 @@ Hilary.scope("moviqContainer").register({
             }
         };
         hideCC = function(self) {
-            var cc = self.dom.video.textTracks[0];
-            if (cc) {
+            if (self.dom.video.textTracks.length > 0) {
+                var cc = self.dom.video.textTracks[0];
                 cc.mode = "hidden";
             }
         };
