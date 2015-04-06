@@ -1,10 +1,5 @@
-/*! moviq-build 2015-03-26 */
-/*!
-// The IoC Container that all moviq components are registered in
-*/
-var moviqContainer = new Hilary();
-
-moviqContainer.register({
+/*! moviq-build 2015-04-06 */
+Hilary.scope("moviqContainer").register({
     name: "locale::en_US",
     factory: {
         errors: {
@@ -23,9 +18,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "IButtons",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -43,9 +37,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "ICaption",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(caption) {
@@ -69,9 +62,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "IEventEmitter",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -90,9 +82,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "IEvents",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(eventsImplementation) {
@@ -122,9 +113,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "IHtmlTemplateGenerator",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -175,9 +165,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "IManifest",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(manifest) {
@@ -191,9 +180,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "IMoviq",
-    dependencies: [ "locale", "IManifest" ],
     factory: function(locale, IManifest) {
         "use strict";
         return function(implementation) {
@@ -214,9 +202,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "IProgressMeter",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -235,9 +222,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "ISnapshot",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -256,9 +242,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "ISource",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(source) {
@@ -282,9 +267,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "ISourceParser",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -346,9 +330,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "ISourceManifestParser",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -367,9 +350,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "ITimeFormatter",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -388,9 +370,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "IVideo",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation, manifest) {
@@ -413,9 +394,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "IVideoInitializer",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -434,9 +414,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "consoleEventEmitter",
-    dependencies: [ "locale", "IEventEmitter" ],
     factory: function(locale, IEventEmitter) {
         "use strict";
         return function(movi) {
@@ -459,9 +438,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "defaultEventHandlers",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(eventEmitter) {
@@ -541,9 +519,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "defaultHtmlTemplates",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         var controls, qualityButton, ccButton, sourceElement, trackElement, header, canvas, poster, video, videoWithPoster;
@@ -572,9 +549,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "simpleEventEmitter",
-    dependencies: [ "locale", "IEventEmitter" ],
     factory: function(locale, IEventEmitter) {
         "use strict";
         return new IEventEmitter({
@@ -585,9 +561,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "snapshot",
-    dependencies: [ "locale", "ISnapshot" ],
     factory: function(locale, ISnapshot) {
         "use strict";
         var grab, prepareCanvas;
@@ -606,8 +581,8 @@ moviqContainer.register({
             ratio = video.videoWidth / video.videoHeight;
             dimensions.width = video.videoWidth;
             dimensions.height = parseInt(dimensions.width / ratio, 10);
-            dimensions.canvasWidth = movi.dom.video.clientWidth;
-            dimensions.canvasHeight = movi.dom.video.clientHeight;
+            dimensions.canvasWidth = Math.max(1, Math.floor(movi.dom.video.clientWidth));
+            dimensions.canvasHeight = Math.max(1, Math.floor(movi.dom.video.clientHeight));
             dimensions.canvasVideoHeight = parseInt(dimensions.canvasWidth / ratio, 10);
             dimensions.dy = dimensions.canvasVideoHeight - dimensions.canvasHeight;
             canvas.width = dimensions.canvasWidth;
@@ -620,9 +595,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "timeFormatter",
-    dependencies: [ "locale", "ITimeFormatter" ],
     factory: function(locale, ITimeFormatter) {
         "use strict";
         var formatTime = function(seconds, useLeadingZero) {
@@ -637,9 +611,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "IJqVideo",
-    dependencies: [ "locale", "IVideo" ],
     factory: function(locale, IVideo) {
         "use strict";
         return function(implementation, manifest) {
@@ -655,7 +628,7 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "jqButtons",
     dependencies: [ "locale", "jqQuerySelectors", "IButtons", "snapshot", "jQuery" ],
     factory: function(locale, querySelectorsCtor, IButtons, snapshot, $) {
@@ -974,7 +947,7 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "jqEventEmitter",
     dependencies: [ "locale", "IEventEmitter", "jQuery" ],
     factory: function(locale, IEventEmitter, $) {
@@ -999,7 +972,7 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "jqHtmlTemplateGenerator",
     dependencies: [ "locale", "defaultHtmlTemplates", "IHtmlTemplateGenerator", "jqQuerySelectors", "jQuery" ],
     factory: function(locale, htmlTemplates, IHtmlTemplateGenerator, querySelectorsCtor, $) {
@@ -1058,7 +1031,7 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "jqProgressMeter",
     dependencies: [ "locale", "jqQuerySelectors", "timeFormatter", "IProgressMeter" ],
     factory: function(locale, querySelectorsCtor, timeFormatter, IProgressMeter) {
@@ -1153,8 +1126,9 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "jqQuerySelectors",
+    dependencies: [],
     factory: function(movi) {
         "use strict";
         return {
@@ -1200,7 +1174,7 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "jqSourceParser",
     dependencies: [ "locale", "ISource", "ICaption", "ISourceParser", "jQuery" ],
     factory: function(locale, ISource, ICaption, ISourceParser, $) {
@@ -1274,7 +1248,7 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "jqVideo",
     dependencies: [ "locale", "IJqVideo", "IManifest", "jqQuerySelectors", "defaultEventHandlers", "jqEventEmitter", "jqButtons", "jqProgressMeter", "sourceParser", "sourceManifestParser", "htmlTemplateGenerator", "timeFormatter", "WatchReport", "jQuery" ],
     factory: function(locale, IJqVideo, IManifest, querySelectorsCtor, eventHandlers, eventEmitter, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, timeFormatter, WatchReport, $) {
@@ -1393,7 +1367,7 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "jqVideoInitializer",
     dependencies: [ "locale", "Video", "IVideoInitializer", "jQuery" ],
     factory: function(locale, Video, IVideoInitializer, $) {
@@ -1420,9 +1394,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "CoverageReport",
-    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(data) {
@@ -1436,9 +1409,8 @@ moviqContainer.register({
     }
 });
 
-moviqContainer.register({
+Hilary.scope("moviqContainer").register({
     name: "WatchReport",
-    dependencies: [ "locale", "CoverageReport" ],
     factory: function(locale, CoverageReport) {
         "use strict";
         return function(movi) {
@@ -1472,7 +1444,7 @@ moviqContainer.register({
 // The composition root. This is where we choose the implementations that will
 // make up this instance of Moviq.
 */
-(function(exports) {
+(function(exports, scope) {
     "use strict";
     var compose;
     /*!
@@ -1542,7 +1514,7 @@ moviqContainer.register({
         });
     };
     exports.Moviq = function(options) {
-        var scope = moviqContainer, opts = options || {}, Moviq, initializer, output;
+        var opts = options || {}, Moviq, initializer, output;
         compose(scope);
         Moviq = scope.resolve("IMoviq");
         initializer = scope.resolve("videoInitializer");
@@ -1556,4 +1528,4 @@ moviqContainer.register({
         }
         return output;
     };
-})(window);
+})(window, Hilary.scope("moviqContainer"));

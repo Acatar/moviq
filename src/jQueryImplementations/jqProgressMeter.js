@@ -1,5 +1,5 @@
-/*globals moviqContainer, console*/
-moviqContainer.register({
+/*globals Hilary, console*/
+Hilary.scope('moviqContainer').register({
     name: 'jqProgressMeter',
     dependencies: ['locale', 'jqQuerySelectors', 'timeFormatter', 'IProgressMeter'],
     factory: function (locale, querySelectorsCtor, timeFormatter, IProgressMeter) {

@@ -1,5 +1,5 @@
-/*globals moviqContainer*/
-moviqContainer.register({
+/*globals Hilary*/
+Hilary.scope('moviqContainer').register({
     name: 'jqButtons',
     dependencies: ['locale', 'jqQuerySelectors', 'IButtons', 'snapshot', 'jQuery'],
     factory: function (locale, querySelectorsCtor, IButtons, snapshot, $) {

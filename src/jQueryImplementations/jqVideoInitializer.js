@@ -1,5 +1,5 @@
-/*globals moviqContainer, console*/
-moviqContainer.register({
+/*globals Hilary, console*/
+Hilary.scope('moviqContainer').register({
     name: 'jqVideoInitializer',
     dependencies: ['locale', 'Video', 'IVideoInitializer', 'jQuery'],
     factory: function (locale, Video, IVideoInitializer, $) {

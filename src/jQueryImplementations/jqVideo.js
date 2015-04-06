@@ -1,5 +1,5 @@
-/*globals moviqContainer*/
-moviqContainer.register({
+/*globals Hilary*/
+Hilary.scope('moviqContainer').register({
     name: 'jqVideo',
     dependencies: ['locale', 'IJqVideo', 'IManifest', 'jqQuerySelectors', 'defaultEventHandlers', 'jqEventEmitter', 'jqButtons', 'jqProgressMeter', 'sourceParser', 'sourceManifestParser', 'htmlTemplateGenerator', 'timeFormatter', 'WatchReport', 'jQuery'],
     factory: function (locale, IJqVideo, IManifest, querySelectorsCtor, eventHandlers, eventEmitter, jqButtons, jqProgressMeter, sourceParser, sourceManifestParser, htmlTemplateGenerator, timeFormatter, WatchReport, $) {

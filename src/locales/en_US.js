@@ -1,5 +1,5 @@
-/*globals moviqContainer*/
-moviqContainer.register({
+/*globals Hilary*/
+Hilary.scope('moviqContainer').register({
     name: 'locale::en_US',
     factory: {
         errors: {

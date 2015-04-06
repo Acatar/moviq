@@ -1,5 +1,5 @@
-/*globals moviqContainer, console*/
-moviqContainer.register({
+/*globals Hilary, console*/
+Hilary.scope('moviqContainer').register({
     name: 'jqSourceParser',
     dependencies: ['locale', 'ISource', 'ICaption', 'ISourceParser', 'jQuery'],
     factory: function (locale, ISource, ICaption, ISourceParser, $) {

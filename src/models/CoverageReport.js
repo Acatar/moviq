@@ -1,7 +1,6 @@
-/*globals moviqContainer*/
-moviqContainer.register({
+/*globals Hilary*/
+Hilary.scope('moviqContainer').register({
     name: 'CoverageReport',
-    dependencies: ['locale'],
     factory: function (locale) {
         "use strict";
         

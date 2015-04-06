@@ -1,10 +1,10 @@
-/*global moviqContainer, console*/
+/*global Hilary, console*/
 
 /*!
 // The composition root. This is where we choose the implementations that will
 // make up this instance of Moviq.
 */
-(function (exports) {
+(function (exports, scope) {
     "use strict";
     
     var compose;
@@ -118,8 +118,7 @@
     };
     
     exports.Moviq = function (options) {
-        var scope = moviqContainer,
-            opts = options || {},
+        var opts = options || {},
             Moviq,
             initializer,
             output;
@@ -141,4 +140,4 @@
         return output;
     };
     
-}(window));
+}(window, Hilary.scope('moviqContainer')));

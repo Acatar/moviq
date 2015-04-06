@@ -3,7 +3,6 @@ module.exports = function (grunt) {
     "use strict";
     
     var hilaryFiles = [
-            '../src/moviqContainer.js',
             '../src/locales/en_US.js',
             '../src/interfaces/IButtons.js',
             '../src/interfaces/ICaption.js',
@@ -124,6 +123,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
 
     // Default task(s).
-    grunt.registerTask('default', ['watch']);
+    grunt.registerTask('mon', ['watch']);
+    grunt.registerTask('default', ["uglify:debug", "uglify:release", "copy:js", "copy:css", "copy:examples"]);
 
 };

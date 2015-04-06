@@ -1,7 +1,6 @@
-/*globals moviqContainer*/
-moviqContainer.register({
+/*globals Hilary*/
+Hilary.scope('moviqContainer').register({
     name: 'IMoviq',
-    dependencies: ['locale', 'IManifest'],
     factory: function (locale, IManifest) {
         "use strict";
         

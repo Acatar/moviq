@@ -1,5 +1,5 @@
-/*globals moviqContainer*/
-moviqContainer.register({
+/*globals Hilary*/
+Hilary.scope('moviqContainer').register({
     name: 'jqEventEmitter',
     dependencies: ['locale', 'IEventEmitter', 'jQuery'],
     factory: function (locale, IEventEmitter, $) {

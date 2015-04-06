@@ -1,7 +1,6 @@
-/*globals moviqContainer, console*/
-moviqContainer.register({
+/*globals Hilary, console*/
+Hilary.scope('moviqContainer').register({
     name: 'snapshot',
-    dependencies: ['locale', 'ISnapshot'],
     factory: function (locale, ISnapshot) {
         "use strict";
         
@@ -46,8 +45,8 @@ moviqContainer.register({
             // get the dimensions
 			dimensions.width = video.videoWidth;
             dimensions.height = parseInt(dimensions.width / ratio, 10); // movi.dom.handle.clientHeight; //video.videoHeight;
-            dimensions.canvasWidth = movi.dom.video.clientWidth;
-            dimensions.canvasHeight = movi.dom.video.clientHeight;
+            dimensions.canvasWidth = Math.max(1, Math.floor(movi.dom.video.clientWidth)); // a minimum of 1
+            dimensions.canvasHeight = Math.max(1, Math.floor(movi.dom.video.clientHeight)); // a minimum of 1
             dimensions.canvasVideoHeight = parseInt(dimensions.canvasWidth / ratio, 10);
             dimensions.dy = dimensions.canvasVideoHeight - dimensions.canvasHeight;
 

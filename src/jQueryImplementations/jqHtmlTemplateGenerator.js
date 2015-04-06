@@ -1,5 +1,5 @@
-/*global moviqContainer*/
-moviqContainer.register({
+/*global Hilary*/
+Hilary.scope('moviqContainer').register({
     name: 'jqHtmlTemplateGenerator',
     dependencies: ['locale', 'defaultHtmlTemplates', 'IHtmlTemplateGenerator', 'jqQuerySelectors', 'jQuery'],
     factory: function (locale, htmlTemplates, IHtmlTemplateGenerator, querySelectorsCtor, $) {
