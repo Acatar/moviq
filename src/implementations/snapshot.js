@@ -1,6 +1,7 @@
 /*globals Hilary, console*/
 Hilary.scope('moviqContainer').register({
     name: 'snapshot',
+    dependencies: ['locale', 'ISnapshot'],
     factory: function (locale, ISnapshot) {
         "use strict";
         

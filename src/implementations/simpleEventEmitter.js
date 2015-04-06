@@ -1,6 +1,7 @@
 /*globals Hilary, console*/
 Hilary.scope('moviqContainer').register({
     name: 'simpleEventEmitter',
+    dependencies: ['locale', 'IEventEmitter'],
     factory: function (locale, IEventEmitter) {
         "use strict";
         

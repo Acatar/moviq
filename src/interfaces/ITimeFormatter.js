@@ -1,6 +1,7 @@
 /*globals Hilary*/
 Hilary.scope('moviqContainer').register({
     name: 'ITimeFormatter',
+    dependencies: ['locale'],
     factory: function (locale) {
         "use strict";
         

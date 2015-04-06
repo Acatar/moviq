@@ -20,6 +20,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "IButtons",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -39,6 +40,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "ICaption",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(caption) {
@@ -64,6 +66,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "IEventEmitter",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -84,6 +87,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "IEvents",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(eventsImplementation) {
@@ -115,6 +119,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "IHtmlTemplateGenerator",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -167,6 +172,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "IManifest",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(manifest) {
@@ -182,6 +188,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "IMoviq",
+    dependencies: [ "locale", "IManifest" ],
     factory: function(locale, IManifest) {
         "use strict";
         return function(implementation) {
@@ -204,6 +211,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "IProgressMeter",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -224,6 +232,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "ISnapshot",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -244,6 +253,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "ISource",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(source) {
@@ -269,6 +279,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "ISourceParser",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -332,6 +343,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "ISourceManifestParser",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -352,6 +364,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "ITimeFormatter",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -372,6 +385,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "IVideo",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation, manifest) {
@@ -396,6 +410,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "IVideoInitializer",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(implementation) {
@@ -416,6 +431,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "consoleEventEmitter",
+    dependencies: [ "locale", "IEventEmitter" ],
     factory: function(locale, IEventEmitter) {
         "use strict";
         return function(movi) {
@@ -440,6 +456,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "defaultEventHandlers",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(eventEmitter) {
@@ -521,6 +538,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "defaultHtmlTemplates",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         var controls, qualityButton, ccButton, sourceElement, trackElement, header, canvas, poster, video, videoWithPoster;
@@ -551,6 +569,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "simpleEventEmitter",
+    dependencies: [ "locale", "IEventEmitter" ],
     factory: function(locale, IEventEmitter) {
         "use strict";
         return new IEventEmitter({
@@ -563,6 +582,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "snapshot",
+    dependencies: [ "locale", "ISnapshot" ],
     factory: function(locale, ISnapshot) {
         "use strict";
         var grab, prepareCanvas;
@@ -597,6 +617,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "timeFormatter",
+    dependencies: [ "locale", "ITimeFormatter" ],
     factory: function(locale, ITimeFormatter) {
         "use strict";
         var formatTime = function(seconds, useLeadingZero) {
@@ -613,6 +634,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "IJqVideo",
+    dependencies: [ "locale", "IVideo" ],
     factory: function(locale, IVideo) {
         "use strict";
         return function(implementation, manifest) {
@@ -1396,6 +1418,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "CoverageReport",
+    dependencies: [ "locale" ],
     factory: function(locale) {
         "use strict";
         return function(data) {
@@ -1411,6 +1434,7 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "WatchReport",
+    dependencies: [ "locale", "CoverageReport" ],
     factory: function(locale, CoverageReport) {
         "use strict";
         return function(movi) {

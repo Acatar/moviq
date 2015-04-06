@@ -1,6 +1,7 @@
 /*globals Hilary*/
 Hilary.scope('moviqContainer').register({
     name: 'IButtons',
+    dependencies: ['locale'],
     factory: function (locale) {
         "use strict";
         

@@ -1,6 +1,7 @@
 /*globals Hilary*/
 Hilary.scope('moviqContainer').register({
     name: 'IVideo',
+    dependencies: ['locale'],
     factory: function (locale) {
         "use strict";
         

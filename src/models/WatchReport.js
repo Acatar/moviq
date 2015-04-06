@@ -1,6 +1,7 @@
 /*globals Hilary*/
 Hilary.scope('moviqContainer').register({
     name: 'WatchReport',
+    dependencies: ['locale', 'CoverageReport'],
     factory: function (locale, CoverageReport) {
         "use strict";
         
