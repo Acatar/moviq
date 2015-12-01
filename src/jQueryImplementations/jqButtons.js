@@ -222,7 +222,7 @@ Hilary.scope('moviqContainer').register({
                             // The user pressed escape.
                             // We need to manipulate the DOM if they
                             // were in fullscreen
-                            btns.fullscreenOut();
+                            fullscreenOut();
                         }
                     });
             };
@@ -441,7 +441,6 @@ Hilary.scope('moviqContainer').register({
                 toggleCaptions: toggleCaptions,
                 changeCaption: changeCaption,
                 toggleFullscreen: toggleFullscreen,
-                fullscreenOut: fullscreenOut,
                 toggleMute: toggleMute,
                 toggleSpeed: toggleSpeed,
                 changeSpeed: changeSpeed,

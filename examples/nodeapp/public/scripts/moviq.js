@@ -43,7 +43,6 @@ Hilary.scope("moviqContainer").register({
             var self = this, impl = implementation || {};
             self.togglePlay = impl.togglePlay;
             self.toggleFullscreen = impl.toggleFullscreen;
-            self.fullscreenOut = impl.fullscreenOut;
             self.toggleCaptions = impl.toggleCaptions;
             self.changeCaption = impl.changeCaption;
             self.toggleMute = impl.toggleMute;
@@ -820,7 +819,7 @@ Hilary.scope("moviqContainer").register({
                 $icon.removeClass(constants.iconClasses.expand).addClass(constants.iconClasses.compress);
                 $(document).off("keyup.moviq-fs").on("keyup.moviq-fs", function(evt) {
                     if (evt.keyCode == 27) {
-                        btns.fullscreenOut();
+                        fullscreenOut();
                     }
                 });
             };
@@ -974,7 +973,6 @@ Hilary.scope("moviqContainer").register({
                 toggleCaptions: toggleCaptions,
                 changeCaption: changeCaption,
                 toggleFullscreen: toggleFullscreen,
-                fullscreenOut: fullscreenOut,
                 toggleMute: toggleMute,
                 toggleSpeed: toggleSpeed,
                 changeSpeed: changeSpeed,

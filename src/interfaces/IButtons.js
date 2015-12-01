@@ -11,7 +11,6 @@ Hilary.scope('moviqContainer').register({
 
             self.togglePlay = impl.togglePlay;
             self.toggleFullscreen = impl.toggleFullscreen;
-            self.fullscreenOut = impl.fullscreenOut;
             self.toggleCaptions = impl.toggleCaptions;
             self.changeCaption = impl.changeCaption;
             self.toggleMute = impl.toggleMute;
