@@ -1,9 +1,10 @@
 /*globals module*/
 module.exports = function (grunt) {
     "use strict";
-    
+
     var hilaryFiles = [
             '../src/locales/en_US.js',
+            '../src/constants.js',
             '../src/interfaces/IButtons.js',
             '../src/interfaces/ICaption.js',
             '../src/interfaces/IEventEmitter.js',

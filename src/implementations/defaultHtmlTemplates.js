@@ -4,7 +4,7 @@ Hilary.scope('moviqContainer').register({
     dependencies: ['locale'],
     factory: function (locale) {
         "use strict";
-        
+
         var controls,
             qualityButton,
             ccButton,
@@ -15,7 +15,7 @@ Hilary.scope('moviqContainer').register({
             poster,
             video,
             videoWithPoster;
-        
+
         controls =
             '<div class="moviq-controls">'
                 + '<div class="moviq-controls-enclosure-more moviq-controls-quality">'
@@ -61,33 +61,33 @@ Hilary.scope('moviqContainer').register({
                     + '</div>'
                 + '</div>'
             + '</div>';
-        
+
         qualityButton =
                     '<button class="moviq-btn moviq-btn-choose-quality moviq-btn-text" aria-label="Set the video quality to: {0}" data-quality="{0}">'
                         + '<em>{0}</em>'
                     + '</button>';
-        
+
         ccButton =
                     '<button class="moviq-btn moviq-btn-choose-cc moviq-btn-text" aria-label="Set the closed captions to: {lang}" data-lang="{lang}" data-id="{id}">'
                         + '<em>{lang}</em>'
                     + '</button>';
-        
+
         sourceElement = '<source type="{type}" data-label="{label}" src="{src}" />';
         trackElement = '<track label="{label}" kind="captions" srclang="{srclang}" src="{src}" data-id="{id}">';
         header = '<div class="moviq-header">{header}</div>';
         canvas = '<canvas class="moviq-snapshot moviq-hidden"></canvas>';
         poster = '<div class="moviq-poster" style="background-image: url({poster});"></div>';
-        
+
         video =
             '<video>'
                 + '<p class="video-not-supported">' + locale.messages.browserNotSupported + '</p>'
             + '</video>';
-        
+
         videoWithPoster =
             '<video poster="{poster}">'
                 + '<p class="video-not-supported">' + locale.messages.browserNotSupported + '</p>'
             + '</video>';
-        
+
         return {
             controls: controls,
             qualityButton: qualityButton,

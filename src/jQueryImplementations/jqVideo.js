@@ -85,7 +85,7 @@ Hilary.scope('moviqContainer').register({
         hideCC = function (self) {
             if (self.dom.video.textTracks.length > 0) {
                 var cc = self.dom.video.textTracks[0];
-                cc.mode = 'hidden'; // showing // disabled            
+                cc.mode = 'hidden'; // showing // disabled
             }
         };
         

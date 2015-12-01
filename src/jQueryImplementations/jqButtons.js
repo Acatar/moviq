@@ -1,21 +1,21 @@
 /*globals Hilary*/
 Hilary.scope('moviqContainer').register({
     name: 'jqButtons',
-    dependencies: ['locale', 'jqQuerySelectors', 'IButtons', 'snapshot', 'jQuery'],
-    factory: function (locale, querySelectorsCtor, IButtons, snapshot, $) {
+    dependencies: ['locale', 'constants', 'jqQuerySelectors', 'IButtons', 'snapshot', 'jQuery'],
+    factory: function (locale, constants, querySelectorsCtor, IButtons, snapshot, $) {
         "use strict";
-        
+
         var init,
             bindButtonEvents,
             handlers,
             cursorManager;
-        
+
         cursorManager = function () {
             var throttle = false,
                 timeout,
                 bind,
                 hide;
-            
+
             bind = function () {
                 $(document).mousemove(function (event) {
                     if (!throttle) {
@@ -26,7 +26,7 @@ Hilary.scope('moviqContainer').register({
                     }
                 });
             };
-            
+
             hide = function () {
                 $('html').css({cursor: 'none'});
                 throttle = true;
@@ -34,12 +34,12 @@ Hilary.scope('moviqContainer').register({
                     throttle = false;
                 }, 500);
             };
-            
+
             return {
                 bind: bind
             };
         };
-        
+
         bindButtonEvents = function (movi, btns, querySelectors) {
             var playBtn = querySelectors.controls.getHandle(querySelectors.controls.play),
                 ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc),
@@ -56,7 +56,7 @@ Hilary.scope('moviqContainer').register({
                 .on('mouseenter', function (event) {
                     movi.$dom.$controls.stop().fadeTo(500, 0.9);
                     movi.$dom.$header.stop().fadeTo(500, 0.9);
-                    
+
                     if ($(event.target).parent().hasClass('fullscreen')) {
                         $('html').css({cursor: 'default'});
                     }
@@ -64,7 +64,7 @@ Hilary.scope('moviqContainer').register({
                 .on('mouseleave', function (event) {
                     movi.$dom.$controls.stop().fadeOut();
                     movi.$dom.$header.stop().fadeOut();
-                
+
                     if ($(event.target).parent().hasClass('fullscreen')) {
                         $('html').css({cursor: 'none'});
                     }
@@ -89,7 +89,7 @@ Hilary.scope('moviqContainer').register({
                     movi.events.onHideCaptions(event);
                 }
             });
-            
+
             ccChoice.on('click', function (event) {
                 var self = $(event.currentTarget),
                     state = btns.changeCaption(self);
@@ -149,8 +149,14 @@ Hilary.scope('moviqContainer').register({
                     movi.events.onFullscreenOff(event);
                 }
             });
+
+            document.onkeydown = function (event) {
+                if (event.keyCode == 27) { // escape
+                    movi.events.onFullscreenOff(event);
+                }
+            };
         };
-        
+
         handlers = function (movi, querySelectors) {
             var $video = movi.$dom.$video,
                 video = movi.dom.video,
@@ -173,11 +179,11 @@ Hilary.scope('moviqContainer').register({
                 var playIcon = querySelectors.controls.getIconHandle(querySelectors.controls.play);
 
                 if (video.paused || video.ended) {
-                    playIcon.removeClass('fa-play').addClass('fa-pause');
+                    playIcon.removeClass(constants.iconClasses.play).addClass(constants.iconClasses.pause);
                     video.play();
                     return 1;
                 } else {
-                    playIcon.removeClass('fa-pause').addClass('fa-play');
+                    playIcon.removeClass(constants.iconClasses.pause).addClass(constants.iconClasses.play);
                     video.pause();
                     return 0;
                 }
@@ -213,16 +219,22 @@ Hilary.scope('moviqContainer').register({
                 }
 
                 $container.addClass('fullscreen');
-                $icon.removeClass('fa-arrows-alt').addClass('fa-compress'); // fa-expand
+                $icon.removeClass(constants.iconClasses.expand).addClass(constants.iconClasses.compress); // fa-expand
             };
 
             fullscreenOut = function () {
                 var container = movi.dom.handle,
                     $container = movi.$dom.$handle,
-                    $icon = querySelectors.controls.getIconHandle(querySelectors.controls.fullscreen);
+                    $icon;
+
+                if (!$container.hasClass('fullscreen')) {
+                    return;
+                }
+
+                $icon = querySelectors.controls.getIconHandle(querySelectors.controls.fullscreen);
 
                 $container.removeClass('fullscreen');
-                $icon.removeClass('fa-compress').addClass('fa-arrows-alt'); // fa-expand
+                $icon.removeClass(constants.iconClasses.compress).addClass(constants.iconClasses.expand); // fa-expand
 
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
@@ -240,7 +252,7 @@ Hilary.scope('moviqContainer').register({
                     track = video.textTracks[0],
                     none = video.textTracks.length < 1,
                     moreThanOne = video.textTracks.length > 1;
-                
+
                 if (none) {
                     return;
                 } else if (moreThanOne) {
@@ -249,7 +261,7 @@ Hilary.scope('moviqContainer').register({
                     return toggleTextTrack(ccButton, movi.captions[0].srclang, track);
                 }
             };
-            
+
             toggleTextTrack = function (ccButton, lang, track) {
                 if (ccButton.hasClass('selected')) {
                     ccButton.removeClass('selected');
@@ -271,12 +283,12 @@ Hilary.scope('moviqContainer').register({
                     }
                 }
             };
-            
+
             changeCaption = function (choiceButton) {
                 var lang = choiceButton.attr('data-lang'),
                     i = parseInt(choiceButton.attr('data-id'), 10),
                     track = video.textTracks[i];
-                
+
                 return toggleTextTrack(choiceButton, lang, track);
             };
 
@@ -285,11 +297,11 @@ Hilary.scope('moviqContainer').register({
 
                 video.muted = !video.muted;
 
-                if ($icon.hasClass('fa-volume-off')) {
-                    $icon.removeClass('fa-volume-off').addClass('fa-volume-up');
+                if ($icon.hasClass(constants.iconClasses.volumeOff)) {
+                    $icon.removeClass(constants.iconClasses.volumeOff).addClass(constants.iconClasses.volumeOn);
                     return 0;
                 } else {
-                    $icon.removeClass('fa-volume-up').addClass('fa-volume-off');
+                    $icon.removeClass(constants.iconClasses.volumeOn).addClass(constants.iconClasses.volumeOff);
                     return 1;
                 }
             };
@@ -336,7 +348,7 @@ Hilary.scope('moviqContainer').register({
                 var spdClass = 'with-quality',
                     qualityButton = querySelectors.controls.getHandle(querySelectors.controls.quality),
                     none = movi.sources.length < 2;
-                
+
                 if (none) {
                     return;
                 } else {
@@ -346,7 +358,7 @@ Hilary.scope('moviqContainer').register({
 
             changeQuality = function (label) {
                 var source, position, i, hidden = 'moviq-hidden', shortLabel;
-                
+
                 // take a snapshot and place it over the video
                 snapshot.grab(movi);
                 movi.$dom.$handle.children(querySelectors.canvas).removeClass(hidden);
@@ -358,35 +370,35 @@ Hilary.scope('moviqContainer').register({
                         break;
                     }
                 }
-                
+
                 // update the source label
                 shortLabel = source.label.length > 2 ? source.label.substr(0, 2) : source.label;
                 querySelectors.controls.getHandle(querySelectors.controls.quality + ' em').text(shortLabel);
-                
+
                 // remember the current position of the video
                 position = video.currentTime;
-                
+
                 // if the video is playing
                 if (!video.paused) {
                     // pause the video
                     togglePlay();
                 }
-                
+
                 // set the new source
                 video.src = source.src;
-                
+
                 // start to load the video, so we get the metadata
                 video.load();
-                
+
                 // the next time the loadedmetadata event fires
                 $video.one('loadedmetadata', function (event) {
-                    
+
                     // set the position to point where the user switched the source
                     video.currentTime = position;
-                    
+
                     // and start playing the video, again
                     togglePlay();
-                    
+
                     // hide the snapshot after the video starts playing again
                     $video.one('playing', function (event) {
                         movi.$dom.$handle.children(querySelectors.canvas).addClass(hidden);
@@ -406,7 +418,7 @@ Hilary.scope('moviqContainer').register({
 
                     // clear any other selected menu buttons
                     querySelectors.controls.getHandle(querySelectors.controls.subMenuButton + '.selected').removeClass('selected');
-                    
+
                     // clear any open submenus (i.e. with-speed, with-quality, etc.)
                     for (i = 0; i < querySelectors.controls.subMenus.length; i += 1) {
                         movi.$dom.$controls.removeClass(querySelectors.controls.subMenus[i]);
@@ -417,7 +429,7 @@ Hilary.scope('moviqContainer').register({
                     movi.$dom.$controls.addClass(containerClass);
                 }
             };
-            
+
             // INIT
             return new IButtons({
                 togglePlay: togglePlay,
@@ -431,20 +443,20 @@ Hilary.scope('moviqContainer').register({
                 changeQuality: changeQuality
             });
         };
-        
+
         init = function (moviInstance) {
             var querySelectors = querySelectorsCtor(moviInstance),
                 handls = handlers(moviInstance, querySelectors);
-            
+
             bindButtonEvents(moviInstance, handls, querySelectors);
-            
+
             if (moviInstance.captions.length > 1) {
                 querySelectors.controls.getHandle(querySelectors.controls.cc).addClass(querySelectors.controls.subMenuButtonClassName);
             }
-            
+
             return handls;
         };
-        
+
         return {
             init: init
         };

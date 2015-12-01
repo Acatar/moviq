@@ -1,4 +1,4 @@
-/*! moviq-build 2015-04-06 */
+/*! moviq-build 2015-12-01 */
 Hilary.scope("moviqContainer").register({
     name: "locale::en_US",
     factory: {
@@ -14,6 +14,22 @@ Hilary.scope("moviqContainer").register({
         },
         messages: {
             browserNotSupported: "Sorry, a browser that supports HTML5 video playback is required to view this content."
+        }
+    }
+});
+
+Hilary.scope("moviqContainer").register({
+    name: "constants",
+    singleton: true,
+    dependencies: [],
+    factory: {
+        iconClasses: {
+            play: "fa-play",
+            pause: "fa-pause",
+            expand: "fa-arrows-alt",
+            compress: "fa-compress",
+            volumeOn: "fa-volume-up",
+            volumeOff: "fa-volume-off"
         }
     }
 });
@@ -652,8 +668,8 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "jqButtons",
-    dependencies: [ "locale", "jqQuerySelectors", "IButtons", "snapshot", "jQuery" ],
-    factory: function(locale, querySelectorsCtor, IButtons, snapshot, $) {
+    dependencies: [ "locale", "constants", "jqQuerySelectors", "IButtons", "snapshot", "jQuery" ],
+    factory: function(locale, constants, querySelectorsCtor, IButtons, snapshot, $) {
         "use strict";
         var init, bindButtonEvents, handlers, cursorManager;
         cursorManager = function() {
@@ -761,17 +777,22 @@ Hilary.scope("moviqContainer").register({
                     movi.events.onFullscreenOff(event);
                 }
             });
+            document.onkeydown = function(event) {
+                if (event.keyCode == 27) {
+                    movi.events.onFullscreenOff(event);
+                }
+            };
         };
         handlers = function(movi, querySelectors) {
             var $video = movi.$dom.$video, video = movi.dom.video, togglePlay, toggleCaptions, toggleTextTrack, changeCaption, buttonsToShow, toggleFullscreen, fullscreenIn, fullscreenOut, toggleMute, toggleSpeed, changeSpeed, toggleSubmenu, toggleQuality, changeQuality;
             togglePlay = function() {
                 var playIcon = querySelectors.controls.getIconHandle(querySelectors.controls.play);
                 if (video.paused || video.ended) {
-                    playIcon.removeClass("fa-play").addClass("fa-pause");
+                    playIcon.removeClass(constants.iconClasses.play).addClass(constants.iconClasses.pause);
                     video.play();
                     return 1;
                 } else {
-                    playIcon.removeClass("fa-pause").addClass("fa-play");
+                    playIcon.removeClass(constants.iconClasses.pause).addClass(constants.iconClasses.play);
                     video.pause();
                     return 0;
                 }
@@ -800,12 +821,16 @@ Hilary.scope("moviqContainer").register({
                     movi.events.onError(locale.errors.jqButtons.fullscreenNotSupported);
                 }
                 $container.addClass("fullscreen");
-                $icon.removeClass("fa-arrows-alt").addClass("fa-compress");
+                $icon.removeClass(constants.iconClasses.expand).addClass(constants.iconClasses.compress);
             };
             fullscreenOut = function() {
-                var container = movi.dom.handle, $container = movi.$dom.$handle, $icon = querySelectors.controls.getIconHandle(querySelectors.controls.fullscreen);
+                var container = movi.dom.handle, $container = movi.$dom.$handle, $icon;
+                if (!$container.hasClass("fullscreen")) {
+                    return;
+                }
+                $icon = querySelectors.controls.getIconHandle(querySelectors.controls.fullscreen);
                 $container.removeClass("fullscreen");
-                $icon.removeClass("fa-compress").addClass("fa-arrows-alt");
+                $icon.removeClass(constants.iconClasses.compress).addClass(constants.iconClasses.expand);
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
                 } else if (document.msExitFullscreen) {
@@ -854,11 +879,11 @@ Hilary.scope("moviqContainer").register({
             toggleMute = function() {
                 var $icon = querySelectors.controls.getIconHandle(querySelectors.controls.mute);
                 video.muted = !video.muted;
-                if ($icon.hasClass("fa-volume-off")) {
-                    $icon.removeClass("fa-volume-off").addClass("fa-volume-up");
+                if ($icon.hasClass(constants.iconClasses.volumeOff)) {
+                    $icon.removeClass(constants.iconClasses.volumeOff).addClass(constants.iconClasses.volumeOn);
                     return 0;
                 } else {
-                    $icon.removeClass("fa-volume-up").addClass("fa-volume-off");
+                    $icon.removeClass(constants.iconClasses.volumeOn).addClass(constants.iconClasses.volumeOff);
                     return 1;
                 }
             };
@@ -977,7 +1002,7 @@ Hilary.scope("moviqContainer").register({
         return function(movi) {
             return new IEventEmitter({
                 emit: function(type, data) {
-                    $(document).trigger(type, [ data ]).trigger("moviq-event", [ type, data ]);
+                    movi.$dom.$video.trigger(type, [ data ]).trigger("moviq-event", [ type, data ]);
                     var dat = data, watch;
                     delete dat.event;
                     watch = {

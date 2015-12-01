@@ -8,7 +8,7 @@ Hilary.scope('moviqContainer').register({
         return function (movi) {
             return new IEventEmitter({
                 emit: function (type, data) {
-                    $(document)
+                    movi.$dom.$video
                         .trigger(type, [data])
                         .trigger('moviq-event', [type, data]);
                     
