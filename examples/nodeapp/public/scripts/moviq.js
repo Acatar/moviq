@@ -43,6 +43,7 @@ Hilary.scope("moviqContainer").register({
             var self = this, impl = implementation || {};
             self.togglePlay = impl.togglePlay;
             self.toggleFullscreen = impl.toggleFullscreen;
+            self.fullscreenOut = impl.fullscreenOut;
             self.toggleCaptions = impl.toggleCaptions;
             self.changeCaption = impl.changeCaption;
             self.toggleMute = impl.toggleMute;
@@ -777,11 +778,6 @@ Hilary.scope("moviqContainer").register({
                     movi.events.onFullscreenOff(event);
                 }
             });
-            document.onkeydown = function(event) {
-                if (event.keyCode == 27) {
-                    movi.events.onFullscreenOff(event);
-                }
-            };
         };
         handlers = function(movi, querySelectors) {
             var $video = movi.$dom.$video, video = movi.dom.video, togglePlay, toggleCaptions, toggleTextTrack, changeCaption, buttonsToShow, toggleFullscreen, fullscreenIn, fullscreenOut, toggleMute, toggleSpeed, changeSpeed, toggleSubmenu, toggleQuality, changeQuality;
@@ -822,6 +818,11 @@ Hilary.scope("moviqContainer").register({
                 }
                 $container.addClass("fullscreen");
                 $icon.removeClass(constants.iconClasses.expand).addClass(constants.iconClasses.compress);
+                $(document).off("keyup.moviq-fs").on("keyup.moviq-fs", function(evt) {
+                    if (evt.keyCode == 27) {
+                        btns.fullscreenOut();
+                    }
+                });
             };
             fullscreenOut = function() {
                 var container = movi.dom.handle, $container = movi.$dom.$handle, $icon;
@@ -973,6 +974,7 @@ Hilary.scope("moviqContainer").register({
                 toggleCaptions: toggleCaptions,
                 changeCaption: changeCaption,
                 toggleFullscreen: toggleFullscreen,
+                fullscreenOut: fullscreenOut,
                 toggleMute: toggleMute,
                 toggleSpeed: toggleSpeed,
                 changeSpeed: changeSpeed,

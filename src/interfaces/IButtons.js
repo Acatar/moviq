@@ -4,13 +4,14 @@ Hilary.scope('moviqContainer').register({
     dependencies: ['locale'],
     factory: function (locale) {
         "use strict";
-        
+
         return function (implementation) {
             var self = this,
                 impl = implementation || {};
 
             self.togglePlay = impl.togglePlay;
             self.toggleFullscreen = impl.toggleFullscreen;
+            self.fullscreenOut = impl.fullscreenOut;
             self.toggleCaptions = impl.toggleCaptions;
             self.changeCaption = impl.changeCaption;
             self.toggleMute = impl.toggleMute;

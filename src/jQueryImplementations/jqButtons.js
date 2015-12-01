@@ -149,12 +149,6 @@ Hilary.scope('moviqContainer').register({
                     movi.events.onFullscreenOff(event);
                 }
             });
-
-            document.onkeydown = function (event) {
-                if (event.keyCode == 27) { // escape
-                    movi.events.onFullscreenOff(event);
-                }
-            };
         };
 
         handlers = function (movi, querySelectors) {
@@ -220,6 +214,17 @@ Hilary.scope('moviqContainer').register({
 
                 $container.addClass('fullscreen');
                 $icon.removeClass(constants.iconClasses.expand).addClass(constants.iconClasses.compress); // fa-expand
+
+                $(document)
+                    .off('keyup.moviq-fs')
+                    .on('keyup.moviq-fs',function(evt) {
+                        if (evt.keyCode == 27) {
+                            // The user pressed escape.
+                            // We need to manipulate the DOM if they
+                            // were in fullscreen
+                            btns.fullscreenOut();
+                        }
+                    });
             };
 
             fullscreenOut = function () {
@@ -436,6 +441,7 @@ Hilary.scope('moviqContainer').register({
                 toggleCaptions: toggleCaptions,
                 changeCaption: changeCaption,
                 toggleFullscreen: toggleFullscreen,
+                fullscreenOut: fullscreenOut,
                 toggleMute: toggleMute,
                 toggleSpeed: toggleSpeed,
                 changeSpeed: changeSpeed,
