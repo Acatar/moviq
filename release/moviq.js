@@ -1,4 +1,4 @@
-/*! moviq-build 2015-12-01 */
+/*! moviq-build 2016-01-25 */
 Hilary.scope("moviqContainer").register({
     name: "locale::en_US",
     factory: {
@@ -1352,7 +1352,7 @@ Hilary.scope("moviqContainer").register({
             }
         };
         addControls = function(self, querySelectors) {
-            var existingControls = self.$dom.$handle.find(querySelectors.controls.control_container);
+            var existingControls = self.$dom.$handle.find(querySelectors.controls.control_container), qualityControl;
             if (existingControls.length < 1) {
                 self.$dom.$handle.append(htmlTemplateGenerator.makeControlsMarkup(self.sources, self.captions));
             }
@@ -1361,9 +1361,11 @@ Hilary.scope("moviqContainer").register({
             if (self.captions.length < 1) {
                 self.$dom.$controls.find(querySelectors.controls.cc).attr("disabled", "disabled").addClass("disabled");
             }
+            qualityControl = self.$dom.$controls.find(querySelectors.controls.quality);
             if (self.sources.length < 2) {
-                self.$dom.$controls.find(querySelectors.controls.quality).attr("disabled", "disabled").addClass("disabled");
+                qualityControl.attr("disabled", "disabled").addClass("disabled");
             }
+            qualityControl.children().first().text(self.sources[0].label);
         };
         jqVideo = function($videoContainer, manifest) {
             var self, querySelectors = querySelectorsCtor($videoContainer), btns, prog, controlsMarkup, i;
