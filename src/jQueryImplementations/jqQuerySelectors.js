@@ -4,7 +4,7 @@ Hilary.scope('moviqContainer').register({
     dependencies: [],
     factory: function (movi) {
         "use strict";
-        
+
         return {
             header: '.moviq-header',
             canvas: '.moviq-snapshot',
@@ -21,6 +21,8 @@ Hilary.scope('moviqContainer').register({
                 speed: '.moviq-btn-speed',
                 speed_chooser: '.moviq-speed-chooser',
                 speed_current: '.moviq-current-speed',
+                speed_back_10: '.moviq-btn-back-10',
+                speed_fwd_10: '.moviq-btn-fwd-10',
                 choose_speed: '.moviq-btn-choose-speed',
                 quality_menu: '.moviq-controls-quality',
                 quality: '.moviq-btn-quality',

@@ -44,6 +44,7 @@ Hilary.scope('moviqContainer').register({
 
             meters = {
                 setPosition: function (pageX, event) {
+                    // also see jqButtons.jumpTo
                     var percent = meters.getCoordinates(pageX).percent,
                         newTime = ((video.duration * percent) / 100),
                         isPaused = video.paused;
@@ -136,6 +137,7 @@ Hilary.scope('moviqContainer').register({
             // INIT
             bindProgressEvents();
             meters.updateDisplay();
+            movi.meters = meters;
 
             return meters;
         };

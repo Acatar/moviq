@@ -22,6 +22,8 @@ Hilary.scope('moviqContainer').register({
 
                 + '</div>'
                 + '<div class="moviq-controls-enclosure-more moviq-controls-speed">'
+                    + '<button class="moviq-btn moviq-btn-back-10">&laquo;10</button>'
+                    + '<button class="moviq-btn moviq-btn-fwd-10">10&raquo;</button>'
                     + '<output class=" moviq-btn-text moviq-current-speed">1x</output>'
                     + '<input class="moviq-speed-chooser" type="range" min=".25" max="3" step=".25" value="1" aria-label="Choose a playback speed" />'
                 + '</div>'

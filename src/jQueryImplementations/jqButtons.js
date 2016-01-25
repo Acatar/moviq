@@ -44,12 +44,15 @@ Hilary.scope('moviqContainer').register({
                 ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc),
                 ccChoice = querySelectors.controls.getHandle(querySelectors.controls.cc_choice),
                 speedBtn = querySelectors.controls.getHandle(querySelectors.controls.speed),
+                back10Btn = querySelectors.controls.getHandle(querySelectors.controls.speed_back_10),
+                fwd10Btn = querySelectors.controls.getHandle(querySelectors.controls.speed_fwd_10),
                 qualityBtn = querySelectors.controls.getHandle(querySelectors.controls.quality),
                 qualityChoice = querySelectors.controls.getHandle(querySelectors.controls.quality_choice),
                 muteBtn = querySelectors.controls.getHandle(querySelectors.controls.mute),
                 fullscreenBtn = querySelectors.controls.getHandle(querySelectors.controls.fullscreen),
                 speedChooser = querySelectors.controls.getHandle(querySelectors.controls.speed_chooser),
-                speedCurrent = querySelectors.controls.getHandle(querySelectors.controls.speed_current);
+                speedCurrent = querySelectors.controls.getHandle(querySelectors.controls.speed_current),
+                jumpTo;
 
             movi.$dom.$handle
                 .on('mouseenter', function (event) {
@@ -113,6 +116,32 @@ Hilary.scope('moviqContainer').register({
                 if (speed.changed) {
                     movi.events.onChangeSpeed(event, speed.newSpeed);
                 }
+            });
+
+            jumpTo = function (time, event) {
+                var video = movi.dom.video,
+                    isPaused = video.paused;
+
+                // also see jqProgressMeter.meters.setPosition
+                video.pause();
+                //meters.updateDisplay(percent);
+                video.currentTime = time;
+
+                if (!isPaused) {
+                    playBtn.click();
+                }
+
+                movi.events.onScrub(event, {
+                    newTime: time
+                });
+            };
+
+            back10Btn.on('click', function (event) {
+                jumpTo((movi.dom.video.currentTime - 10), event);
+            });
+
+            fwd10Btn.on('click', function (event) {
+                jumpTo((movi.dom.video.currentTime + 10), event);
             });
 
             qualityBtn.on('click', function (event) {

@@ -567,7 +567,7 @@ Hilary.scope("moviqContainer").register({
     factory: function(locale) {
         "use strict";
         var controls, qualityButton, ccButton, sourceElement, trackElement, header, canvas, poster, video, videoWithPoster;
-        controls = '<div class="moviq-controls">' + '<div class="moviq-controls-enclosure-more moviq-controls-quality">' + "</div>" + '<div class="moviq-controls-enclosure-more moviq-controls-speed">' + '<output class=" moviq-btn-text moviq-current-speed">1x</output>' + '<input class="moviq-speed-chooser" type="range" min=".25" max="3" step=".25" value="1" aria-label="Choose a playback speed" />' + "</div>" + '<div class="moviq-controls-enclosure-more moviq-controls-cc">' + "</div>" + '<div class="moviq-controls-enclosure">' + '<div class="moviq-controls-left">' + '<button class="moviq-btn moviq-btn-play" aria-label="Play or pause the video">' + '<span class="fa fa-play"></span>' + "</button>" + "</div>" + '<div class="moviq-progress">' + '<span class="moviq-progress-display"></span>' + '<span class="moviq-progress-picker"></span>' + '<div class="moviq-progress-bar" aria-label="This bar shows the current position of the video, as well as the amount buffered. You can click anywhere in this bar to seek to a new position.">' + '<span class="moviq-progress-buffer"></span>' + '<span class="moviq-progress-time"></span>' + "</div>" + "</div>" + '<div class="moviq-controls-right">' + '<button class="moviq-btn moviq-btn-cc" aria-label="Toggle closed captions. This will open a menu, if more than one text track is available.">' + '<i class="fa fa-cc"></i>' + "</button>" + '<button class="moviq-btn moviq-btn-speed moviq-btn-submenu" aria-label="Toggle the controls for choosing a playback speed">' + '<i class="fa fa-clock-o"></i>' + "</button>" + '<button class="moviq-btn moviq-btn-quality moviq-btn-submenu moviq-btn-text" aria-label="Toggle the video quality options">' + "<em>HD</em>" + "</button>" + '<button class="moviq-btn moviq-btn-mute" aria-label="Mute or unmute sound">' + '<span class="fa fa-volume-off"></span>' + "</button>" + '<button class="moviq-btn moviq-btn-fullscreen" aria-label="Toggle fullscreen">' + '<span class="fa fa-arrows-alt"></span>' + "</button>" + "</div>" + "</div>" + "</div>";
+        controls = '<div class="moviq-controls">' + '<div class="moviq-controls-enclosure-more moviq-controls-quality">' + "</div>" + '<div class="moviq-controls-enclosure-more moviq-controls-speed">' + '<button class="moviq-btn moviq-btn-back-10">&laquo;10</button>' + '<button class="moviq-btn moviq-btn-fwd-10">10&raquo;</button>' + '<output class=" moviq-btn-text moviq-current-speed">1x</output>' + '<input class="moviq-speed-chooser" type="range" min=".25" max="3" step=".25" value="1" aria-label="Choose a playback speed" />' + "</div>" + '<div class="moviq-controls-enclosure-more moviq-controls-cc">' + "</div>" + '<div class="moviq-controls-enclosure">' + '<div class="moviq-controls-left">' + '<button class="moviq-btn moviq-btn-play" aria-label="Play or pause the video">' + '<span class="fa fa-play"></span>' + "</button>" + "</div>" + '<div class="moviq-progress">' + '<span class="moviq-progress-display"></span>' + '<span class="moviq-progress-picker"></span>' + '<div class="moviq-progress-bar" aria-label="This bar shows the current position of the video, as well as the amount buffered. You can click anywhere in this bar to seek to a new position.">' + '<span class="moviq-progress-buffer"></span>' + '<span class="moviq-progress-time"></span>' + "</div>" + "</div>" + '<div class="moviq-controls-right">' + '<button class="moviq-btn moviq-btn-cc" aria-label="Toggle closed captions. This will open a menu, if more than one text track is available.">' + '<i class="fa fa-cc"></i>' + "</button>" + '<button class="moviq-btn moviq-btn-speed moviq-btn-submenu" aria-label="Toggle the controls for choosing a playback speed">' + '<i class="fa fa-clock-o"></i>' + "</button>" + '<button class="moviq-btn moviq-btn-quality moviq-btn-submenu moviq-btn-text" aria-label="Toggle the video quality options">' + "<em>HD</em>" + "</button>" + '<button class="moviq-btn moviq-btn-mute" aria-label="Mute or unmute sound">' + '<span class="fa fa-volume-off"></span>' + "</button>" + '<button class="moviq-btn moviq-btn-fullscreen" aria-label="Toggle fullscreen">' + '<span class="fa fa-arrows-alt"></span>' + "</button>" + "</div>" + "</div>" + "</div>";
         qualityButton = '<button class="moviq-btn moviq-btn-choose-quality moviq-btn-text" aria-label="Set the video quality to: {0}" data-quality="{0}">' + "<em>{0}</em>" + "</button>";
         ccButton = '<button class="moviq-btn moviq-btn-choose-cc moviq-btn-text" aria-label="Set the closed captions to: {lang}" data-lang="{lang}" data-id="{id}">' + "<em>{lang}</em>" + "</button>";
         sourceElement = '<source type="{type}" data-label="{label}" src="{src}" />';
@@ -709,7 +709,7 @@ Hilary.scope("moviqContainer").register({
             };
         };
         bindButtonEvents = function(movi, btns, querySelectors) {
-            var playBtn = querySelectors.controls.getHandle(querySelectors.controls.play), ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc), ccChoice = querySelectors.controls.getHandle(querySelectors.controls.cc_choice), speedBtn = querySelectors.controls.getHandle(querySelectors.controls.speed), qualityBtn = querySelectors.controls.getHandle(querySelectors.controls.quality), qualityChoice = querySelectors.controls.getHandle(querySelectors.controls.quality_choice), muteBtn = querySelectors.controls.getHandle(querySelectors.controls.mute), fullscreenBtn = querySelectors.controls.getHandle(querySelectors.controls.fullscreen), speedChooser = querySelectors.controls.getHandle(querySelectors.controls.speed_chooser), speedCurrent = querySelectors.controls.getHandle(querySelectors.controls.speed_current);
+            var playBtn = querySelectors.controls.getHandle(querySelectors.controls.play), ccButton = querySelectors.controls.getHandle(querySelectors.controls.cc), ccChoice = querySelectors.controls.getHandle(querySelectors.controls.cc_choice), speedBtn = querySelectors.controls.getHandle(querySelectors.controls.speed), back10Btn = querySelectors.controls.getHandle(querySelectors.controls.speed_back_10), fwd10Btn = querySelectors.controls.getHandle(querySelectors.controls.speed_fwd_10), qualityBtn = querySelectors.controls.getHandle(querySelectors.controls.quality), qualityChoice = querySelectors.controls.getHandle(querySelectors.controls.quality_choice), muteBtn = querySelectors.controls.getHandle(querySelectors.controls.mute), fullscreenBtn = querySelectors.controls.getHandle(querySelectors.controls.fullscreen), speedChooser = querySelectors.controls.getHandle(querySelectors.controls.speed_chooser), speedCurrent = querySelectors.controls.getHandle(querySelectors.controls.speed_current), jumpTo;
             movi.$dom.$handle.on("mouseenter", function(event) {
                 movi.$dom.$controls.stop().fadeTo(500, .9);
                 movi.$dom.$header.stop().fadeTo(500, .9);
@@ -761,6 +761,23 @@ Hilary.scope("moviqContainer").register({
                 if (speed.changed) {
                     movi.events.onChangeSpeed(event, speed.newSpeed);
                 }
+            });
+            jumpTo = function(time, event) {
+                var video = movi.dom.video, isPaused = video.paused;
+                video.pause();
+                video.currentTime = time;
+                if (!isPaused) {
+                    playBtn.click();
+                }
+                movi.events.onScrub(event, {
+                    newTime: time
+                });
+            };
+            back10Btn.on("click", function(event) {
+                jumpTo(movi.dom.video.currentTime - 10, event);
+            });
+            fwd10Btn.on("click", function(event) {
+                jumpTo(movi.dom.video.currentTime + 10, event);
             });
             qualityBtn.on("click", function(event) {
                 var quality = btns.toggleQuality();
@@ -1194,6 +1211,7 @@ Hilary.scope("moviqContainer").register({
             };
             bindProgressEvents();
             meters.updateDisplay();
+            movi.meters = meters;
             return meters;
         };
         return new IProgressMeter({
@@ -1223,6 +1241,8 @@ Hilary.scope("moviqContainer").register({
                 speed: ".moviq-btn-speed",
                 speed_chooser: ".moviq-speed-chooser",
                 speed_current: ".moviq-current-speed",
+                speed_back_10: ".moviq-btn-back-10",
+                speed_fwd_10: ".moviq-btn-fwd-10",
                 choose_speed: ".moviq-btn-choose-speed",
                 quality_menu: ".moviq-controls-quality",
                 quality: ".moviq-btn-quality",
