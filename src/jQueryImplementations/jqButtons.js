@@ -160,8 +160,10 @@ Hilary.scope('moviqContainer').register({
                 changeCaption,
                 buttonsToShow,
                 toggleFullscreen,
+                isInFullscreen,
                 fullscreenIn,
                 fullscreenOut,
+                fullscreenOutEventHandler,
                 toggleMute,
                 toggleSpeed,
                 changeSpeed,
@@ -187,11 +189,24 @@ Hilary.scope('moviqContainer').register({
                 var container = movi.$dom.$handle;
 
                 if (container.hasClass('fullscreen')) {
-                    fullscreenOut(movi);
+                    fullscreenOut();
                     return 0;
                 } else {
-                    fullscreenIn(movi);
+                    fullscreenIn();
                     return 1;
+                }
+            };
+
+            isInFullscreen = function () {
+                // Note that the browser fullscreen (triggered by short keys) might
+                // be considered different from content fullscreen when expecting a boolean
+                return ((document.fullscreenElement && document.fullscreenElement !== null) ||    // alternative standard methods
+                    document.mozFullScreen || document.webkitIsFullScreen) || false;
+            };
+
+            fullscreenOutEventHandler = function (event) {
+                if (!isInFullscreen()) {
+                    fullscreenOut();
                 }
             };
 
@@ -202,29 +217,44 @@ Hilary.scope('moviqContainer').register({
 
                 if (container.requestFullscreen) {
                     container.requestFullscreen();
+                    $(document)
+                        .off('fullscreenchange.moviq-fs')
+                        .on('fullscreenchange.moviq-fs', fullscreenOutEventHandler);
+                    $(document)
+                        .off('fullscreenChange.moviq-fs')
+                        .on('fullscreenChange.moviq-fs', fullscreenOutEventHandler);
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                    $(document)
+                        .off('webkitfullscreenchange.moviq-fs')
+                        .on('webkitfullscreenchange.moviq-fs', fullscreenOutEventHandler);
                 } else if (container.msRequestFullscreen) {
                     container.msRequestFullscreen();
+                    $(document)
+                        .off('keyup.moviq-fs')  // 'webkitfullscreenchange.moviq-fs'
+                        .on('keyup.moviq-fs', function (event) {
+                            if (event.keyCode == 27) {
+                                // The user pressed escape.
+                                // We need to manipulate the DOM if they
+                                // were in fullscreen
+                                console.log('escape!');
+                                fullscreenOut();
+                            }
+                        });
+                    // $(document)
+                    //     .off('MSFullscreenChange.moviq-fs')
+                    //     .on('MSFullscreenChange.moviq-fs', fullscreenOutEventHandler);
                 } else if (container.mozRequestFullScreen) {
                     container.mozRequestFullScreen();
-                } else if (container.webkitRequestFullscreen) {
-                    container.webkitRequestFullscreen();
+                    $(document)
+                        .off('mozfullscreenchange.moviq-fs')
+                        .on('mozfullscreenchange.moviq-fs', fullscreenOutEventHandler);
                 } else {
                     movi.events.onError(locale.errors.jqButtons.fullscreenNotSupported);
                 }
 
                 $container.addClass('fullscreen');
                 $icon.removeClass(constants.iconClasses.expand).addClass(constants.iconClasses.compress); // fa-expand
-
-                $(document)
-                    .off('keyup.moviq-fs')
-                    .on('keyup.moviq-fs',function(evt) {
-                        if (evt.keyCode == 27) {
-                            // The user pressed escape.
-                            // We need to manipulate the DOM if they
-                            // were in fullscreen
-                            fullscreenOut();
-                        }
-                    });
             };
 
             fullscreenOut = function () {
@@ -243,12 +273,12 @@ Hilary.scope('moviqContainer').register({
 
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
                 } else if (document.msExitFullscreen) {
                     document.msExitFullscreen();
                 } else if (document.mozCancelFullScreen) {
                     document.mozCancelFullScreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
                 }
             };
 

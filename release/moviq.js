@@ -779,7 +779,7 @@ Hilary.scope("moviqContainer").register({
             });
         };
         handlers = function(movi, querySelectors) {
-            var $video = movi.$dom.$video, video = movi.dom.video, togglePlay, toggleCaptions, toggleTextTrack, changeCaption, buttonsToShow, toggleFullscreen, fullscreenIn, fullscreenOut, toggleMute, toggleSpeed, changeSpeed, toggleSubmenu, toggleQuality, changeQuality;
+            var $video = movi.$dom.$video, video = movi.dom.video, togglePlay, toggleCaptions, toggleTextTrack, changeCaption, buttonsToShow, toggleFullscreen, isInFullscreen, fullscreenIn, fullscreenOut, fullscreenOutEventHandler, toggleMute, toggleSpeed, changeSpeed, toggleSubmenu, toggleQuality, changeQuality;
             togglePlay = function() {
                 var playIcon = querySelectors.controls.getIconHandle(querySelectors.controls.play);
                 if (video.paused || video.ended) {
@@ -795,33 +795,46 @@ Hilary.scope("moviqContainer").register({
             toggleFullscreen = function() {
                 var container = movi.$dom.$handle;
                 if (container.hasClass("fullscreen")) {
-                    fullscreenOut(movi);
+                    fullscreenOut();
                     return 0;
                 } else {
-                    fullscreenIn(movi);
+                    fullscreenIn();
                     return 1;
+                }
+            };
+            isInFullscreen = function() {
+                return document.fullscreenElement && document.fullscreenElement !== null || document.mozFullScreen || document.webkitIsFullScreen || false;
+            };
+            fullscreenOutEventHandler = function(event) {
+                if (!isInFullscreen()) {
+                    fullscreenOut();
                 }
             };
             fullscreenIn = function() {
                 var container = movi.dom.handle, $container = movi.$dom.$handle, $icon = querySelectors.controls.getIconHandle(querySelectors.controls.fullscreen);
                 if (container.requestFullscreen) {
                     container.requestFullscreen();
+                    $(document).off("fullscreenchange.moviq-fs").on("fullscreenchange.moviq-fs", fullscreenOutEventHandler);
+                    $(document).off("fullscreenChange.moviq-fs").on("fullscreenChange.moviq-fs", fullscreenOutEventHandler);
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                    $(document).off("webkitfullscreenchange.moviq-fs").on("webkitfullscreenchange.moviq-fs", fullscreenOutEventHandler);
                 } else if (container.msRequestFullscreen) {
                     container.msRequestFullscreen();
+                    $(document).off("keyup.moviq-fs").on("keyup.moviq-fs", function(event) {
+                        if (event.keyCode == 27) {
+                            console.log("escape!");
+                            fullscreenOut();
+                        }
+                    });
                 } else if (container.mozRequestFullScreen) {
                     container.mozRequestFullScreen();
-                } else if (container.webkitRequestFullscreen) {
-                    container.webkitRequestFullscreen();
+                    $(document).off("mozfullscreenchange.moviq-fs").on("mozfullscreenchange.moviq-fs", fullscreenOutEventHandler);
                 } else {
                     movi.events.onError(locale.errors.jqButtons.fullscreenNotSupported);
                 }
                 $container.addClass("fullscreen");
                 $icon.removeClass(constants.iconClasses.expand).addClass(constants.iconClasses.compress);
-                $(document).off("keyup.moviq-fs").on("keyup.moviq-fs", function(evt) {
-                    if (evt.keyCode == 27) {
-                        fullscreenOut();
-                    }
-                });
             };
             fullscreenOut = function() {
                 var container = movi.dom.handle, $container = movi.$dom.$handle, $icon;
@@ -833,12 +846,12 @@ Hilary.scope("moviqContainer").register({
                 $icon.removeClass(constants.iconClasses.compress).addClass(constants.iconClasses.expand);
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
                 } else if (document.msExitFullscreen) {
                     document.msExitFullscreen();
                 } else if (document.mozCancelFullScreen) {
                     document.mozCancelFullScreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
                 }
             };
             toggleCaptions = function() {
