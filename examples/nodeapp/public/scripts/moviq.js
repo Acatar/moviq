@@ -1106,13 +1106,14 @@ Hilary.scope("moviqContainer").register({
     factory: function(locale, querySelectorsCtor, timeFormatter, IProgressMeter) {
         "use strict";
         var init = function(movi) {
-            var querySelectors = querySelectorsCtor(movi), $video, video, $bar, $timeBar, $bufferBar, $timeDisplay, bindProgressEvents, coverage, meters, timePickerActive = false;
+            var querySelectors = querySelectorsCtor(movi), $video, video, $bar, $timeBar, $bufferBar, $timeDisplay, playBtn, bindProgressEvents, coverage, meters, timePickerActive = false;
             $video = movi.$dom.$video;
             video = movi.dom.video;
             $bar = querySelectors.controls.getHandle(querySelectors.controls.progress_bar);
             $timeBar = querySelectors.controls.getHandle(querySelectors.controls.progress_time);
             $bufferBar = querySelectors.controls.getHandle(querySelectors.controls.progress_buffer);
             $timeDisplay = querySelectors.controls.getHandle(querySelectors.controls.progress_timeDisplay);
+            playBtn = querySelectors.controls.getHandle(querySelectors.controls.play);
             coverage = {
                 getPositionPercent: function() {
                     return 100 * (video.currentTime / video.duration);
@@ -1134,7 +1135,7 @@ Hilary.scope("moviqContainer").register({
                     video.pause();
                     meters.updateDisplay(percent);
                     video.currentTime = newTime;
-                    video.play();
+                    playBtn.click();
                     movi.events.onScrub(event, {
                         percent: percent,
                         newTime: newTime

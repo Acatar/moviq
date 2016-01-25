@@ -12,6 +12,7 @@ Hilary.scope('moviqContainer').register({
                 $timeBar,
                 $bufferBar,
                 $timeDisplay,
+                playBtn,
                 bindProgressEvents,
                 coverage,
                 meters,
@@ -23,6 +24,7 @@ Hilary.scope('moviqContainer').register({
             $timeBar = querySelectors.controls.getHandle(querySelectors.controls.progress_time);
             $bufferBar = querySelectors.controls.getHandle(querySelectors.controls.progress_buffer);
             $timeDisplay = querySelectors.controls.getHandle(querySelectors.controls.progress_timeDisplay);
+            playBtn = querySelectors.controls.getHandle(querySelectors.controls.play);
 
             coverage = {
                 getPositionPercent: function () {
@@ -52,7 +54,8 @@ Hilary.scope('moviqContainer').register({
                     video.pause();
                     meters.updateDisplay(percent);
                     video.currentTime = newTime;
-                    video.play();
+                    //video.play();
+                    playBtn.click();
 
                     movi.events.onScrub(event, {
                         percent: percent,
