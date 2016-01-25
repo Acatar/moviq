@@ -1,9 +1,8 @@
-/*globals Hilary*/
 Hilary.scope('moviqContainer').register({
     name: 'jqButtons',
     dependencies: ['locale', 'constants', 'jqQuerySelectors', 'IButtons', 'snapshot', 'jQuery'],
     factory: function (locale, constants, querySelectorsCtor, IButtons, snapshot, $) {
-        "use strict";
+        'use strict';
 
         var init,
             bindButtonEvents,
@@ -17,7 +16,7 @@ Hilary.scope('moviqContainer').register({
                 hide;
 
             bind = function () {
-                $(document).mousemove(function (event) {
+                $(document).mousemove(function (/*event*/) {
                     if (!throttle) {
                         throttle = false;
                         clearTimeout(timeout);
@@ -104,7 +103,7 @@ Hilary.scope('moviqContainer').register({
             speedBtn.on('click', function (event) {
                 var speed = btns.toggleSpeed();
 
-                movi.events.onToggleSpeed(event);
+                movi.events.onToggleSpeed(event, speed);
             });
 
             speedChooser.on('change mousemove', function (event) {
@@ -119,7 +118,7 @@ Hilary.scope('moviqContainer').register({
             qualityBtn.on('click', function (event) {
                 var quality = btns.toggleQuality();
 
-                movi.events.onToggleQuality(event);
+                movi.events.onToggleQuality(event, quality);
             });
 
             qualityChoice.on('click', function (event) {
@@ -158,7 +157,6 @@ Hilary.scope('moviqContainer').register({
                 toggleCaptions,
                 toggleTextTrack,
                 changeCaption,
-                buttonsToShow,
                 toggleFullscreen,
                 isInFullscreen,
                 fullscreenIn,
@@ -204,7 +202,7 @@ Hilary.scope('moviqContainer').register({
                     document.mozFullScreen || document.webkitIsFullScreen) || false;
             };
 
-            fullscreenOutEventHandler = function (event) {
+            fullscreenOutEventHandler = function (/*event*/) {
                 if (!isInFullscreen()) {
                     fullscreenOut();
                 }
@@ -233,7 +231,7 @@ Hilary.scope('moviqContainer').register({
                     $(document)
                         .off('keyup.moviq-fs')  // 'webkitfullscreenchange.moviq-fs'
                         .on('keyup.moviq-fs', function (event) {
-                            if (event.keyCode == 27) {
+                            if (event.keyCode === 27) {
                                 // The user pressed escape.
                                 // We need to manipulate the DOM if they
                                 // were in fullscreen
@@ -258,8 +256,7 @@ Hilary.scope('moviqContainer').register({
             };
 
             fullscreenOut = function () {
-                var container = movi.dom.handle,
-                    $container = movi.$dom.$handle,
+                var $container = movi.$dom.$handle,
                     $icon;
 
                 if (!$container.hasClass('fullscreen')) {
@@ -342,8 +339,7 @@ Hilary.scope('moviqContainer').register({
             };
 
             toggleSpeed = function () {
-                var spdClass = 'with-speed',
-                    speedButton = querySelectors.controls.getHandle(querySelectors.controls.speed);
+                var speedButton = querySelectors.controls.getHandle(querySelectors.controls.speed);
 
                 toggleSubmenu(speedButton, 'with-speed');
             };
@@ -380,8 +376,7 @@ Hilary.scope('moviqContainer').register({
             };
 
             toggleQuality = function () {
-                var spdClass = 'with-quality',
-                    qualityButton = querySelectors.controls.getHandle(querySelectors.controls.quality),
+                var qualityButton = querySelectors.controls.getHandle(querySelectors.controls.quality),
                     none = movi.sources.length < 2;
 
                 if (none) {
@@ -426,7 +421,7 @@ Hilary.scope('moviqContainer').register({
                 video.load();
 
                 // the next time the loadedmetadata event fires
-                $video.one('loadedmetadata', function (event) {
+                $video.one('loadedmetadata', function (/*event*/) {
 
                     // set the position to point where the user switched the source
                     video.currentTime = position;
@@ -435,7 +430,7 @@ Hilary.scope('moviqContainer').register({
                     togglePlay();
 
                     // hide the snapshot after the video starts playing again
-                    $video.one('playing', function (event) {
+                    $video.one('playing', function (/*event*/) {
                         movi.$dom.$handle.children(querySelectors.canvas).addClass(hidden);
                     });
                 });

@@ -1,10 +1,9 @@
-/*globals Hilary, console*/
 Hilary.scope('moviqContainer').register({
     name: 'jqProgressMeter',
     dependencies: ['locale', 'jqQuerySelectors', 'timeFormatter', 'IProgressMeter'],
     factory: function (locale, querySelectorsCtor, timeFormatter, IProgressMeter) {
-        "use strict";
-        
+        'use strict';
+
         var init = function (movi) {
             var querySelectors = querySelectorsCtor(movi),
                 $video,
@@ -13,12 +12,11 @@ Hilary.scope('moviqContainer').register({
                 $timeBar,
                 $bufferBar,
                 $timeDisplay,
-                init,
                 bindProgressEvents,
                 coverage,
                 meters,
                 timePickerActive = false;
-            
+
             $video = movi.$dom.$video;
             video = movi.dom.video;
             $bar = querySelectors.controls.getHandle(querySelectors.controls.progress_bar);
@@ -43,16 +41,23 @@ Hilary.scope('moviqContainer').register({
             };
 
             meters = {
-                setPosition: function (pageX) {
-                    var percent = meters.getCoordinates(pageX).percent;
-                    
+                setPosition: function (pageX, event) {
+                    var percent = meters.getCoordinates(pageX).percent,
+                        newTime = ((video.duration * percent) / 100);
+                        //isPaused = video.paused;
+
                     // we need to pause, set the position, and then play again to
                     // make sure that we generate multiple time ranges in the watch
                     // report. Otherwise, the coverage data will be incorrect.
                     video.pause();
                     meters.updateDisplay(percent);
-                    video.currentTime = ((video.duration * percent) / 100);
+                    video.currentTime = newTime;
                     video.play();
+
+                    movi.events.onScrub(event, {
+                        percent: percent,
+                        newTime: newTime
+                    });
                 },
                 getCoordinates: function (pageX) {
                     var position = (pageX - $bar.offset().left),
@@ -106,9 +111,9 @@ Hilary.scope('moviqContainer').register({
 
                 $bar
                     .on('mousedown', function (event) {
-                        meters.setPosition(event.pageX);
+                        meters.setPosition(event.pageX, event);
                     })
-                    .on('mouseleave', function (event) {
+                    .on('mouseleave', function (/*event*/) {
                         $picker.text('');
                         timePickerActive = false;
                     })
@@ -121,14 +126,14 @@ Hilary.scope('moviqContainer').register({
                         $picker.css('left', position.left);
                     });
             };
-            
+
             // INIT
             bindProgressEvents();
             meters.updateDisplay();
-            
+
             return meters;
         };
-        
+
         return new IProgressMeter({
             init: init
         });

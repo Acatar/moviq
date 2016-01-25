@@ -1,10 +1,10 @@
 /*globals Hilary*/
 Hilary.scope('moviqContainer').register({
     name: 'defaultEventHandlers',
-    dependencies: ['locale'],
-    factory: function (locale) {
-        "use strict";
-        
+    dependencies: [],
+    factory: function () {
+        'use strict';
+
         return function (eventEmitter) {
             var self = {};
 
@@ -19,6 +19,10 @@ Hilary.scope('moviqContainer').register({
 
             self.onPause = function (event) {
                 eventEmitter.emit('moviq-pause', { event: event });
+            };
+
+            self.onScrub = function (event, info) {
+                eventEmitter.emit('moviq-scrub', { event: event, percent: info.percent, newTime: info.newTime });
             };
 
             self.onShowCaptions = function (lang, event) {
@@ -37,8 +41,8 @@ Hilary.scope('moviqContainer').register({
                 eventEmitter.emit('moviq-change-speed', { speed: speed, event: event });
             };
 
-            self.onToggleQuality = function (event) {
-                eventEmitter.emit('moviq-toggle-quality', { event: event });
+            self.onToggleQuality = function (event, quality) {
+                eventEmitter.emit('moviq-toggle-quality', { quality: quality, event: event });
             };
 
             self.onChangeQuality = function (quality, event) {

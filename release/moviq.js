@@ -103,8 +103,8 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "IEvents",
-    dependencies: [ "locale" ],
-    factory: function(locale) {
+    dependencies: [],
+    factory: function() {
         "use strict";
         return function(eventsImplementation) {
             var self = this, ignore = function() {};
@@ -119,6 +119,7 @@ Hilary.scope("moviqContainer").register({
             self.onError = eventsImplementation.onError || ignore;
             self.onPlay = eventsImplementation.onPlay || ignore;
             self.onPause = eventsImplementation.onPause || ignore;
+            self.onScrub = eventsImplementation.onScrub || ignore;
             self.onShowCaptions = eventsImplementation.onShowCaptions || ignore;
             self.onHideCaptions = eventsImplementation.onHideCaptions || ignore;
             self.onToggleSpeed = eventsImplementation.onToggleSpeed || ignore;
@@ -472,8 +473,8 @@ Hilary.scope("moviqContainer").register({
 
 Hilary.scope("moviqContainer").register({
     name: "defaultEventHandlers",
-    dependencies: [ "locale" ],
-    factory: function(locale) {
+    dependencies: [],
+    factory: function() {
         "use strict";
         return function(eventEmitter) {
             var self = {};
@@ -491,6 +492,13 @@ Hilary.scope("moviqContainer").register({
             self.onPause = function(event) {
                 eventEmitter.emit("moviq-pause", {
                     event: event
+                });
+            };
+            self.onScrub = function(event, info) {
+                eventEmitter.emit("moviq-scrub", {
+                    event: event,
+                    percent: info.percent,
+                    newTime: info.newTime
                 });
             };
             self.onShowCaptions = function(lang, event) {
@@ -516,8 +524,9 @@ Hilary.scope("moviqContainer").register({
                     event: event
                 });
             };
-            self.onToggleQuality = function(event) {
+            self.onToggleQuality = function(event, quality) {
                 eventEmitter.emit("moviq-toggle-quality", {
+                    quality: quality,
                     event: event
                 });
             };
@@ -675,7 +684,7 @@ Hilary.scope("moviqContainer").register({
         cursorManager = function() {
             var throttle = false, timeout, bind, hide;
             bind = function() {
-                $(document).mousemove(function(event) {
+                $(document).mousemove(function() {
                     if (!throttle) {
                         throttle = false;
                         clearTimeout(timeout);
@@ -744,7 +753,7 @@ Hilary.scope("moviqContainer").register({
             });
             speedBtn.on("click", function(event) {
                 var speed = btns.toggleSpeed();
-                movi.events.onToggleSpeed(event);
+                movi.events.onToggleSpeed(event, speed);
             });
             speedChooser.on("change mousemove", function(event) {
                 var speed = btns.changeSpeed(speedChooser.val());
@@ -755,7 +764,7 @@ Hilary.scope("moviqContainer").register({
             });
             qualityBtn.on("click", function(event) {
                 var quality = btns.toggleQuality();
-                movi.events.onToggleQuality(event);
+                movi.events.onToggleQuality(event, quality);
             });
             qualityChoice.on("click", function(event) {
                 var self = $(event.currentTarget), label = self.attr("data-quality"), quality = btns.changeQuality(label);
@@ -779,7 +788,7 @@ Hilary.scope("moviqContainer").register({
             });
         };
         handlers = function(movi, querySelectors) {
-            var $video = movi.$dom.$video, video = movi.dom.video, togglePlay, toggleCaptions, toggleTextTrack, changeCaption, buttonsToShow, toggleFullscreen, isInFullscreen, fullscreenIn, fullscreenOut, fullscreenOutEventHandler, toggleMute, toggleSpeed, changeSpeed, toggleSubmenu, toggleQuality, changeQuality;
+            var $video = movi.$dom.$video, video = movi.dom.video, togglePlay, toggleCaptions, toggleTextTrack, changeCaption, toggleFullscreen, isInFullscreen, fullscreenIn, fullscreenOut, fullscreenOutEventHandler, toggleMute, toggleSpeed, changeSpeed, toggleSubmenu, toggleQuality, changeQuality;
             togglePlay = function() {
                 var playIcon = querySelectors.controls.getIconHandle(querySelectors.controls.play);
                 if (video.paused || video.ended) {
@@ -805,7 +814,7 @@ Hilary.scope("moviqContainer").register({
             isInFullscreen = function() {
                 return document.fullscreenElement && document.fullscreenElement !== null || document.mozFullScreen || document.webkitIsFullScreen || false;
             };
-            fullscreenOutEventHandler = function(event) {
+            fullscreenOutEventHandler = function() {
                 if (!isInFullscreen()) {
                     fullscreenOut();
                 }
@@ -822,7 +831,7 @@ Hilary.scope("moviqContainer").register({
                 } else if (container.msRequestFullscreen) {
                     container.msRequestFullscreen();
                     $(document).off("keyup.moviq-fs").on("keyup.moviq-fs", function(event) {
-                        if (event.keyCode == 27) {
+                        if (event.keyCode === 27) {
                             console.log("escape!");
                             fullscreenOut();
                         }
@@ -837,7 +846,7 @@ Hilary.scope("moviqContainer").register({
                 $icon.removeClass(constants.iconClasses.expand).addClass(constants.iconClasses.compress);
             };
             fullscreenOut = function() {
-                var container = movi.dom.handle, $container = movi.$dom.$handle, $icon;
+                var $container = movi.$dom.$handle, $icon;
                 if (!$container.hasClass("fullscreen")) {
                     return;
                 }
@@ -901,7 +910,7 @@ Hilary.scope("moviqContainer").register({
                 }
             };
             toggleSpeed = function() {
-                var spdClass = "with-speed", speedButton = querySelectors.controls.getHandle(querySelectors.controls.speed);
+                var speedButton = querySelectors.controls.getHandle(querySelectors.controls.speed);
                 toggleSubmenu(speedButton, "with-speed");
             };
             changeSpeed = function(speed) {
@@ -933,7 +942,7 @@ Hilary.scope("moviqContainer").register({
                 }
             };
             toggleQuality = function() {
-                var spdClass = "with-quality", qualityButton = querySelectors.controls.getHandle(querySelectors.controls.quality), none = movi.sources.length < 2;
+                var qualityButton = querySelectors.controls.getHandle(querySelectors.controls.quality), none = movi.sources.length < 2;
                 if (none) {
                     return;
                 } else {
@@ -958,10 +967,10 @@ Hilary.scope("moviqContainer").register({
                 }
                 video.src = source.src;
                 video.load();
-                $video.one("loadedmetadata", function(event) {
+                $video.one("loadedmetadata", function() {
                     video.currentTime = position;
                     togglePlay();
-                    $video.one("playing", function(event) {
+                    $video.one("playing", function() {
                         movi.$dom.$handle.children(querySelectors.canvas).addClass(hidden);
                     });
                 });
@@ -1097,7 +1106,7 @@ Hilary.scope("moviqContainer").register({
     factory: function(locale, querySelectorsCtor, timeFormatter, IProgressMeter) {
         "use strict";
         var init = function(movi) {
-            var querySelectors = querySelectorsCtor(movi), $video, video, $bar, $timeBar, $bufferBar, $timeDisplay, init, bindProgressEvents, coverage, meters, timePickerActive = false;
+            var querySelectors = querySelectorsCtor(movi), $video, video, $bar, $timeBar, $bufferBar, $timeDisplay, bindProgressEvents, coverage, meters, timePickerActive = false;
             $video = movi.$dom.$video;
             video = movi.dom.video;
             $bar = querySelectors.controls.getHandle(querySelectors.controls.progress_bar);
@@ -1120,12 +1129,16 @@ Hilary.scope("moviqContainer").register({
                 }
             };
             meters = {
-                setPosition: function(pageX) {
-                    var percent = meters.getCoordinates(pageX).percent;
+                setPosition: function(pageX, event) {
+                    var percent = meters.getCoordinates(pageX).percent, newTime = video.duration * percent / 100;
                     video.pause();
                     meters.updateDisplay(percent);
-                    video.currentTime = video.duration * percent / 100;
+                    video.currentTime = newTime;
                     video.play();
+                    movi.events.onScrub(event, {
+                        percent: percent,
+                        newTime: newTime
+                    });
                 },
                 getCoordinates: function(pageX) {
                     var position = pageX - $bar.offset().left, percent = 100 * position / $bar.width();
@@ -1164,8 +1177,8 @@ Hilary.scope("moviqContainer").register({
                     meters.updateDisplay();
                 });
                 $bar.on("mousedown", function(event) {
-                    meters.setPosition(event.pageX);
-                }).on("mouseleave", function(event) {
+                    meters.setPosition(event.pageX, event);
+                }).on("mouseleave", function() {
                     $picker.text("");
                     timePickerActive = false;
                 }).on("mousemove", function(event) {
@@ -1381,7 +1394,7 @@ Hilary.scope("moviqContainer").register({
             qualityControl.children().first().text(self.sources[0].label);
         };
         jqVideo = function($videoContainer, manifest) {
-            var self, querySelectors = querySelectorsCtor($videoContainer), btns, prog, controlsMarkup, i;
+            var self, querySelectors = querySelectorsCtor($videoContainer);
             self = new IJqVideo({
                 events: undefined,
                 sources: undefined,
@@ -1420,7 +1433,7 @@ Hilary.scope("moviqContainer").register({
             self.buttons = jqButtons.init(self);
             self.progressMeter = jqProgressMeter.init(self);
             $videoContainer.addClass("moviqified");
-            self.$dom.$video.one("loadedmetadata", function(event) {
+            self.$dom.$video.one("loadedmetadata", function() {
                 self.duration = timeFormatter.formatTime(self.dom.video.duration, false);
             });
             return self;

@@ -1,10 +1,10 @@
 /*globals Hilary*/
 Hilary.scope('moviqContainer').register({
     name: 'IEvents',
-    dependencies: ['locale'],
-    factory: function (locale) {
-        "use strict";
-        
+    dependencies: [],
+    factory: function () {
+        'use strict';
+
         return function (eventsImplementation) {
             var self = this,
                 ignore = function () {};
@@ -20,6 +20,7 @@ Hilary.scope('moviqContainer').register({
             self.onError = eventsImplementation.onError || ignore;
             self.onPlay = eventsImplementation.onPlay || ignore;
             self.onPause = eventsImplementation.onPause || ignore;
+            self.onScrub = eventsImplementation.onScrub || ignore;
             self.onShowCaptions = eventsImplementation.onShowCaptions || ignore;
             self.onHideCaptions = eventsImplementation.onHideCaptions || ignore;
             self.onToggleSpeed = eventsImplementation.onToggleSpeed || ignore;
