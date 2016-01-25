@@ -45,8 +45,8 @@ Hilary.scope('moviqContainer').register({
             meters = {
                 setPosition: function (pageX, event) {
                     var percent = meters.getCoordinates(pageX).percent,
-                        newTime = ((video.duration * percent) / 100);
-                        //isPaused = video.paused;
+                        newTime = ((video.duration * percent) / 100),
+                        isPaused = video.paused;
 
                     // we need to pause, set the position, and then play again to
                     // make sure that we generate multiple time ranges in the watch
@@ -54,8 +54,11 @@ Hilary.scope('moviqContainer').register({
                     video.pause();
                     meters.updateDisplay(percent);
                     video.currentTime = newTime;
-                    //video.play();
-                    playBtn.click();
+
+                    if (!isPaused) {
+                        //video.play();
+                        playBtn.click();
+                    }
 
                     movi.events.onScrub(event, {
                         percent: percent,

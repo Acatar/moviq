@@ -1131,11 +1131,13 @@ Hilary.scope("moviqContainer").register({
             };
             meters = {
                 setPosition: function(pageX, event) {
-                    var percent = meters.getCoordinates(pageX).percent, newTime = video.duration * percent / 100;
+                    var percent = meters.getCoordinates(pageX).percent, newTime = video.duration * percent / 100, isPaused = video.paused;
                     video.pause();
                     meters.updateDisplay(percent);
                     video.currentTime = newTime;
-                    playBtn.click();
+                    if (!isPaused) {
+                        playBtn.click();
+                    }
                     movi.events.onScrub(event, {
                         percent: percent,
                         newTime: newTime
