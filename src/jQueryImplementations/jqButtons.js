@@ -276,6 +276,8 @@ Hilary.scope('moviqContainer').register({
                     $(document)
                         .off('mozfullscreenchange.moviq-fs')
                         .on('mozfullscreenchange.moviq-fs', fullscreenOutEventHandler);
+                } else if (video.currentSrc) {
+                    window.location = video.currentSrc;
                 } else {
                     movi.events.onError(locale.errors.jqButtons.fullscreenNotSupported);
                 }
