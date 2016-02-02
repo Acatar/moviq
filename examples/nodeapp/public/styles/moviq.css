@@ -201,95 +201,10 @@
 }
 .moviq-video .moviq-controls.with-speed {
   height: 70px;
-  /*hide the outline behind the border*/
 }
 .moviq-video .moviq-controls.with-speed .moviq-controls-speed {
   opacity: 1.0;
   pointer-events: auto;
-}
-.moviq-video .moviq-controls.with-speed input[type=range] {
-  /*removes default webkit styles*/
-  -webkit-appearance: none;
-  /*fix for FF unable to apply focus style bug */
-  border: none;
-  /*required for proper track sizing in FF*/
-  width: 200px;
-  margin-top: 9px;
-  background-color: transparent;
-  padding: 0;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]::-webkit-slider-runnable-track {
-  width: 200px;
-  height: 5px;
-  background: #ddd;
-  border: none;
-  border-radius: 3px;
-  margin-top: 6px;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #fd104a;
-  margin-top: -4px;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]:focus {
-  outline: none;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]:focus::-webkit-slider-runnable-track {
-  background: #ccc;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]::-moz-range-track {
-  width: 200px;
-  height: 5px;
-  background: #ddd;
-  border: none;
-  border-radius: 3px;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]::-moz-range-thumb {
-  border: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #fd104a;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]:-moz-focusring {
-  outline: 1px solid transparent;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]::-ms-track {
-  width: 200px;
-  height: 5px;
-  /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
-  background: transparent;
-  background-color: transparent;
-  /*leave room for the larger thumb to overflow with a transparent border */
-  border-color: transparent;
-  border-width: 6px 0;
-  /*remove default tick marks*/
-  color: transparent;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]::-ms-fill-lower {
-  background: #777;
-  border-radius: 10px;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]::-ms-fill-upper {
-  background: #ddd;
-  border-radius: 10px;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]::-ms-thumb {
-  border: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #fd104a;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]:focus::-ms-fill-lower {
-  background: #888;
-}
-.moviq-video .moviq-controls.with-speed input[type=range]:focus::-ms-fill-upper {
-  background: #ccc;
 }
 .moviq-video .moviq-controls.with-cc {
   height: 70px;
@@ -398,6 +313,91 @@
   -moz-transition: opacity 0.5s ease;
   -o-transition: opacity 0.5s ease;
   transition: opacity 0.5s ease;
+  /*hide the outline behind the border*/
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range] {
+  /*removes default webkit styles*/
+  -webkit-appearance: none;
+  /*fix for FF unable to apply focus style bug */
+  border: none;
+  /*required for proper track sizing in FF*/
+  width: 200px;
+  margin-top: 9px;
+  background-color: transparent;
+  padding: 0;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]::-webkit-slider-runnable-track {
+  width: 200px;
+  height: 5px;
+  background: #ddd;
+  border: none;
+  border-radius: 3px;
+  margin-top: 6px;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #fd104a;
+  margin-top: -4px;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]:focus {
+  outline: none;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #ccc;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]::-moz-range-track {
+  width: 200px;
+  height: 5px;
+  background: #ddd;
+  border: none;
+  border-radius: 3px;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]::-moz-range-thumb {
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #fd104a;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]:-moz-focusring {
+  outline: 1px solid transparent;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]::-ms-track {
+  width: 200px;
+  height: 5px;
+  /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+  background: transparent;
+  background-color: transparent;
+  /*leave room for the larger thumb to overflow with a transparent border */
+  border-color: transparent;
+  border-width: 6px 0;
+  /*remove default tick marks*/
+  color: transparent;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]::-ms-fill-lower {
+  background: #777;
+  border-radius: 10px;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]::-ms-fill-upper {
+  background: #ddd;
+  border-radius: 10px;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]::-ms-thumb {
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #fd104a;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]:focus::-ms-fill-lower {
+  background: #888;
+}
+.moviq-video .moviq-controls .moviq-controls-enclosure-more input[type=range]:focus::-ms-fill-upper {
+  background: #ccc;
 }
 .moviq-video .moviq-controls .moviq-controls-enclosure-more .moviq-btn,
 .moviq-video .moviq-controls .moviq-controls-enclosure-more input,

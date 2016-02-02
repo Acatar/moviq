@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Moviq Simple Example</title>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 <!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="../_public/styles/main.css">
     <link rel="stylesheet" href="../../styles/moviq.css">
@@ -13,44 +13,43 @@
 <body>
     <h1>Simple Example</h1>
     <div id="main">
-        
+
         <div class="moviq-video vid1">
             <div class="moviq-header">Acatar Pitch</div>
 <!--            data-manifest="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch.ism/Manifest"-->
             <video preload="auto">
-                <source type="video/mp4" data-label="HD" src="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_3400kbps_AAC_und_ch2_96kbps.mp4" />
-                <source type="video/mp4" data-label="SD" src="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_1500kbps_AAC_und_ch2_96kbps.mp4" />
-                <source type="video/mp4" data-label="LD" src="http://acatarmedia01.streaming.mediaservices.windows.net/2cfa1c5a-9cd5-44e8-ad52-6c84dceefcf0/AcatarPitch_H264_400kbps_AAC_und_ch2_96kbps.mp4" />
+                <source type="video/mp4" data-label="SD" src="https://d4storagelearn01ue.blob.core.windows.net/public/videos/acatar-pitch/AcatarPitch_H264_1500kbps_AAC_und_ch2_96kbps.mp4" />
+                <source type="video/mp4" data-label="HD" src="https://d4storagelearn01ue.blob.core.windows.net/public/videos/acatar-pitch/AcatarPitch_H264_3400kbps_AAC_und_ch2_96kbps.mp4" />
+                <source type="video/mp4" data-label="LD" src="https://d4storagelearn01ue.blob.core.windows.net/public/videos/acatar-pitch/AcatarPitch_H264_400kbps_AAC_und_ch2_96kbps.mp4" />
                 <track label="English" kind="captions" srclang="en" src="../_public/captions/example.vtt">
                 <track label="Spanish" kind="captions" srclang="sp" src="../_public/captions/example.vtt">
             </video>
         </div>
-        
+
         <br />
-        
+
         <div class="moviq-video vid2">
 
         </div>
-    
+
     </div>
-    
+
     <script src="../../lib/hilary.min.js"></script>
     <script src="../../release/moviq.js"></script>
     <script>
         var moviq = new Moviq(),
             vid1,
             vid2;
-        
+
         vid1 = moviq.ify('.vid1');
-        
+
         vid2 = moviq.ify('.vid2', {
             poster: '',
             header: 'Acatar Pitch 2',
             sources: [
-                { type: 'video/mp4', label: 'HD', src: 'https://psamedia01ue.blob.core.windows.net/asset-c8eadb58-570e-4840-b965-a83b1d3270af/AcatarPitch_H264_3400kbps_AAC_und_ch2_96kbps.mp4?sv=2014-02-14&sr=c&sig=6en%2BgZ%2BvCKqZOT9eO9HAbfbAtXXdIoy6%2FozOc8xsnc4%3D&st=2015-03-05T05%3A00%3A00Z&se=2015-03-13T04%3A00%3A00Z&sp=r' },
-                { type: 'video/mp4', label: 'SD', src: 'https://psamedia01ue.blob.core.windows.net/asset-c8eadb58-570e-4840-b965-a83b1d3270af/AcatarPitch_H264_1500kbps_AAC_und_ch2_96kbps.mp4?sv=2014-02-14&sr=c&sig=6en%2BgZ%2BvCKqZOT9eO9HAbfbAtXXdIoy6%2FozOc8xsnc4%3D&st=2015-03-05T05%3A00%3A00Z&se=2015-03-13T04%3A00%3A00Z&sp=r' },
-                { type: 'video/mp4', label: 'LD', src: 'https://psamedia01ue.blob.core.windows.net/asset-c8eadb58-570e-4840-b965-a83b1d3270af/AcatarPitch_H264_400kbps_AAC_und_ch2_96kbps.mp4?sv=2014-02-14&sr=c&sig=6en%2BgZ%2BvCKqZOT9eO9HAbfbAtXXdIoy6%2FozOc8xsnc4%3D&st=2015-03-05T05%3A00%3A00Z&se=2015-03-13T04%3A00%3A00Z&sp=r' },
-                { type: 'application/x-mpegURL', label: 'HLS', src: 'http://acatarmedia01.streaming.mediaservices.windows.net/35825854-9ceb-4485-a01c-c6b5dde4a8f0/AcatarPitch-m3u8-aapl.ism/manifest(format=m3u8-aapl)' }
+                { type: 'video/mp4', label: 'HD', src: 'https://d4storagelearn01ue.blob.core.windows.net/public/videos/acatar-pitch/AcatarPitch_H264_3400kbps_AAC_und_ch2_96kbps.mp4' },
+                { type: 'video/mp4', label: 'SD', src: 'https://d4storagelearn01ue.blob.core.windows.net/public/videos/acatar-pitch/AcatarPitch_H264_1500kbps_AAC_und_ch2_96kbps.mp4' },
+                { type: 'video/mp4', label: 'LD', src: 'https://d4storagelearn01ue.blob.core.windows.net/public/videos/acatar-pitch/AcatarPitch_H264_400kbps_AAC_und_ch2_96kbps.mp4' }
             ],
             captions: [
                 { srclang: 'en', label: 'English', src: '../_public/captions/example.vtt' },
