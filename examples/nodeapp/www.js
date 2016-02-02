@@ -3,7 +3,7 @@ module.exports.name = 'www';
 module.exports.dependencies = ['http', 'url', 'path', 'fs'];
 module.exports.factory = function (http, url, path, fs) {
     "use strict";
-    
+
     var port = process.env.PORT || 50123,
         mimeTypes = {
             "html": "text/html",
@@ -27,10 +27,10 @@ module.exports.factory = function (http, url, path, fs) {
             fstream.pipe(res);
             return;
         }
-        
+
         mimeType = mimeTypes[path.extname(pathname).split(".")[1]];
         filepath = mimeType === 'text/html' ? path.join(process.cwd(), 'views', pathname) : path.join(process.cwd(), 'public', pathname);
-        
+
         fs.exists(filepath, function (exists) {
             if (exists) {
                 res.writeHead(200, { 'Content-Type': mimeType });

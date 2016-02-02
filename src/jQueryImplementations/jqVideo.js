@@ -110,7 +110,7 @@ Hilary.scope('moviqContainer').register({
             }
 
             // update the source name
-            qualityControl.children().first().text(self.sources[0].label);
+            qualityControl.children().first().text((self.sources[0] && self.sources[0].label));
         };
 
         jqVideo = function ($videoContainer, manifest) {

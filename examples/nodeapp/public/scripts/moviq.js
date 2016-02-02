@@ -1,4 +1,4 @@
-/*! moviq-build 2016-01-25 */
+/*! moviq-build 2016-02-02 */
 Hilary.scope("moviqContainer").register({
     name: "locale::en_US",
     factory: {
@@ -1414,7 +1414,7 @@ Hilary.scope("moviqContainer").register({
             if (self.sources.length < 2) {
                 qualityControl.attr("disabled", "disabled").addClass("disabled");
             }
-            qualityControl.children().first().text(self.sources[0].label);
+            qualityControl.children().first().text(self.sources[0] && self.sources[0].label);
         };
         jqVideo = function($videoContainer, manifest) {
             var self, querySelectors = querySelectorsCtor($videoContainer);
